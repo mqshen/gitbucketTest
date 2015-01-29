@@ -1,5 +1,5 @@
 package view
-import java.util.{Date, TimeZone}
+import java.util.{Locale, Date, TimeZone}
 import java.text.SimpleDateFormat
 import play.twirl.api.Html
 import util.StringUtil
@@ -14,6 +14,45 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
    * Format java.util.Date to "yyyy-MM-dd HH:mm:ss".
    */
   def datetime(date: Date): String = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date)
+
+  val timeUnits = List(
+    (1000L, "second"),
+    (1000L * 60, "minute"),
+    (1000L * 60 * 60, "hour"),
+    (1000L * 60 * 60 * 24, "day"),
+    (1000L * 60 * 60 * 24 * 30, "month"),
+    (1000L * 60 * 60 * 24 * 365, "year")
+  ).reverse
+
+  /**
+   * Format java.util.Date to "x {seconds/minutes/hours/days/months/years} ago"
+   */
+  def datetimeAgo(date: Date): String = {
+    val duration = new Date().getTime - date.getTime
+    timeUnits.find(tuple => duration / tuple._1 > 0) match {
+      case Some((unitValue, unitString)) =>
+        val value = duration / unitValue
+        s"${value} ${unitString}${if (value > 1) "s" else ""} ago"
+      case None => "just now"
+    }
+  }
+
+  /**
+   * Format java.util.Date to "x {seconds/minutes/hours/days} ago"
+   * If duration over 1 month, format to "d MMM (yyyy)"
+   */
+  def datetimeAgoRecentOnly(date: Date): String = {
+    val duration = new Date().getTime - date.getTime
+    timeUnits.find(tuple => duration / tuple._1 > 0) match {
+      case Some((_, "month")) => s"on ${new SimpleDateFormat("d MMM", Locale.ENGLISH).format(date)}"
+      case Some((_, "year")) => s"on ${new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH).format(date)}"
+      case Some((unitValue, unitString)) =>
+        val value = duration / unitValue
+        s"${value} ${unitString}${if (value > 1) "s" else ""} ago"
+      case None => "just now"
+    }
+  }
+
 
   /**
    * Format java.util.Date to "yyyy-MM-dd'T'hh:mm:ss'Z'".
@@ -38,7 +77,7 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
 
   private[this] val renderersBySuffix: Seq[(String, (List[String], String, String, service.RepositoryService.RepositoryInfo, Boolean, Boolean, app.Context) => Html)] =
     Seq(
-      ".md" -> ((filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink, context) => markdown(fileContent, repository, enableWikiLink, enableRefsLink)(context)),
+      ".md"       -> ((filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink, context) => markdown(fileContent, repository, enableWikiLink, enableRefsLink)(context)),
       ".markdown" -> ((filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink, context) => markdown(fileContent, repository, enableWikiLink, enableRefsLink)(context))
     )
 
@@ -47,9 +86,14 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
   /**
    * Converts Markdown of Wiki pages to HTML.
    */
-  def markdown(value: String, repository: service.RepositoryService.RepositoryInfo,
-               enableWikiLink: Boolean, enableRefsLink: Boolean)(implicit context: app.Context): Html =
-    Html(Markdown.toHtml(value, repository, enableWikiLink, enableRefsLink))
+  def markdown(value: String,
+               repository: service.RepositoryService.RepositoryInfo,
+               enableWikiLink: Boolean,
+               enableRefsLink: Boolean,
+               enableTaskList: Boolean = false,
+               hasWritePermission: Boolean = false,
+               pages: List[String] = Nil)(implicit context: app.Context): Html =
+    Html(Markdown.toHtml(value, repository, enableWikiLink, enableRefsLink, enableTaskList, hasWritePermission, pages))
 
   def renderMarkup(filePath: List[String], fileContent: String, branch: String,
                    repository: service.RepositoryService.RepositoryInfo,
@@ -75,6 +119,7 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
 
   def avatarWithHref(userName: String, size: Int, tooltip: Boolean = false)(implicit context: app.Context): Html =
     getAvatarImageHtmlWithHref(userName, size, "", tooltip)
+
   /**
    * Returns &lt;img&gt; which displays the avatar icon for the given mail address.
    * This method looks up Gravatar if avatar icon has not been configured in user settings.
@@ -107,12 +152,13 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
    */
   def activityMessage(message: String)(implicit context: app.Context): Html =
     Html(message
-      .replaceAll("\\[issue:([^\\s]+?)/([^\\s]+?)#((\\d+))\\]"   , s"""<a href="${context.path}/$$1/$$2/issues/$$3">$$1/$$2#$$3</a>""")
-      .replaceAll("\\[pullreq:([^\\s]+?)/([^\\s]+?)#((\\d+))\\]" , s"""<a href="${context.path}/$$1/$$2/pull/$$3">$$1/$$2#$$3</a>""")
-      .replaceAll("\\[repo:([^\\s]+?)/([^\\s]+?)\\]"             , s"""<a href="${context.path}/$$1/$$2\">$$1/$$2</a>""")
-      .replaceAll("\\[branch:([^\\s]+?)/([^\\s]+?)#([^\\s]+?)\\]", (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/tree/${encodeRefName(m.group(3))}">${m.group(3)}</a>""")
-      .replaceAll("\\[tag:([^\\s]+?)/([^\\s]+?)#([^\\s]+?)\\]"   , (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/tree/${encodeRefName(m.group(3))}">${m.group(3)}</a>""")
-      .replaceAll("\\[user:([^\\s]+?)\\]"                        , (m: Match) => user(m.group(1)).body)
+      .replaceAll("\\[issue:([^\\s]+?)/([^\\s]+?)#((\\d+))\\]"     , s"""<a href="${context.path}/$$1/$$2/issues/$$3">$$1/$$2#$$3</a>""")
+      .replaceAll("\\[pullreq:([^\\s]+?)/([^\\s]+?)#((\\d+))\\]"   , s"""<a href="${context.path}/$$1/$$2/pull/$$3">$$1/$$2#$$3</a>""")
+      .replaceAll("\\[repo:([^\\s]+?)/([^\\s]+?)\\]"               , s"""<a href="${context.path}/$$1/$$2\">$$1/$$2</a>""")
+      .replaceAll("\\[branch:([^\\s]+?)/([^\\s]+?)#([^\\s]+?)\\]"  , (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/tree/${encodeRefName(m.group(3))}">${m.group(3)}</a>""")
+      .replaceAll("\\[tag:([^\\s]+?)/([^\\s]+?)#([^\\s]+?)\\]"     , (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/tree/${encodeRefName(m.group(3))}">${m.group(3)}</a>""")
+      .replaceAll("\\[user:([^\\s]+?)\\]"                          , (m: Match) => user(m.group(1)).body)
+      .replaceAll("\\[commit:([^\\s]+?)/([^\\s]+?)\\@([^\\s]+?)\\]", (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/commit/${m.group(3)}">${m.group(1)}/${m.group(2)}@${m.group(3).substring(0, 7)}</a>""")
     )
 
   /**
@@ -206,6 +252,8 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
       case _ => "plain_text"
     }
   }
+
+  def pre(value: Html): Html = Html(s"<pre>${value.body.trim.split("\n").map(_.trim).mkString("\n")}</pre>")
 
   /**
    * Implicit conversion to add mkHtml() to Seq[Html].

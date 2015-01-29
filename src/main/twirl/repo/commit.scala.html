@@ -2,9 +2,11 @@
   commit: util.JGitUtil.CommitInfo,
   branches: List[String],
   tags: List[String],
+  comments: List[model.Comment],
   repository: service.RepositoryService.RepositoryInfo,
   diffs: Seq[util.JGitUtil.DiffInfo],
-  oldCommitId: Option[String])(implicit context: app.Context)
+  oldCommitId: Option[String],
+  hasWritePermission: Boolean)(implicit context: app.Context)
 @import context._
 @import view.helpers._
 @import util.Implicits._
@@ -81,7 +83,7 @@
         </td>
       </tr>
     </table>
-    @helper.html.diff(diffs, repository, Some(commit.id), oldCommitId, true)
+    @helper.html.diff(diffs, repository, Some(commit.id), oldCommitId, true, None, hasWritePermission, true)
   }
 }
 <script>

@@ -24,6 +24,7 @@
                             id="issue_title" name="title" placeholder="Title" required="required" size="30" tabindex="1" type="text">
                         </div>
 
+                        @if(hasWritePermission){
                         <div class="composer-infobar js-infobar">
                             <div class="assignee infobar-widget">
                                 <span class="css-truncate text js-assignee-infobar-item-wrapper">
@@ -152,8 +153,6 @@
 
                                                 <div class="select-menu-no-results">Nothing to show</div>
                                             </div> <!-- /.select-menu-list -->
-
-
                                             <input id="issue_milestone_id" name="issue[milestone_id]" type="hidden">
                                             <input id="new_milestone_title" name="new_milestone_title" type="hidden">
                                         </div>
@@ -161,11 +160,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        }
 
                         <div class="comment-content">
-
-
                             <div class="js-previewable-comment-form js-suggester-container previewable-comment-form write-selected" data-preview-url="/preview?repository=20172284">
                                 <div class="comment-form-head tabnav">
                                     <ul class="tabnav-tabs">
@@ -178,8 +175,7 @@
                                             Parsed as Markdown
                                         </a>
 
-                                        <a href="#fullscreen_issue_body" class="enable-fullscreen js-enable-fullscreen tooltipped-n
-  tabnav-widget text tabnav-extras">
+                                        <a href="#fullscreen_issue_body" class="enable-fullscreen js-enable-fullscreen tooltipped-n tabnav-widget text tabnav-extras">
                                             <span class="octicon octicon-screen-full"></span>
                                             Edit in fullscreen
                                         </a>
@@ -272,104 +268,29 @@
 
             </div>
             <div class="discussion-sidebar">
+                @if(hasWritePermission){
                 <h3>Labels</h3>
                 <ul class="color-label-list filter-list small">
+                    <style type="text/css" media="screen">
+                        @labels.map { label =>
+                            span.labelstyle-@{label.color}, .linked-labelstyle-@{label.color} {  background-color: #@label.color !important;  color: #@label.fontColor !important;}
+                            .labelstyle-@{label.color}.selected {  background-color: #@label.color !important;  color: #@label.fontColor !important;}
+                            .label-select-menu .labelstyle-@{label.color}.selected {  background:#@label.color !important;  color: #@label.fontColor !important;}
+                        }
+                    </style>
                     @labels.map { label =>
-                        <li>
-                            <a href="#" class="toggle-label" data-label="filter-item color-label js-composer-label labelstyle-@label.color"
-                            data-bgcolor="@label.color" data-fgcolor="@label.fontColor">
-                                <input style="display: none" type="checkbox" value="@label.labelName" id="issue_labels_bug" name="labels[]">
+                        <li data-name="@label.labelName">
+                            <a href="#" class="filter-item color-label js-composer-label labelstyle-@label.color">
+                                <input style="display: none" type="checkbox" value="test" id="issue_labels_test" name="labels[]">
                                 <span class="color" style="background-color: #@label.color">&nbsp;</span>
-                                <span class="name" title="bug">@label.labelName</span>
+                                <span class="name" title="test">@label.labelName</span>
                             </a>
                         </li>
                     }
-                    <li data-name="bug">
-                        <a href="#" class="filter-item color-label js-composer-label labelstyle-fc2929">
-
-                            <input style="display: none" type="checkbox" value="bug" id="issue_labels_bug" name="issue[labels][]">
-                            <span class="color" style="background-color: #fc2929">&nbsp;</span>
-                            <span class="name" title="bug">bug</span>
-                        </a>
-                    </li>
                 </ul>
+                }
             </div>
         </div>
-    <div class="row-fluid">
-      <div class="span9">
-        <div class="issue-avatar-image">@avatar(loginAccount.get.userName, 48)</div>
-        <div class="box issue-box">
-          <div class="box-content">
-            <span id="error-title" class="error"></span>
-            <input type="text" name="title" value="" placeholder="Title" style="width: 565px;"/>
-            <div>
-              <span id="label-assigned">No one is assigned</span>
-              @if(hasWritePermission){
-                <input type="hidden" name="assignedUserName" value=""/>
-                @helper.html.dropdown() {
-                  <li><a href="javascript:void(0);" class="assign" data-name=""><i class="icon-remove-circle"></i> Clear assignee</a></li>
-                  @collaborators.map { collaborator =>
-                    <li><a href="javascript:void(0);" class="assign" data-name="@collaborator"><i class="icon-while"></i>@avatar(collaborator, 20) @collaborator</a></li>
-                  }
-                }
-              }
-              <div class="pull-right">
-                <span id="label-milestone">No milestone</span>
-                @if(hasWritePermission){
-                  <input type="hidden" name="milestoneId" value=""/>
-                  @helper.html.dropdown() {
-                    <li><a href="javascript:void(0);" class="milestone" data-id=""><i class="icon-remove-circle"></i> Clear this milestone</a></li>
-                    @milestones.filter(_.closedDate.isEmpty).map { milestone =>
-                      <li>
-                        <a href="javascript:void(0);" class="milestone" data-id="@milestone.milestoneId" data-title="@milestone.title">
-                          <i class="icon-while"></i> @milestone.title
-                          <div class="small" style="padding-left: 20px;">
-                            @milestone.dueDate.map { dueDate =>
-                              @if(isPast(dueDate)){
-                                <img src="@assets/common/images/alert.png"/><span class="milestone-alert">Due by @date(dueDate)</span>
-                              } else {
-                                <span class="muted">Due by @date(dueDate)</span>
-                              }
-                            }.getOrElse {
-                              <span class="muted">No due date</span>
-                            }
-                          </div>
-                        </a>
-                      </li>
-                    }
-                  }
-                }
-              </div>
-            </div>
-            <hr>
-            @helper.html.preview(repository, "", false, true, "width: 565px; height: 200px; max-height: 250px;", elastic = true)
-          </div>
-        </div>
-        <div class="pull-right">
-          <input type="submit" class="btn btn-success" value="Submit new issue"/>
-        </div>
-      </div>
-      <div class="span3">
-        @if(hasWritePermission){
-          <span class="strong">Labels</span>
-          <div>
-            <div id="label-list">
-              <ul class="label-list nav nav-pills nav-stacked">
-                @labels.map { label =>
-                  <li>
-                    <a href="javascript:void(0);" class="toggle-label" data-label="@label.labelName" data-bgcolor="@label.color" data-fgcolor="@label.fontColor">
-                      <span style="background-color: #@label.color;" class="label-color">&nbsp;&nbsp;</span>
-                      @label.labelName
-                    </a>
-                  </li>
-                }
-              </ul>
-              <input type="hidden" name="labelNames" value=""/>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
     </form>
   }
 }

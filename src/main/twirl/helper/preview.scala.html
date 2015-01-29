@@ -1,5 +1,13 @@
-@(repository: service.RepositoryService.RepositoryInfo, content: String, enableWikiLink: Boolean, enableRefsLink: Boolean,
-  style: String = "", placeholder: String = "Leave a comment", elastic: Boolean = false)(implicit context: app.Context)
+@(repository: service.RepositoryService.RepositoryInfo,
+  content: String,
+  enableWikiLink: Boolean,
+  enableRefsLink: Boolean,
+  enableTaskList: Boolean,
+  hasWritePermission: Boolean,
+  style: String = "",
+  placeholder: String = "Leave a comment",
+  elastic: Boolean = false,
+  uid: Long = new java.util.Date().getTime())(implicit context: app.Context)
 @import context._
 @import view.helpers._
 <div class="tabbable">

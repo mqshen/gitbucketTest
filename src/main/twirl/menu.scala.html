@@ -44,7 +44,7 @@
   }
 
       <h1 itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public">
-          <span class="mega-octicon octicon-repo-forked"></span>
+          @helper.html.repositoryicon(repository, true)
           <span class="author">
               <a href="@url(repository.owner)" class="url fn" itemprop="url" rel="author">
                 <span itemprop="title">@repository.owner</span>

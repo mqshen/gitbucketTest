@@ -7,28 +7,28 @@
 @html.main(s"Labels - ${repository.owner}/${repository.name}"){
   @html.menu("issues", repository){
     @issues.html.tab("labels", hasWritePermission, repository)
-    &nbsp;
-    <table class="table table-bordered table-hover table-issues" id="new-label-table" style="display: none;">
-      <tr><td></td></tr>
-    </table>
-    <table class="table table-bordered table-hover table-issues">
-      <tr id="label-row-header">
-        <th style="background-color: #eee;">
-          <span class="small">@labels.size labels</span>
-        </th>
-      </tr>
-      @labels.map { label =>
-        @_root_.issues.labels.html.label(label, counts, repository, hasWritePermission)
-      }
-      @if(labels.isEmpty){
-        <tr>
-          <td style="padding: 20px; background-color: #eee; text-align: center;">
-            No labels to show.
-            @if(hasWritePermission){
-              <a href="@url(repository)/issues/labels/new">Create a new label.</a>
+    <div class="table-list-header">
+        <div class="table-list-filters">
+            <div class="table-list-header-toggle left">
+                <span class="table-list-header-meta"> @labels.size labels </span>
+            </div>
+        </div>
+    </div>
+    <ul class="table-list table-list-bordered">
+            @labels.map { label =>
+                @_root_.issues.labels.html.label(label, counts, repository, hasWritePermission)
             }
-          </td>
-        </tr>
+        </li>
+    </ul>
+      @if(labels.isEmpty){
+        <div class="blankslate spacious large-format">
+            <span class="mega-octicon octicon-tag"></span>
+            <h3>No labels!</h3>
+            <p>
+                There aren't any labels for this repository quite yet.
+                Click on the "New Label" button above to create one.
+            </p>
+        </div>
       }
     </table>
   }

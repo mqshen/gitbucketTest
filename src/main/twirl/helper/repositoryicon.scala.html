@@ -2,11 +2,11 @@
 @import context._
 @import view.helpers._
 @if(repository.repository.isPrivate){
-  <img src="@assets/common/images/repo_private@{if(large){"_lg"}}.png"/>
+  <span class="mega-octicon octicon-lock"></span>
 } else {
   @if(repository.repository.originUserName.isDefined){
-    <img src="@assets/common/images/repo_fork@{if(large){"_lg"}}.png"/>
+    <span class="mega-octicon octicon-repo-forked"></span>
   } else {
-    <img src="@assets/common/images/repo_public@{if(large){"_lg"}}.png"/>
+    <span class="mega-octicon octicon-repo"></span>
   }
 }

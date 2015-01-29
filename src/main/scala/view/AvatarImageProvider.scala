@@ -11,7 +11,7 @@ trait AvatarImageProvider { self: RequestCache =>
    * Looks up Gravatar if avatar icon has not been configured in user settings.
    */
   protected def getAvatarImageHtml(userName: String, size: Int,
-      mailAddress: String = "", tooltip: Boolean = false, avatarClass: String = "avatar")(implicit context: app.Context): Html = {
+                                   mailAddress: String = "", tooltip: Boolean = false, avatarClass: String = "avatar")(implicit context: app.Context): Html = {
 
     val src = if(mailAddress.isEmpty){
       // by user name
@@ -49,7 +49,7 @@ trait AvatarImageProvider { self: RequestCache =>
   }
 
   protected def getAvatarImageHtmlWithHref(userName: String, size: Int,
-                                   mailAddress: String = "", tooltip: Boolean = false)(implicit context: app.Context): Html = {
+                                           mailAddress: String = "", tooltip: Boolean = false)(implicit context: app.Context): Html = {
 
     val src = if(mailAddress.isEmpty){
       // by user name
@@ -85,5 +85,4 @@ trait AvatarImageProvider { self: RequestCache =>
       Html(s"""<a href="${context.path}/${userName}"><img src="${src}" class="${if(size > 20){"gravatar"} else {"avatar-mini"}}" style="width: ${size}px; height: ${size}px;" /></a>""")
     }
   }
-
 }

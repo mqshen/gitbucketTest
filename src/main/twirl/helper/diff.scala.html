@@ -2,7 +2,10 @@
  repository: service.RepositoryService.RepositoryInfo,
  newCommitId: Option[String],
  oldCommitId: Option[String],
- showIndex: Boolean)(implicit context: app.Context)
+ showIndex: Boolean,
+ issueId: Option[Int],
+ hasWritePermission: Boolean,
+ showLineNotes: Boolean)(implicit context: app.Context)
 @import context._
 @import view.helpers._
 @import org.eclipse.jgit.diff.DiffEntry.ChangeType

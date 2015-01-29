@@ -1,10 +1,12 @@
-@(issue: model.Issue,
-  comments: List[model.IssueComment],
+@(issue: Option[model.Issue],
+  comments: List[model.Comment],
   hasWritePermission: Boolean,
   repository: service.RepositoryService.RepositoryInfo,
   pullreq: Option[model.PullRequest] = None)(implicit context: app.Context)
 @import context._
 @import view.helpers._
+
+@issue.map { issue =>
 
 <div class="js-discussion js-socket-channel" data-channel="daltoniam/starscream:marked-as-read:44042728">
     <div class="timeline-comment-wrapper js-comment-container">
@@ -38,7 +40,9 @@
 </div>
 
 
-@comments.map { comment =>
+@comments.map {
+
+case comment: model.IssueComment => {
   @if(comment.action != "close" && comment.action != "reopen" && comment.action != "delete_branch"){
 
       <div class="timeline-comment-wrapper js-comment-container">
@@ -126,6 +130,7 @@
     </div>
   }
 }
+}
 <script>
 $(function(){
   $('i.icon-pencil').click(function(){
@@ -163,3 +168,4 @@ $(function(){
   });
 });
 </script>
+}

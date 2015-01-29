@@ -47,8 +47,8 @@ trait IssuesService {
    * @param repos Tuple of the repository owner and the repository name
    * @return the count of the search result
    */
-  def countIssue(condition: IssueSearchCondition, onlyPullRequest: Boolean, repos: (String, String)*)
-                (implicit s: Session): Int =
+  def countIssue(condition: IssueSearchCondition, onlyPullRequest: Boolean,
+                 repos: (String, String)*)(implicit s: Session): Int =
     Query(searchIssueQuery(repos, condition, onlyPullRequest).length).first
 
   /**
@@ -59,8 +59,8 @@ trait IssuesService {
    * @param condition the search condition
    * @return the Map which contains issue count for each labels (key is label name, value is issue count)
    */
-  def countIssueGroupByLabels(owner: String, repository: String,
-                              condition: IssueSearchCondition)(implicit s: Session): Map[String, Int] = {
+  def countIssueGroupByLabels(owner: String, repository: String, condition: IssueSearchCondition,
+                              filterUser: Map[String, String])(implicit s: Session): Map[String, Int] = {
 
     searchIssueQuery(Seq(owner -> repository), condition.copy(labels = Set.empty), false)
       .innerJoin(IssueLabels).on { (t1, t2) =>
@@ -77,28 +77,6 @@ trait IssuesService {
       }
       .toMap
   }
-  /**
-   * Returns list which contains issue count for each repository.
-   * If the issue does not exist, its repository is not included in the result.
-   *
-   * @param condition the search condition
-   * @param onlyPullRequest if true then returns only pull request, false then returns both of issue and pull request.
-   * @param repos Tuple of the repository owner and the repository name
-   * @return list which contains issue count for each repository
-   */
-  def countIssueGroupByRepository(
-      condition: IssueSearchCondition, onlyPullRequest: Boolean,
-      repos: (String, String)*)(implicit s: Session): List[(String, String, Int)] = {
-    searchIssueQuery(repos, condition.copy(repo = None), onlyPullRequest)
-      .groupBy { t =>
-        t.userName -> t.repositoryName
-      }
-      .map { case (repo, t) =>
-        (repo._1, repo._2, t.length)
-      }
-      .sortBy(_._3 desc)
-      .list
-  }
 
   /**
    * Returns the search result against  issues.
@@ -110,8 +88,7 @@ trait IssuesService {
    * @param repos Tuple of the repository owner and the repository name
    * @return the search result (list of tuples which contain issue, labels and comment count)
    */
-  def searchIssue(condition: IssueSearchCondition, pullRequest: Boolean,
-                  offset: Int, limit: Int, repos: (String, String)*)
+  def searchIssue(condition: IssueSearchCondition, pullRequest: Boolean, offset: Int, limit: Int, repos: (String, String)*)
                  (implicit s: Session): List[IssueInfo] = {
 
     // get issues and comment count and labels
@@ -156,20 +133,18 @@ trait IssuesService {
   /**
    * Assembles query for conditional issue searching.
    */
-  private def searchIssueQuery(repos: Seq[(String, String)], condition: IssueSearchCondition,
-                               pullRequest: Boolean)(implicit s: Session) =
+  private def searchIssueQuery(repos: Seq[(String, String)], condition: IssueSearchCondition, pullRequest: Boolean)(implicit s: Session) =
     Issues filter { t1 =>
-      condition.repo
-          .map { _.split('/') match { case array => Seq(array(0) -> array(1)) } }
-          .getOrElse (repos)
-          .map { case (owner, repository) => t1.byRepository(owner, repository) }
-          .foldLeft[Column[Boolean]](false) ( _ || _ ) &&
+      repos
+        .map { case (owner, repository) => t1.byRepository(owner, repository) }
+        .foldLeft[Column[Boolean]](false) ( _ || _ ) &&
       (t1.closed           === (condition.state == "closed").bind) &&
       (t1.milestoneId      === condition.milestoneId.get.get.bind, condition.milestoneId.flatten.isDefined) &&
       (t1.milestoneId.?    isEmpty, condition.milestoneId == Some(None)) &&
       (t1.assignedUserName === condition.assigned.get.bind, condition.assigned.isDefined) &&
       (t1.openedUserName   === condition.author.get.bind, condition.author.isDefined) &&
       (t1.pullRequest      === pullRequest.bind) &&
+      // Label filter
       (IssueLabels filter { t2 =>
         (t2.byIssue(t1.userName, t1.repositoryName, t1.issueId)) &&
         (t2.labelId in
@@ -177,7 +152,19 @@ trait IssuesService {
             (t3.byRepository(t1.userName, t1.repositoryName)) &&
             (t3.labelName inSetBind condition.labels)
           } map(_.labelId)))
-      } exists, condition.labels.nonEmpty)
+      } exists, condition.labels.nonEmpty) &&
+      // Visibility filter
+      (Repositories filter { t2 =>
+        (t2.byRepository(t1.userName, t1.repositoryName)) &&
+        (t2.isPrivate === (condition.visibility == Some("private")).bind)
+      } exists, condition.visibility.nonEmpty) &&
+      // Organization (group) filter
+      (t1.userName inSetBind condition.groups, condition.groups.nonEmpty) &&
+      // Mentioned filter
+      ((t1.openedUserName === condition.mentioned.get.bind) || t1.assignedUserName === condition.mentioned.get.bind ||
+        (IssueComments filter { t2 =>
+          (t2.byIssue(t1.userName, t1.repositoryName, t1.issueId)) && (t2.commentedUserName === condition.mentioned.get.bind)
+        } exists), condition.mentioned.isDefined)
     }
 
   def createIssue(owner: String, repository: String, loginUser: String, title: String, content: Option[String],
@@ -276,6 +263,7 @@ trait IssuesService {
 
     // Search Issue
     val issues = Issues
+      .filter(_.byRepository(owner, repository))
       .innerJoin(IssueOutline).on { case (t1, t2) =>
         t1.byIssue(t2.userName, t2.repositoryName, t2.issueId)
       }
@@ -291,6 +279,7 @@ trait IssuesService {
 
     // Search IssueComment
     val comments = IssueComments
+      .filter(_.byRepository(owner, repository))
       .innerJoin(Issues).on { case (t1, t2) =>
         t1.byIssue(t2.userName, t2.repositoryName, t2.issueId)
       }
@@ -336,31 +325,62 @@ object IssuesService {
       milestoneId: Option[Option[Int]] = None,
       author: Option[String] = None,
       assigned: Option[String] = None,
-      repo: Option[String] = None,
+      mentioned: Option[String] = None,
       state: String = "open",
       sort: String = "created",
-      direction: String = "desc"){
+      direction: String = "desc",
+      visibility: Option[String] = None,
+      groups: Set[String] = Set.empty){
 
     def isEmpty: Boolean = {
       labels.isEmpty && milestoneId.isEmpty && author.isEmpty && assigned.isEmpty &&
-        state == "open" && sort == "created" && direction == "desc"
+        state == "open" && sort == "created" && direction == "desc" && visibility.isEmpty
     }
 
     def nonEmpty: Boolean = !isEmpty
 
+    def toFilterString: String = (
+      List(
+        Some(s"is:${state}"),
+        author.map(author => s"author:${author}"),
+        assigned.map(assignee => s"assignee:${assignee}"),
+        mentioned.map(mentioned => s"mentions:${mentioned}")
+      ).flatten ++
+      labels.map(label => s"label:${label}") ++
+      List(
+        milestoneId.map { _ match {
+          case Some(x) => s"milestone:${milestoneId}"
+          case None    => "no:milestone"
+        }},
+        (sort, direction) match {
+          case ("created" , "desc") => None
+          case ("created" , "asc" ) => Some("sort:created-asc")
+          case ("comments", "desc") => Some("sort:comments-desc")
+          case ("comments", "asc" ) => Some("sort:comments-asc")
+          case ("updated" , "desc") => Some("sort:updated-desc")
+          case ("updated" , "asc" ) => Some("sort:updated-asc")
+        },
+        visibility.map(visibility => s"visibility:${visibility}")
+      ).flatten ++
+      groups.map(group => s"group:${group}")
+    ).mkString(" ")
+
     def toURL: String =
       "?" + List(
         if(labels.isEmpty) None else Some("labels=" + urlEncode(labels.mkString(","))),
-        milestoneId.map { id => "milestone=" + (id match {
-          case Some(x) => x.toString
-          case None    => "none"
-        })},
-        author  .map(x => "author="   + urlEncode(x)),
-        assigned.map(x => "assigned=" + urlEncode(x)),
-        repo.map("for="   + urlEncode(_)),
+        milestoneId.map { _ match {
+          case Some(x) => "milestone=" + x
+          case None    => "milestone=none"
+        }},
+        author   .map(x => "author="    + urlEncode(x)),
+        assigned .map(x => "assigned="  + urlEncode(x)),
+        mentioned.map(x => "mentioned=" + urlEncode(x)),
         Some("state="     + urlEncode(state)),
         Some("sort="      + urlEncode(sort)),
-        Some("direction=" + urlEncode(direction))).flatten.mkString("&")
+        Some("direction=" + urlEncode(direction)),
+        visibility.map(x => "visibility=" + urlEncode(x)),
+        if(groups.isEmpty) None else Some("groups=" + urlEncode(groups.mkString(",")))
+      ).flatten.mkString("&")
 
   }
 
@@ -371,19 +391,63 @@ object IssuesService {
       if(value == null || value.isEmpty || (allow.nonEmpty && !allow.contains(value))) None else Some(value)
     }
 
+    /**
+     * Restores IssueSearchCondition instance from filter query.
+     */
+    def apply(filter: String, milestones: Map[String, Int]): IssueSearchCondition = {
+      val conditions = filter.split("[ 　\t]+").map { x =>
+        val dim = x.split(":")
+        dim(0) -> dim(1)
+      }.groupBy(_._1).map { case (key, values) =>
+        key -> values.map(_._2).toSeq
+      }
+
+      val (sort, direction) = conditions.get("sort").flatMap(_.headOption).getOrElse("created-desc") match {
+        case "created-asc"   => ("created" , "asc" )
+        case "comments-desc" => ("comments", "desc")
+        case "comments-asc"  => ("comments", "asc" )
+        case "updated-desc"  => ("comments", "desc")
+        case "updated-asc"   => ("comments", "asc" )
+        case _               => ("created" , "desc")
+      }
+
+      IssueSearchCondition(
+        conditions.get("label").map(_.toSet).getOrElse(Set.empty),
+        conditions.get("milestone").flatMap(_.headOption) match {
+          case None         => None
+          case Some("none") => Some(None)
+          case Some(x)      => milestones.get(x).map(x => Some(x))
+        },
+        conditions.get("author").flatMap(_.headOption),
+        conditions.get("assignee").flatMap(_.headOption),
+        conditions.get("mentions").flatMap(_.headOption),
+        conditions.get("is").getOrElse(Seq.empty).find(x => x == "open" || x == "closed").getOrElse("open"),
+        sort,
+        direction,
+        conditions.get("visibility").flatMap(_.headOption),
+        conditions.get("group").map(_.toSet).getOrElse(Set.empty)
+      )
+    }
+
+    /**
+     * Restores IssueSearchCondition instance from request parameters.
+     */
     def apply(request: HttpServletRequest): IssueSearchCondition =
       IssueSearchCondition(
         param(request, "labels").map(_.split(",").toSet).getOrElse(Set.empty),
-        param(request, "milestone").map{
+        param(request, "milestone").map {
           case "none" => None
           case x      => x.toIntOpt
         },
         param(request, "author"),
         param(request, "assigned"),
-        param(request, "for"),
+        param(request, "mentioned"),
         param(request, "state",     Seq("open", "closed")).getOrElse("open"),
         param(request, "sort",      Seq("created", "comments", "updated")).getOrElse("created"),
-        param(request, "direction", Seq("asc", "desc")).getOrElse("desc"))
+        param(request, "direction", Seq("asc", "desc")).getOrElse("desc"),
+        param(request, "visibility"),
+        param(request, "groups").map(_.split(",").toSet).getOrElse(Set.empty)
+      )
 
     def page(request: HttpServletRequest) = try {
       val i = param(request, "page").getOrElse("1").toInt

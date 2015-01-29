@@ -7,10 +7,10 @@
 } else {
   @activities.map { activity =>
       @(activity.activityType match {
-        case "open_issue"        => detailActivity(activity, "issue", "open")
+        case "open_issue"        => detailActivity(activity, "issue", "issue-opened")
         case "comment_issue"     => detailActivity(activity, "comment", "")
-        case "close_issue"       => detailActivity(activity, "issue", "close")
-        case "reopen_issue"      => detailActivity(activity, "issues_reopened", "reopen")
+        case "close_issue"       => detailActivity(activity, "issue", "issue-closed")
+        case "reopen_issue"      => detailActivity(activity, "issues_reopened", "issue-reopened")
         case "open_pullreq"      => detailActivity(activity, "issues_opened", "git-pull-request")
         case "merge_pullreq"     => detailActivity(activity, "merge", "")
         case "create_repository" => simpleActivity(activity, "create", "repo")

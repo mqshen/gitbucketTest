@@ -12,7 +12,10 @@ trait SystemSettingsService {
   def saveSystemSettings(settings: SystemSettings): Unit = {
     defining(new java.util.Properties()){ props =>
       settings.baseUrl.foreach(x => props.setProperty(BaseURL, x.replaceFirst("/\\Z", "")))
+      settings.information.foreach(x => props.setProperty(Information, x))
       props.setProperty(AllowAccountRegistration, settings.allowAccountRegistration.toString)
+      props.setProperty(AllowAnonymousAccess, settings.allowAnonymousAccess.toString)
+      props.setProperty(IsCreateRepoOptionPublic, settings.isCreateRepoOptionPublic.toString)
       props.setProperty(Gravatar, settings.gravatar.toString)
       props.setProperty(Notification, settings.notification.toString)
       props.setProperty(Ssh, settings.ssh.toString)
@@ -39,8 +42,9 @@ trait SystemSettingsService {
           props.setProperty(LdapUserNameAttribute, ldap.userNameAttribute)
           ldap.additionalFilterCondition.foreach(x => props.setProperty(LdapAdditionalFilterCondition, x))
           ldap.fullNameAttribute.foreach(x => props.setProperty(LdapFullNameAttribute, x))
-          ldap.mailAttribute.foreach(x => props.setProperty(LdapMailAddressAttribute, x.toString))
+          ldap.mailAttribute.foreach(x => props.setProperty(LdapMailAddressAttribute, x))
           ldap.tls.foreach(x => props.setProperty(LdapTls, x.toString))
+          ldap.ssl.foreach(x => props.setProperty(LdapSsl, x.toString))
           ldap.keystore.foreach(x => props.setProperty(LdapKeystore, x))
         }
       }
@@ -60,7 +64,10 @@ trait SystemSettingsService {
       }
       SystemSettings(
         getOptionValue[String](props, BaseURL, None).map(x => x.replaceFirst("/\\Z", "")),
+        getOptionValue[String](props, Information, None),
         getValue(props, AllowAccountRegistration, false),
+        getValue(props, AllowAnonymousAccess, true),
+        getValue(props, IsCreateRepoOptionPublic, true),
         getValue(props, Gravatar, true),
         getValue(props, Notification, false),
         getValue(props, Ssh, false),
@@ -90,6 +97,7 @@ trait SystemSettingsService {
             getOptionValue(props, LdapFullNameAttribute, None),
             getOptionValue(props, LdapMailAddressAttribute, None),
             getOptionValue[Boolean](props, LdapTls, None),
+            getOptionValue[Boolean](props, LdapSsl, None),
             getOptionValue(props, LdapKeystore, None)))
         } else {
           None
@@ -105,7 +113,10 @@ object SystemSettingsService {
 
   case class SystemSettings(
     baseUrl: Option[String],
+    information: Option[String],
     allowAccountRegistration: Boolean,
+    allowAnonymousAccess: Boolean,
+    isCreateRepoOptionPublic: Boolean,
     gravatar: Boolean,
     notification: Boolean,
     ssh: Boolean,
@@ -131,6 +142,7 @@ object SystemSettingsService {
     fullNameAttribute: Option[String],
     mailAttribute: Option[String],
     tls: Option[Boolean],
+    ssl: Option[Boolean],
     keystore: Option[String])
 
   case class Smtp(
@@ -147,7 +159,10 @@ object SystemSettingsService {
   val DefaultLdapPort = 389
 
   private val BaseURL = "base_url"
+  private val Information = "information"
   private val AllowAccountRegistration = "allow_account_registration"
+  private val AllowAnonymousAccess = "allow_anonymous_access"
+  private val IsCreateRepoOptionPublic = "is_create_repository_option_public"
   private val Gravatar = "gravatar"
   private val Notification = "notification"
   private val Ssh = "ssh"
@@ -170,6 +185,7 @@ object SystemSettingsService {
   private val LdapFullNameAttribute = "ldap.fullname_attribute"
   private val LdapMailAddressAttribute = "ldap.mail_attribute"
   private val LdapTls = "ldap.tls"
+  private val LdapSsl = "ldap.ssl"
   private val LdapKeystore = "ldap.keystore"
 
   private def getValue[A: ClassTag](props: java.util.Properties, key: String, default: A): A =
@@ -191,7 +207,7 @@ object SystemSettingsService {
       else value
     }
 
-  // TODO temporary flag
-  val enablePluginSystem = Option(System.getProperty("enable.plugin")).getOrElse("false").toBoolean
+//  // TODO temporary flag
+//  val enablePluginSystem = Option(System.getProperty("enable.plugin")).getOrElse("false").toBoolean
 
 }

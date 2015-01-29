@@ -1,10 +1,13 @@
 @(branch: String,
   repository: service.RepositoryService.RepositoryInfo,
   pathList: List[String],
+  groupNames: List[String],
   latestCommit: util.JGitUtil.CommitInfo,
   files: List[util.JGitUtil.FileInfo],
   readme: Option[(List[String], String)],
-  hasWritePermission: Boolean)(implicit context: app.Context)
+  hasWritePermission: Boolean,
+  info: Option[Any] = None,
+  error: Option[Any] = None)(implicit context: app.Context)
 @import context._
 @import view.helpers._
 @html.main(s"${repository.owner}/${repository.name}", Some(repository)) {

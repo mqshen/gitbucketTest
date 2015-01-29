@@ -1,0 +1,25 @@
+{
+  "name": "gitbucket",
+  "version": "0.0.1",
+  "authors": [
+    "mqshen <mqshen@126.com>"
+  ],
+  "description": "test",
+  "main": "gitbucket",
+  "keywords": [
+    "gitbucket"
+  ],
+  "dependencies": {
+    "jquery": "jquery#2.1.1-rc2",
+    "MutationObservers": "Polymer/MutationObservers#~0.2.0"
+  },
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

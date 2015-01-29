@@ -7,3 +7,5 @@ addSbtPlugin("org.scalatra.sbt" % "scalatra-sbt" % "0.3.5")
 addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.0.2")
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.4")
+
+libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intransitive()

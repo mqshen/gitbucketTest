@@ -11,6 +11,19 @@ object MyBuild extends Build {
   val ScalaVersion = "2.11.2"
   val ScalatraVersion = "2.3.0"
 
+
+//  import java.io.File
+//  import com.yahoo.platform.yui.compressor.YUICompressor
+//
+//  val assetsPath = "src/main/webapp/assets/"
+//  val libPath = assetsPath + "vendors/"
+//  val sourceJS = Array("jquery/dist/jquery.js", "WeakMap/weakmap.js", "MutationObservers/MutationObserver.js")
+//  val sourcePaths = sourceJS.map { js =>
+//    new File(libPath, js).getPath
+//  }
+//  val dest = new File(assetsPath, "script-min.js")
+//  YUICompressor.main(Array("-o", dest.getPath) ++ sourcePaths)
+
   lazy val project = Project (
     "gitbucket",
     file(".")
@@ -61,7 +74,7 @@ object MyBuild extends Build {
       val customJars = (baseDirectories ** "*.jar")
       customJars.classpath
     },
-      unmanagedResourceDirectories in Compile := List(file("src/main/webapp"))
+    unmanagedResourceDirectories in Compile := List(file("src/main/webapp"))
     ).enablePlugins(SbtTwirl)
 }
 
