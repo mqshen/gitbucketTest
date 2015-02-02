@@ -23,7 +23,7 @@ class AvatarImageProviderSpec extends Specification with Mockito {
       val provider = new AvatarImageProviderImpl(Some(createAccount(None)))
 
       provider.toHtml("user", 32).toString mustEqual
-        "<img src=\"https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=32&d=retro&r=g\" class=\"avatar\" style=\"width: 32px; height: 32px;\" />"
+        "<img src=\"https://secure.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=32&d=retro&r=g\" class=\"avatar\" style=\"width: 32px; height: 32px;\" />"
     }
 
     "show uploaded image even if gravatar integration is enabled" in {
@@ -47,7 +47,7 @@ class AvatarImageProviderSpec extends Specification with Mockito {
       val provider = new AvatarImageProviderImpl(None)
 
       provider.toHtml("user", 20, "hoge@hoge.com").toString mustEqual
-        "<img src=\"https://www.gravatar.com/avatar/4712f9b0e63f56ad952ad387eaa23b9c?s=20&d=retro&r=g\" class=\"avatar-mini\" style=\"width: 20px; height: 20px;\" />"
+        "<img src=\"https://secure.gravatar.com/avatar/4712f9b0e63f56ad952ad387eaa23b9c?s=20&d=retro&r=g\" class=\"avatar-mini\" style=\"width: 20px; height: 20px;\" />"
     }
 
     "show unknown image for unknown user if gravatar integration is enabled" in {

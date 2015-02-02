@@ -232,7 +232,7 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
     } getOrElse content
 
   def userAvatar(mailAddress:String) = {
-    s"https://www.gravatar.com/avatar/${StringUtil.md5(mailAddress.toLowerCase)}?s=40&d=retro&r=g"
+    s"https://secure.gravatar.com/avatar/${StringUtil.md5(mailAddress.toLowerCase)}?s=40&d=retro&r=g"
   }
 
   /**
