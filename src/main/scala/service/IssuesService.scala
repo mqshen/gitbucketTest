@@ -201,16 +201,19 @@ trait IssuesService {
     IssueLabels filter(_.byPrimaryKey(owner, repository, issueId, labelId)) delete
 
   def createComment(owner: String, repository: String, loginUser: String,
-      issueId: Int, content: String, action: String)(implicit s: Session): Int =
-    IssueComments.autoInc insert IssueComment(
-        userName          = owner,
-        repositoryName    = repository,
-        issueId           = issueId,
-        action            = action,
-        commentedUserName = loginUser,
-        content           = content,
-        registeredDate    = currentDate,
-        updatedDate       = currentDate)
+      issueId: Int, content: String, action: String)(implicit s: Session): (Int, IssueComment) = {
+    val issueComment: IssueComment =  IssueComment(
+      userName          = owner,
+      repositoryName    = repository,
+      issueId           = issueId,
+      action            = action,
+      commentedUserName = loginUser,
+      content           = content,
+      registeredDate    = currentDate,
+      updatedDate       = currentDate)
+    val commentId = IssueComments.autoInc insert issueComment
+    (commentId, issueComment)
+  }
 
   def updateIssue(owner: String, repository: String, issueId: Int,
       title: String, content: Option[String])(implicit s: Session) =

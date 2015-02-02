@@ -1,5 +1,4 @@
 import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys
-import org.scalatra.sbt._
 import play.twirl.sbt.SbtTwirl
 import sbt.Keys._
 import sbt._
@@ -9,7 +8,8 @@ object MyBuild extends Build {
   val Name = "gitbucket"
   val Version = "0.0.1"
   val ScalaVersion = "2.11.2"
-  val ScalatraVersion = "2.3.0"
+  //val ScalatraVersion = "2.3.0"
+  val ScalatraVersion = "2.4.0-SNAPSHOT"
 
 
 //  import java.io.File
@@ -28,7 +28,6 @@ object MyBuild extends Build {
     "gitbucket",
     file(".")
   )
-  .settings(ScalatraPlugin.scalatraWithJRebel: _*)
   .settings(
     sourcesInBase := false,
     organization := Organization,
@@ -36,6 +35,7 @@ object MyBuild extends Build {
     version := Version,
     scalaVersion := ScalaVersion,
     resolvers ++= Seq(
+      "Local Maven Repository" at "file://"+ Path.userHome.absolutePath + "/.m2/repository",
       Classpaths.typesafeReleases,
       "amateras-repo" at "http://amateras.sourceforge.jp/mvn/"
     ),
@@ -47,7 +47,7 @@ object MyBuild extends Build {
       "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
       "org.scalatra" %% "scalatra-json" % ScalatraVersion,
       "org.json4s" %% "json4s-jackson" % "3.2.10",
-      "jp.sf.amateras" %% "scalatra-forms" % "0.1.0",
+      "jp.sf.amateras" %% "scalatra-forms" % "0.1.0-SNAPSHOT",
       "commons-io" % "commons-io" % "2.4",
       "org.pegdown" % "pegdown" % "1.4.1",
       "org.apache.commons" % "commons-compress" % "1.5",
@@ -59,7 +59,8 @@ object MyBuild extends Build {
       "org.quartz-scheduler" % "quartz" % "2.2.1",
       "com.h2database" % "h2" % "1.4.180",
       "ch.qos.logback" % "logback-classic" % "1.0.13" % "runtime",
-      "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container;provided",
+      "org.eclipse.jetty" % "jetty-webapp" % "9.3.0-SNAPSHOT" % "container;provided",
+      "org.eclipse.jetty" % "jetty-plus" % "9.3.0-SNAPSHOT" % "container;provided",
       "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided;test" artifacts Artifact("javax.servlet", "jar", "jar"),
       "junit" % "junit" % "4.11" % "test",
       "com.typesafe.play" %% "twirl-compiler" % "1.0.2"

@@ -21,9 +21,11 @@ import org.scalatra.i18n._
 abstract class ControllerBase extends ScalatraFilter
   with ClientSideValidationFormSupport with JacksonJsonSupport with I18nSupport with FlashMapSupport with Validations
   with SystemSettingsService {
+  override implicit protected def jsonFormats: Formats = DefaultFormats
 
-  implicit val jsonFormats = DefaultFormats
-
+  override def render(value: JValue)(implicit formats: Formats): JValue = {
+    JString("test")
+  }
 // TODO Scala 2.11
 //  // Don't set content type via Accept header.
 //  override def format(implicit request: HttpServletRequest) = ""
@@ -96,6 +98,24 @@ abstract class ControllerBase extends ScalatraFilter
 
   override def ajaxPost[T](path : String, form : ValueType[T])(action : T => Any) : Route =
     super.ajaxPost(path, form){ form =>
+      request.setAttribute(Keys.Request.Ajax, "true")
+      action(form)
+    }
+
+  def ajaxPut(path : String)(action : => Any) : Route =
+    super.put(path){
+      request.setAttribute(Keys.Request.Ajax, "true")
+      action
+    }
+
+  override def ajaxPut[T](path : String, form : ValueType[T])(action : T => Any) : Route =
+    super.ajaxPut(path, form){ form =>
+      request.setAttribute(Keys.Request.Ajax, "true")
+      action(form)
+    }
+
+  override def ajaxDelete[T](path : String, form : ValueType[T])(action : T => Any) : Route =
+    super.ajaxDelete(path, form){ form =>
       request.setAttribute(Keys.Request.Ajax, "true")
       action(form)
     }

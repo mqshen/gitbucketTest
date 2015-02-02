@@ -19,29 +19,59 @@ trait IssuesControllerBase extends ControllerBase {
     with ReadableUsersAuthenticator with ReferrerAuthenticator with CollaboratorsAuthenticator =>
 
   case class IssueCreateForm(title: String, content: Option[String],
-    assignedUserName: Option[String], milestoneId: Option[Int], labelNames: Option[String])
-  case class CommentForm(issueId: Int, content: String)
+    assignedUserName: Option[String], milestoneId: Option[Int], labelNames: List[String])
+  case class CommentForm(issueId: Int, content: Option[String], operation: Option[String])
   case class IssueStateForm(issueId: Int, content: Option[String])
+  case class AssignForm(issueId: Int, labels: List[Int])
+  case class MilestoneForm(issueId: Int, milestoneId: Int)
+  case class AssigneeForm(assignee: Option[String])
+  case class CommentEditForm(content: Option[String])
+  case class FilterForm(partial: String, q: String)
 
   val issueCreateForm = mapping(
       "title"            -> trim(label("Title", text(required))),
       "content"          -> trim(optional(text())),
       "assignedUserName" -> trim(optional(text())),
       "milestoneId"      -> trim(optional(number())),
-      "labelNames"       -> trim(optional(text()))
+      "labelNames"       -> list(trim(text()))
     )(IssueCreateForm.apply)
 
   val issueTitleEditForm = mapping(
     "title" -> trim(label("Title", text(required)))
     )(x => x)
+
   val issueEditForm = mapping(
     "content" -> trim(optional(text()))
     )(x => x)
 
   val commentForm = mapping(
       "issueId" -> label("Issue Id", number()),
-      "content" -> trim(label("Comment", text(required)))
+      "content" -> trim(optional(text())),
+      "operation" -> trim(optional(text()))
     )(CommentForm.apply)
+
+  val commentEditForm = mapping(
+    "content" -> trim(optional(text()))
+  )(CommentEditForm.apply)
+
+  val assignForm = mapping(
+    "issueId" -> number(),
+    "labels" -> list(number())
+  )(AssignForm.apply)
+
+  val milestoneForm = mapping(
+    "issueId" -> number(),
+    "milestoneId" -> number()
+  )(MilestoneForm.apply)
+
+  val assigneeForm = mapping(
+    "assignee" -> trim(optional(text()))
+  )(AssigneeForm.apply)
+
+  val filterForm = mapping(
+    "partial" -> trim(text()),
+    "q" -> trim(text())
+  )(FilterForm.apply)
 
   val issueStateForm = mapping(
       "issueId" -> label("Issue Id", number()),
@@ -96,13 +126,11 @@ trait IssuesControllerBase extends ControllerBase {
 
       // insert labels
       if(writable){
-        form.labelNames.map { value =>
-          val labels = getLabels(owner, name)
-          value.split(",").foreach { labelName =>
+        val labels = getLabels(owner, name)
+        form.labelNames.map { labelName =>
             labels.find(_.labelName == labelName).map { label =>
               registerIssueLabel(owner, name, issueId, label.labelId)
             }
-          }
         }
       }
 
@@ -153,8 +181,29 @@ trait IssuesControllerBase extends ControllerBase {
     }
   })
 
+  ajaxPost("/:owner/:repository/issue_comments", commentForm)(readableUsersOnly { (form, repository) =>
+    handleComment(form.issueId, form.content, repository)() map { case (oldIssue, (id, issueComment, operation)) =>
+      val lastUpdateTime = oldIssue.updatedDate
+      getIssue(repository.owner, repository.name, oldIssue.issueId.toString).map { issue =>
+        contentType = formats("json")
+        val hasWrite = hasWritePermission(repository.owner, repository.name, context.loginAccount)
+        val item = issues.html.commentItem(issue, issueComment, hasWrite, repository, None, true)
+        val participants = issues.html.participants(issue, getComments(repository.owner, repository.name, issue.issueId))
+        val buttons = issues.html.commentButton(issue, true, hasWrite, repository)
+        val content = Map(s"#partial-timeline-marker[data-last-modified='${lastUpdateTime}']" -> item.toString,
+          "#partial-users-participants" -> participants.toString,
+          "#partial-discussion-stats" -> view.helpers.dataChannel("partial-discussion-stats", issue, repository).toString,
+          "#partial-new-comment-form-actions" -> buttons.toString
+        )
+        org.json4s.jackson.Serialization.write(
+          Map("updateContent" -> content
+          ))
+      } getOrElse NotFound
+    } getOrElse NotFound
+  })
+
   post("/:owner/:repository/issue_comments/new", commentForm)(readableUsersOnly { (form, repository) =>
-    handleComment(form.issueId, Some(form.content), repository)() map { case (issue, id) =>
+    handleComment(form.issueId, form.content, repository)() map { case (issue, id) =>
       redirect(s"/${repository.owner}/${repository.name}/${
         if(issue.isPullRequest) "pull" else "issues"}/${form.issueId}#comment-${id}")
     } getOrElse NotFound
@@ -167,12 +216,17 @@ trait IssuesControllerBase extends ControllerBase {
     } getOrElse NotFound
   })
 
-  ajaxPost("/:owner/:repository/issue_comments/edit/:id", commentForm)(readableUsersOnly { (form, repository) =>
+  ajaxPost("/:owner/:repository/issue_comments/:id", commentEditForm)(readableUsersOnly { (form, repository) =>
     defining(repository.owner, repository.name){ case (owner, name) =>
       getComment(owner, name, params("id")).map { comment =>
         if(isEditable(owner, name, comment.commentedUserName)){
-          updateComment(comment.commentId, form.content)
-          redirect(s"/${owner}/${name}/issue_comments/_data/${comment.commentId}")
+          form.content.map(updateComment(comment.commentId, _))
+          contentType = formats("json")
+          org.json4s.jackson.Serialization.write(
+            Map("body" -> view.Markdown.toHtml(form.content.getOrElse(""), repository, false, true, true, false),
+            "newBodyVersion" -> comment.updatedDate
+            )
+          )
         } else Unauthorized
       } getOrElse NotFound
     }
@@ -185,6 +239,26 @@ trait IssuesControllerBase extends ControllerBase {
           Ok(deleteComment(comment.commentId))
         } else Unauthorized
       } getOrElse NotFound
+    }
+  })
+
+
+  ajaxGet("/:owner/:repository/issues/show_menu_content", filterForm)(referrersOnly { (form, repository) =>
+    contentType = formats("html")
+    form.partial match {
+      case "filters/authors_content" =>
+        val users = getCollaborators(repository.owner, repository.name) :+ repository.owner
+        issues.html.userFilter(users, form.q, None, repository)
+      case "filters/labels_content" =>
+        val labels = getLabels(repository.owner, repository.name)
+        issues.html.labelFilter(labels, form.q, repository)
+      case "filters/milestones_content" =>
+        val milestones = getMilestones(repository.owner, repository.name)
+        issues.html.milestoneFilter(milestones, form.q, repository)
+      case "filters/assigns_content" =>
+        val users = getCollaborators(repository.owner, repository.name) :+ repository.owner
+        issues.html.assigneeFilter(users, form.q, None, repository)
+
     }
   })
 
@@ -228,6 +302,67 @@ trait IssuesControllerBase extends ControllerBase {
       registerIssueLabel(repository.owner, repository.name, issueId, params("labelId").toInt)
       issues.html.labellist(getIssueLabels(repository.owner, repository.name, issueId))
     }
+  })
+
+  def labelHtml(labels: List[model.Label], repository: RepositoryService.RepositoryInfo) = {
+    labels.foldLeft("") { case (html, label) =>
+      html + s"""<a href="${view.helpers.url(repository)}/labels/${label.labelName}" class="label css-truncate-target linked-labelstyle-${label.color}" title="${label.labelName}">${label.labelName}</a>"""
+    }
+  }
+
+  ajaxPut("/:owner/:repository/issues/labels/modify_assignment", assignForm)(collaboratorsOnly { (form, repository) =>
+    defining(repository.owner, repository.name){ case (owner, name) =>
+      form.labels.map { labelId =>
+        registerIssueLabel(repository.owner, repository.name, form.issueId, labelId)
+      }
+      val labels = getIssueLabels(repository.owner, repository.name, form.issueId)
+      contentType = formats("json")
+      org.json4s.jackson.Serialization.write(
+        Map(
+          "labels" -> labelHtml(labels, repository)
+        ))
+    }
+  })
+
+  ajaxDelete("/:owner/:repository/issues/labels/modify_assignment", assignForm)(collaboratorsOnly { (form, repository) =>
+    defining(repository.owner, repository.name){ case (owner, name) =>
+      form.labels.map { labelId =>
+        deleteIssueLabel(repository.owner, repository.name, form.issueId, labelId)
+      }
+      val labels = getIssueLabels(repository.owner, repository.name, form.issueId)
+      contentType = formats("json")
+      org.json4s.jackson.Serialization.write(
+        Map(
+          "labels" -> labelHtml(labels, repository)
+        ))
+    }
+  })
+
+  ajaxPost("/:owner/:repository/milestone", milestoneForm)(collaboratorsOnly { (form, repository) =>
+    val milestoneId = if(form.milestoneId == 0) None else Some(form.milestoneId)
+    updateMilestoneId(repository.owner, repository.name, form.issueId, milestoneId)
+    val milestones = getMilestonesWithIssueCount(repository.owner, repository.name)
+    val progress = milestones.find(_._1.milestoneId == form.milestoneId).map { case (milestone, openCount, closeCount) =>
+      issues.milestones.html.item(milestone, openCount + closeCount, closeCount, repository)
+    } getOrElse("No milestone")
+    val list = issues.milestones.html.selector(milestones, form.milestoneId)
+    contentType = formats("json")
+    org.json4s.jackson.Serialization.write(
+      Map(
+        "infobar_body" -> progress.toString(),
+        "select_menu_body" -> list.toString()
+      )
+    )
+  })
+
+  ajaxPost("/:owner/:repository/issues/:id/assignee", assigneeForm)(collaboratorsOnly { (form, repository) =>
+    updateAssignedUserName(repository.owner, repository.name, params("id").toInt, form.assignee)
+    contentType = formats("json")
+    org.json4s.jackson.Serialization.write(
+      Map(
+        "re" -> ""
+      )
+    )
   })
 
   ajaxPost("/:owner/:repository/issues/:id/label/delete")(collaboratorsOnly { repository =>
@@ -327,7 +462,7 @@ trait IssuesControllerBase extends ControllerBase {
    */
   private def handleComment(issueId: Int, content: Option[String], repository: RepositoryService.RepositoryInfo)
       (getAction: model.Issue => Option[String] =
-           p1 => params.get("action").filter(_ => isEditable(p1.userName, p1.repositoryName, p1.openedUserName))) = {
+           p1 => params.get("operation").filter(_ => isEditable(p1.userName, p1.repositoryName, p1.openedUserName))) = {
 
     defining(repository.owner, repository.name){ case (owner, name) =>
       val userName = context.loginAccount.get.userName
@@ -336,9 +471,9 @@ trait IssuesControllerBase extends ControllerBase {
         val (action, recordActivity) =
           getAction(issue)
             .collect {
-              case "close" if(!issue.closed) => true  ->
+              case "Close" if(!issue.closed) => true  ->
                 (Some("close")  -> Some(if(issue.isPullRequest) recordClosePullRequestActivity _ else recordCloseIssueActivity _))
-              case "reopen" if(issue.closed) => false ->
+              case "Reopen" if(issue.closed) => false ->
                 (Some("reopen") -> Some(recordReopenIssueActivity _))
             }
             .map { case (closed, t) =>
@@ -347,7 +482,7 @@ trait IssuesControllerBase extends ControllerBase {
             }
             .getOrElse(None -> None)
 
-        val commentId = content
+        val (commentId, issueComment) = content
           .map       ( _ -> action.map( _ + "_comment" ).getOrElse("comment") )
           .getOrElse ( action.get.capitalize -> action.get )
         match {
@@ -382,7 +517,7 @@ trait IssuesControllerBase extends ControllerBase {
             }
         }
 
-        issue -> commentId
+        issue -> (commentId, issueComment, action)
       }
     }
   }

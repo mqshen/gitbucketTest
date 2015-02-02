@@ -4,30 +4,42 @@
 @import context._
 @import view.helpers._
 @main(account, groupNames, "repositories", isGroupManager){
-  @if(repositories.isEmpty){
-    No repositories
-  } else {
-    @repositories.map { repository =>
-      <div class="block">
-        <div class="repository-icon">
-          @helper.html.repositoryicon(repository, true)
-        </div>
-        <div class="repository-content">
-          <div class="block-header">
-            <a href="@url(repository)">@repository.name</a>
-            @if(repository.repository.isPrivate){
-              <i class="icon-lock"></i>
+<div class="repo-tab">
+    <div class="filter-bar">
+    </div>
+    <ul class="repo-list js-repo-list" data-filterable-for="your-repos-filter" data-filterable-type="substring">
+        @if(repositories.isEmpty){
+            No repositories
+        } else {
+            @repositories.map { repository =>
+            <li class="repo-list-item public fork">
+                <h3 class="repo-list-name">
+                    <a href="@url(repository)">@repository.name</a>
+                </h3>
+
+                @if(repository.repository.originUserName.isDefined){
+                <p class="repo-list-info">
+                    <span class="octicon octicon-repo-forked"></span>
+                    forked from <a href="/eclipse/jetty.project">eclipse/jetty.project</a>
+                </p>
+                }
+
+                @if(repository.repository.description.isDefined){
+                <p class="repo-list-description">
+                    @repository.repository.description
+                </p>
+                }
+
+                <p class="repo-list-meta">
+                    Updated @datetime(repository.repository.lastActivityDate)
+                </p>
+
+                <div class="participation-graph">
+                </div>
+            </li>
             }
-          </div>
-          @if(repository.repository.originUserName.isDefined){
-            <div class="small muted">forked from <a href="@path/@repository.repository.parentUserName/@repository.repository.parentRepositoryName">@repository.repository.parentUserName/@repository.repository.parentRepositoryName</a></div>
-          }
-          @if(repository.repository.description.isDefined){
-            <div>@repository.repository.description</div>
-          }
-          <div><span class="muted small">Last updated: @datetime(repository.repository.lastActivityDate)</span></div>
-        </div>
-      </div>
-    }
-  }
+        }
+    </ul>
+</div>
+
 }

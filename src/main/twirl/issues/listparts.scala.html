@@ -45,7 +45,7 @@
 
 
         <div class="table-list-header-toggle right">
-            <div class="left select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="/daltoniam/starscream/issues/show_menu_content?partial=filters%2Fauthors_content&amp;q=is%3Aopen+is%3Aissue">
+            <div class="left select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="@url(repository.get)/issues/show_menu_content?partial=filters%2Fauthors_content&amp;q=is%3Aopen+is%3Aissue">
                 <span class="button-link select-menu-button js-menu-target" role="button" aria-haspopup="true" data-hotkey="u">
                     Author
                 </span>
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <div class="left select-menu label-select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="/daltoniam/starscream/issues/show_menu_content?partial=filters%2Flabels_content&amp;q=is%3Aopen+is%3Aissue">
+            <div class="left select-menu label-select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="@url(repository.get)/issues/show_menu_content?partial=filters%2Flabels_content&amp;q=is%3Aopen+is%3Aissue">
                 <span class="button-link select-menu-button js-menu-target" role="button" aria-haspopup="true" data-hotkey="l">
                     Labels
                 </span>
@@ -83,7 +83,7 @@
             </div>
 
 
-            <div class="left select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="/daltoniam/starscream/issues/show_menu_content?partial=filters%2Fmilestones_content&amp;q=is%3Aopen+is%3Aissue">
+            <div class="left select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="@url(repository.get)/issues/show_menu_content?partial=filters%2Fmilestones_content&amp;q=is%3Aopen+is%3Aissue">
                 <span class="button-link select-menu-button js-menu-target" role="button" aria-haspopup="true" data-hotkey="m">
                     Milestones
                 </span>
@@ -101,7 +101,7 @@
                 </div>
             </div>
 
-            <div class="left select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="/daltoniam/starscream/issues/show_menu_content?partial=filters%2Fassigns_content&amp;q=is%3Aopen+is%3Aissue">
+            <div class="left select-menu js-menu-container js-select-menu js-load-contents" data-contents-url="@url(repository.get)/issues/show_menu_content?partial=filters%2Fassigns_content&amp;q=is%3Aopen+is%3Aissue">
                 <span class="button-link select-menu-button js-menu-target" role="button" aria-haspopup="true" data-hotkey="a">
                     Assignee
                 </span>
@@ -193,17 +193,27 @@
             <a href="@path/@issue.userName/@issue.repositoryName/issues/@issue.issueId" class="issue-title-link js-navigation-open">
             @issue.title
             </a>
+            <span class="labels">
+                @labels.map { label =>
+                    <a href="@url(repository.get)/issues?q=is%3Aopen+label%3A@label.labelName" aria-label="View all bug issues" class="label labelstyle-@label.color linked-labelstyle-@label.color lightertooltipped" style="background-color: #@label.color ; color: #@{label.fontColor};">@label.labelName</a>
+                }
+            </span>
             <div class="issue-meta">
                 <span class="issue-meta-section opened-by">
                     #@issue.issueId
                     opened @datetime(issue.registeredDate)
                     by
-                    @user(issue.openedUserName, styleClass = "username")
+                    <a href="@path/@issue.openedUserName" class="tooltipped tooltipped-s muted-link">@issue.openedUserName</a>
                 </span>
 
+                @milestone.map { milestone =>
                 <span class="issue-meta-section css-truncate issue-milestone">
+                    <a class="milestone-link muted-link css-truncate tooltipped tooltipped-n" aria-label="View all issues in this milestone" href="@url(repository.get)/milestones/@milestone">
+                        <span class="octicon octicon-milestone"></span> 
+                        <span class="css-truncate-target">@milestone</span>
+                    </a>
                 </span>
-
+                }
             </div>
         </div>
 

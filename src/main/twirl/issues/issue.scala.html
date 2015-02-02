@@ -16,7 +16,6 @@
 
               <div class="gh-header-show ">
                   <div class="gh-header-actions">
-
                       <a href="@url(repository)/issues/new" class="minibutton primary" data-hotkey="c">
                           New issue
                       </a>
@@ -42,7 +41,8 @@
                   }
                   </div>
                   <div class="flex-table-item flex-table-item-primary">
-                      @user(issue.openedUserName, styleClass="username strong") opened this <span class="noun">Issue</span>
+                      <a href="@path/@issue.openedUserName" class="author">@issue.openedUserName</a>
+                      opened this <span class="noun">Issue</span>
                       @datetime(issue.registeredDate) ·
                       @defining( comments.filter( _.action.contains("comment") ).size  ){  count =>
                           @count
@@ -52,7 +52,8 @@
           </div>
           <div id="discussion_bucket" class="tab-content clearfix">
               <div class="discussion-sidebar">
-                @issueinfo(issue, comments, issueLabels, collaborators, milestones, labels, hasWritePermission, repository)
+                  @dataChannel("partial-discussion-stats", issue, repository)
+                  @issueinfo(issue, comments, issueLabels, collaborators, milestones, labels, hasWritePermission, repository)
               </div>
               <div class="discussion-timeline js-quote-selection-container">
                   @commentlist(Some(issue), comments, hasWritePermission, repository)
@@ -63,37 +64,3 @@
 
   }
 }
-<script>
-$(function(){
-  $('#edit').click(function(){
-    $('.edit-title').show();
-    $('.show-title').hide();
-    return false;
-  });
-
-  $('#update').click(function(){
-    $(this).attr('disabled', 'disabled');
-    $.ajax({
-      url: '@url(repository)/issues/edit_title/@issue.issueId',
-      type: 'POST',
-      data: {
-        title   : $('#edit-title').val()
-      }
-    }).done(function(data){
-      $('#show-title').empty().text(data.title);
-      $('#cancel').click();
-      $(this).removeAttr('disabled');
-    }).fail(function(req){
-      $(this).removeAttr('disabled');
-      $('#error-edit-title').text($.parseJSON(req.responseText).title);
-    });
-    return false;
-  });
-
-  $('#cancel').click(function(){
-    $('.edit-title').hide();
-    $('.show-title').show();
-    return false;
-  });
-});
-</script>

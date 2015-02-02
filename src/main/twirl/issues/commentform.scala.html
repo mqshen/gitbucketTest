@@ -14,7 +14,7 @@
                 @avatar(loginAccount.get.userName, 48, avatarClass = "timeline-comment-avatar")
             </a>
 
-            <form accept-charset="UTF-8" action="@url(repository)/issue_comments/state" class="js-new-comment-form" data-remote="true" data-type="json" method="post">
+            <form accept-charset="UTF-8" action="@url(repository)/issue_comments" class="js-new-comment-form" data-remote="true" data-type="json" method="post">
                 <div class="timeline-comment">
                     <input type="hidden" name="issueId" value="@issue.issueId">
                     <div class="js-previewable-comment-form js-suggester-container previewable-comment-form write-selected" data-preview-url="/preview?repository=21924882">
@@ -101,35 +101,15 @@
                             </div>
                         </div>
                         <div class="suggester-container">
-                            <div class="suggester js-suggester js-navigation-container" data-url="/daltoniam/starscream/suggestions/issue/44042728">
+                            <div class="suggester js-suggester js-navigation-container" data-url="@url(repository)/suggestions/issue/@issue.issueId">
                             </div>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <div id="partial-new-comment-form-actions" class="js-socket-channel js-updatable-content" >
-
-                            @if((reopenable || !issue.closed) && (hasWritePermission || issue.openedUserName == loginAccount.get.userName)){
-                                <button type="submit" name="action" value="@{if(issue.closed) "reopen" else "close"}" class="button js-comment-and-button" tabindex="3" data-disable-with="">
-                                    @{if(issue.closed) "Reopen" else "Close"}
-                                </button>
-                            }
-                            <button type="submit" class="button primary" tabindex="2" data-disable-with="" data-disable-invalid="">
-                                Comment
-                            </button>
-                        </div>
+                        @commentButton(issue, true, hasWritePermission, repository)
                     </div>
                 </div>
             </form>
         </div>
-
-
     </div>
-
 }
-<script>
-$(function(){
-  $('#action').click(function(){
-    $('<input type="hidden">').attr('name', 'action').val($(this).val().toLowerCase()).appendTo('form');
-  });
-});
-</script>

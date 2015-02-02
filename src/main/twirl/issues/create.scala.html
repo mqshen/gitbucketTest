@@ -52,14 +52,14 @@
                                             <div class="select-menu-list">
 
                                                 <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-assignee" role="button" aria-label="Clear assignee">
-                                                    <input name="issue[assignee]" type="radio" value="">
+                                                    <input name="assignedUserName" type="radio" value="">
                                                     <span class="select-menu-item-icon octicon octicon-x"></span>
                                                     <div class="select-menu-item-text">Clear assignee</div>
                                                 </div> <!-- /.select-menu-item -->
 
                                                 <div data-filterable-for="assignee-filter-field" data-filterable-type="fuzzy" role="menu">
                                                     <div class="select-menu-item js-navigation-item" role="menuitem">
-                                                        <input name="issue[assignee]" type="radio" value="mqshen">
+                                                        <input name="assignedUserName" type="radio" value="mqshen">
                                                         <span class="select-menu-item-icon octicon octicon-check"></span>
 
                                                         <div class="select-menu-item-gravatar js-select-menu-item-gravatar">
@@ -102,7 +102,6 @@
                                                 <span class="octicon octicon-x js-menu-close" role="button" aria-label="Close"></span>
                                             </div>
 
-
                                             <div class="select-menu-filters">
                                                 <div class="select-menu-text-filter">
                                                     <input type="text" id="context-milestone-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter milestones" autocomplete="off">
@@ -120,17 +119,36 @@
                                             </div><!-- /.select-menu-filters -->
 
                                             <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tab-open">
+                                                @milestones.map { milestone =>
 
                                                 <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-milestone">
                                                     <input id="milestone_clear" name="milestone" type="radio" value="clear">
                                                     <span class="select-menu-item-icon octicon octicon-x"></span>
                                                     <div class="select-menu-item-text">Clear this milestone</div>
-                                                </div> <!-- /.select-menu-item -->
-
+                                                </div>
+                                                <!-- /.select-menu-item -->
                                                 <div data-filterable-for="context-milestone-filter-field" data-filterable-type="substring" role="menu">
+                                                    <div class="select-menu-item js-navigation-item" role="menuitem">
+                                                        <input id="milestone_@milestone.milestoneId" name="milestoneId" type="radio" value="@milestone.milestoneId">
+                                                        <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                        <div class="select-menu-item-text">
+                                                            <h4 class="js-milestone-title js-select-button-text">@milestone.title</h4>
+                                                            <span class="description">
+                                                                @milestone.dueDate.map { dueDate =>
+                                                                    @if(isPast(dueDate)){
+                                                                        <strong class="text-danger">
+                                                                            <span class="octicon octicon-alert"></span> Past due by @date(dueDate)
+                                                                        </strong>
+                                                                    } else {
+                                                                        <span class="octicon octicon-calendar"></span> Due by @date(dueDate)
+                                                                    }
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
-
+                                                }
                                                 <div class="select-menu-item select-menu-new-item-form js-navigation-item js-new-item-form">
                                                     <input type="radio" name="milestone" value="new">
                                                     <input type="hidden" class="js-new-item-value" name="milestone_title">
@@ -153,8 +171,10 @@
 
                                                 <div class="select-menu-no-results">Nothing to show</div>
                                             </div> <!-- /.select-menu-list -->
-                                            <input id="issue_milestone_id" name="issue[milestone_id]" type="hidden">
+                                            <!--
+                                            <input id="issue_milestone_id" name="milestoneId" type="hidden">
                                             <input id="new_milestone_title" name="new_milestone_title" type="hidden">
+                                            -->
                                         </div>
                                     </div>
                                 </div>
@@ -271,17 +291,11 @@
                 @if(hasWritePermission){
                 <h3>Labels</h3>
                 <ul class="color-label-list filter-list small">
-                    <style type="text/css" media="screen">
-                        @labels.map { label =>
-                            span.labelstyle-@{label.color}, .linked-labelstyle-@{label.color} {  background-color: #@label.color !important;  color: #@label.fontColor !important;}
-                            .labelstyle-@{label.color}.selected {  background-color: #@label.color !important;  color: #@label.fontColor !important;}
-                            .label-select-menu .labelstyle-@{label.color}.selected {  background:#@label.color !important;  color: #@label.fontColor !important;}
-                        }
-                    </style>
+                    @labelstyle(labels)
                     @labels.map { label =>
                         <li data-name="@label.labelName">
                             <a href="#" class="filter-item color-label js-composer-label labelstyle-@label.color">
-                                <input style="display: none" type="checkbox" value="test" id="issue_labels_test" name="labels[]">
+                                <input style="display: none" type="checkbox" value="@label.labelName" id="issue_labels_@label.labelId" name="labelNames[@label.labelId]">
                                 <span class="color" style="background-color: #@label.color">&nbsp;</span>
                                 <span class="name" title="test">@label.labelName</span>
                             </a>

@@ -1,6 +1,7 @@
 package view
 import java.util.{Locale, Date, TimeZone}
 import java.text.SimpleDateFormat
+import model.{Repository, Issue}
 import play.twirl.api.Html
 import util.StringUtil
 import service.RequestCache
@@ -157,10 +158,13 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
       .replaceAll("\\[repo:([^\\s]+?)/([^\\s]+?)\\]"               , s"""<a href="${context.path}/$$1/$$2\">$$1/$$2</a>""")
       .replaceAll("\\[branch:([^\\s]+?)/([^\\s]+?)#([^\\s]+?)\\]"  , (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/tree/${encodeRefName(m.group(3))}">${m.group(3)}</a>""")
       .replaceAll("\\[tag:([^\\s]+?)/([^\\s]+?)#([^\\s]+?)\\]"     , (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/tree/${encodeRefName(m.group(3))}">${m.group(3)}</a>""")
-      .replaceAll("\\[user:([^\\s]+?)\\]"                          , (m: Match) => user(m.group(1)).body)
+      .replaceAll("\\[user:([^\\s]+?)\\]"                          , (m: Match) => activityUser(m.group(1)).body)
       .replaceAll("\\[commit:([^\\s]+?)/([^\\s]+?)\\@([^\\s]+?)\\]", (m: Match) => s"""<a href="${context.path}/${m.group(1)}/${m.group(2)}/commit/${m.group(3)}">${m.group(1)}/${m.group(2)}@${m.group(3).substring(0, 7)}</a>""")
     )
 
+  def activityUser(userName: String)(implicit context: app.Context): Html  = {
+    Html(s"""<a href="${context.path}/${userName}" data-ga-click="News feed, event click, Event click type:IssueCommentEvent target:actor">${userName}</a>""")
+  }
   /**
    * URL encode except '/'.
    */
@@ -181,10 +185,28 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
    */
   def url(userName: String)(implicit context: app.Context): String = s"${context.path}/${userName}"
 
+  def dataChannel(id: String, issue: Issue, repository: service.RepositoryService.RepositoryInfo)
+                 (implicit context: app.Context): Html = Html(s"""<div id="$id" class="discussion-stats js-socket-channel js-updatable-content" data-channel="mqshen/WeTalk:issue:55980302" data-url="${url(repository)}/issues/5/show_partial?partial=discussion_stats"> </div>""")
   /**
    * Returns the url to the root of assets.
    */
   def assets(implicit context: app.Context): String = s"${context.path}/assets"
+
+
+  def userTips(userName: String, showFullName: Boolean = true, hasContainer: Boolean = true)(implicit context: app.Context): Html =
+    userTipsWithContent(userName, showFullName, hasContainer)(Html(userName))
+
+
+  private def userTipsWithContent(userName: String, showFullName: Boolean, hasContainer: Boolean)(content: Html)(implicit context: app.Context): Html =
+    getAccountByUserName(userName).map { account =>
+      val html = if(showFullName)  s"""<span class="description">${account.fullName}</span>""" else ""
+      if (hasContainer) {
+        Html(s"""<div class="select-menu-item-gravatar js-select-menu-item-gravatar"><img alt="" class="avatar" data-user="${account.userName}" height="20" src="${userAvatar(account.mailAddress)}" width="20"></div><div class="select-menu-item-text"><h4>${account.userName} ${html}</h4></div>""")
+      }
+      else {
+        Html(s"""<img alt="" class="avatar" data-user="${account.userName}" height="20" src="${userAvatar(account.mailAddress)}" width="20"><a href="${context.path}/${account.userName}" class="author">${account.userName}</a>""")
+      }
+    } getOrElse content
 
   /**
    * Generates the text link to the account page.
@@ -192,7 +214,6 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
    */
   def user(userName: String, mailAddress: String = "", styleClass: String = "")(implicit context: app.Context): Html =
     userWithContent(userName, mailAddress, styleClass)(Html(userName))
-
   /**
    * Generates the avatar link to the account page.
    * If user does not exist or disabled, this method returns avatar image without link.
@@ -206,9 +227,13 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
     } else {
       getAccountByMailAddress(mailAddress)
     }).map { account =>
-      Html(s"""<a href="${url(account.userName)}" class="${styleClass}">${content}</a>""")
+      Html(s"""<a class="participant-avatar tooltipped tooltipped-s" aria-label="${account.userName}" href="${url(account.userName)}"> <img alt="${account.fullName}" class="avatar" height="20" src="${userAvatar(account.mailAddress)}" width="20"> </a>""")
+
     } getOrElse content
 
+  def userAvatar(mailAddress:String) = {
+    s"https://www.gravatar.com/avatar/${StringUtil.md5(mailAddress.toLowerCase)}?s=40&d=retro&r=g"
+  }
 
   /**
    * Test whether the given Date is past date.
@@ -263,4 +288,6 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
     def mkHtml(separator: scala.xml.Elem) = Html(seq.mkString(separator.toString))
   }
 
+
+  def let[A,B](a:A)(f:A=>B):B = f(a)
 }

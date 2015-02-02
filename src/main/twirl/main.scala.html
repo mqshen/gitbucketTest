@@ -1,4 +1,4 @@
-@(title: String, repository: Option[service.RepositoryService.RepositoryInfo] = None)(body: Html)(implicit context: app.Context)
+@(title: String, repository: Option[service.RepositoryService.RepositoryInfo] = None, bodyClass: String = "")(body: Html)(implicit context: app.Context)
 @import context._
 @import view.helpers._
 <!DOCTYPE html>
@@ -20,8 +20,8 @@
     <link href="@assets/vendors/octicons/octicons.css" rel="stylesheet">
     <link href="@assets/common/css/github.css" rel="stylesheet">
     <link href="@assets/common/css/gitbucket2.css" rel="stylesheet">
-  <script src="@assets/common/js/frameworks.js"></script>
-      <script src="@assets/common/js/github.js"></script>
+  <script src="@assets/common/js/frameworks2.js"></script>
+      <script src="@assets/common/js/github2.js"></script>
       <!--
     <script src="@assets/vendors/jquery/jquery-1.9.1.js"></script>
     <script src="@assets/vendors/dropzone/dropzone.js"></script>
@@ -35,7 +35,7 @@
     <script src="@assets/vendors/elastic/jquery.elastic.source.js"></script>
       -->
   </head>
-  <body>
+  <body class="@bodyClass">
       <div class="header header-logged-in true" role="banner">
           <div class="container clearfix">
               <a class="header-logo-invertocat" href="@path" data-hotkey="g d" aria-label="Homepage" ga-data-click="Header, go to dashboard, icon:logo">
@@ -142,7 +142,9 @@
 
           </div>
       </div>
-    @body
+      <div id="site-container" class="context-loader-container" data-pjax-container="">
+          @body
+      </div>
     <script>
       $(function(){
         $('#search').submit(function(){

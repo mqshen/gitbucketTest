@@ -1,5 +1,5 @@
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
@@ -32,11 +32,11 @@ public class JettyLauncher {
 
         Server server = new Server();
 
-        SelectChannelConnector connector = new SelectChannelConnector();
+        ServerConnector connector = new ServerConnector(server);
         if(host != null) {
             connector.setHost(host);
         }
-        connector.setMaxIdleTime(1000 * 60 * 60);
+        connector.setIdleTimeout(1000 * 60 * 60);
         connector.setSoLingerTime(-1);
         connector.setPort(port);
         server.addConnector(connector);
