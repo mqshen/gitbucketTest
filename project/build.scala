@@ -52,6 +52,7 @@ object MyBuild extends Build {
       "org.pegdown" % "pegdown" % "1.4.1",
       "org.apache.commons" % "commons-compress" % "1.5",
       "org.apache.commons" % "commons-email" % "1.3.1",
+      "commons-fileupload" % "commons-fileupload" % "1.3.1",
       "org.apache.httpcomponents" % "httpclient" % "4.3",
       "org.apache.sshd" % "apache-sshd" % "0.11.0",
       "com.typesafe.slick" %% "slick" % "2.1.0",

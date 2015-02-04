@@ -3,133 +3,81 @@
 @import view.helpers._
 @html.main(if(account.isEmpty) "New Group" else "Update Group"){
   @admin.html.menu("users"){
-    <form method="POST" action="@if(account.isEmpty){@path/admin/users/_newgroup} else {@path/admin/users/@account.get.userName/_editgroup}" validate="true">
-      <div class="row-fluid">
-        <div class="span5">
-          <fieldset>
-            <label for="groupName" class="strong">Group name</label>
-            <div>
-              <span id="error-groupName" class="error"></span>
+<div class="boxed-group">
+    <h3>User profile</h3>
+    @account.map { account =>
+    <div class="boxed-group-inner clearfix js-uploadable-container js-upload-avatar-image is-default page-new-repo">
+        <form action="@path/admin/users/@account.userName/_editgroup" method="POST" validate="true" class="js-autocomplete-container js-suggestion-member-form">
+            <input type="hidden" name="clearImage" value="false">
+            <input type="hidden" name="removed" value="false">
+            <div class="column two-thirds">
+                <dl class="form">
+                    <dt><label for="user_profile_name">Group Name</label></dt>
+                    <dd><input id="user_profile_name" name="oldGroupName" disabled size="30" type="text" value="@account.userName"></dd>
+                </dl>
+                <dl class="form">
+                    <dt><label for="user_profile_blog">URL</label></dt>
+                    <dd><input id="user_profile_blog" name="url" size="30" type="url" value="@account.url"></dd>
+                </dl>
+                <dl class="form">
+                    <dt><label >Member</label></dt>
+                    <ul class="boxed-group-list application-authorizations" id="member">
+                        @members.map { member =>
+                        <li class="clearfix " data-type="application">
+                            <input type="hidden" name="members[@member.userName]" value="@member.userName">
+                            <a class="delete-button js-delete-member right" aria-label="Delete comment">
+                                <span class="octicon octicon-x"></span>
+                            </a>
+                            <div class="button-group">
+                                <a href="#" class="minibutton js-composer-member @if(!member.isManager) { selected }"><input style="display: none" type="radio" @if(!member.isManager) {checked} value="false" name="memberTypes[@member.userName]">Member</a>
+                                <a href="#" class="minibutton js-composer-member @if(member.isManager) { selected }"><input style="display: none" type="radio" @if(member.isManager) {checked} value="true" name="memberTypes[@member.userName]">Manager</a>
+                            </div>
+                            <strong>@member.userName</strong>
+                        </li>
+                        }
+
+                    </ul>
+                    <dd>
+                        <input type="text" name="member" id="search-member" class="input-block input-contrast auto-search-input new-member-field js-autocomplete-field" autofocus="" placeholder="Search by username or full name" autocomplete="off">
+                    </dd>
+                </dl>
+                <div class="autocomplete-results js-autocomplete" data-search-url="@path/admin/users/suggestions">
+                    <ul class="autocomplete-group js-autocomplete-results js-navigation-container"></ul>
+                </div>
+                <hr>
+                <p><button type="submit" class="button primary">Update Group</button></p>
             </div>
-            <input type="text" name="groupName" id="groupName" value="@account.map(_.userName)"@if(account.isDefined){ readonly}/>
-            @if(account.isDefined){
-              <label for="removed">
-                <input type="checkbox" name="removed" id="removed" value="true" @if(account.get.isRemoved){checked}/>
-                Disable
-              </label>
-            }
-          </fieldset>
-          <fieldset>
-            <label class="strong">URL (Optional)</label>
-            <div>
-              <span id="error-url" class="error"></span>
+        </form>
+    </div>
+    }.getOrElse {
+    <div class="boxed-group-inner clearfix js-uploadable-container js-upload-avatar-image is-default page-new-repo">
+        <form action="@path/admin/users/_newgroup" method="POST" validate="true" class="js-autocomplete-container js-suggestion-member-form">
+            <div class="column two-thirds">
+                <dl class="form">
+                    <dt><label for="user_profile_name">Group Name</label></dt>
+                    <dd><input id="user_profile_name" name="groupName" size="30" type="text" value=""></dd>
+                </dl>
+                <dl class="form">
+                    <dt><label for="user_profile_blog">URL</label></dt>
+                    <dd><input id="user_profile_blog" name="url" size="30" type="url" value=""></dd>
+                </dl>
+                <dl class="form">
+                    <dt><label >Member</label></dt>
+                    <ul class="boxed-group-list application-authorizations" id="member">
+
+                    </ul>
+                    <dd>
+                        <input type="text" name="member" id="search-member" class="input-block input-contrast auto-search-input new-member-field js-autocomplete-field" autofocus="" placeholder="Search by username or full name" autocomplete="off">
+                    </dd>
+                </dl>
+                <div class="autocomplete-results js-autocomplete" data-search-url="@path/admin/users/suggestions">
+                    <ul class="autocomplete-group js-autocomplete-results js-navigation-container"></ul>
+                </div>
+                <hr>
+                <p><button type="submit" class="button primary">Create Group</button></p>
             </div>
-            <input type="text" name="url" id="url" value="@account.map(_.url)"/>
-          </fieldset>
-          <fieldset>
-            <label for="avatar" class="strong">Image (Optional)</label>
-            @helper.html.uploadavatar(account)
-          </fieldset>
-        </div>
-        <div class="span7">
-          <fieldset>
-            <label class="strong">Members</label>
-            <ul id="member-list" class="collaborator">
-            </ul>
-            @helper.html.account("memberName", 200)
-            <input type="button" class="btn" value="Add" id="addMember"/>
-            <input type="hidden" id="members" name="members" value="@members.map(member => member.userName + ":" + member.isManager).mkString(",")"/>
-            <div>
-              <span class="error" id="error-members"></span>
-            </div>
-          </fieldset>
-        </div>
-      </div>
-      <fieldset class="margin">
-        <input type="submit" class="btn btn-success" value="@if(account.isEmpty){Create Group} else {Update Group}"/>
-        <a href="@path/admin/users" class="btn">Cancel</a>
-      </fieldset>
-    </form>
+        </form>
+    </div>
+    }
   }
 }
-<script>
-$(function(){
-  $('input[type=submit]').click(function(){
-    updateMembers();
-  });
-
-  $('#addMember').click(function(){
-    $('#error-members').text('');
-    var userName = $('#memberName').val();
-
-    // check empty
-    if($.trim(userName) == ''){
-      return false;
-    }
-
-    // check duplication
-    var exists = $('#member-list li').filter(function(){
-      return $(this).data('name') == userName;
-    }).length > 0;
-    if(exists){
-      $('#error-members').text('User has been already added.');
-      return false;
-    }
-
-    // check existence
-    $.post('@path/_user/existence', {
-      'userName': userName
-    }, function(data, status){
-      if(data == 'true'){
-        addMemberHTML(userName, false);
-      } else {
-        $('#error-members').text('User does not exist.');
-      }
-    });
-  });
-
-  $(document).on('click', '.remove', function(){
-    $(this).parent().remove();
-  });
-
-  // Don't submit form by ENTER key
-  $('#memberName').keypress(function(e){
-    return !(e.keyCode == 13);
-  });
-
-  @members.map { member =>
-    addMemberHTML('@member.userName', @member.isManager);
-  }
-
-  function addMemberHTML(userName, isManager){
-    var memberButton = $('<button type="button" class="btn btn-default btn-mini" value="false">Member</button>').data('name', userName);
-    if(!isManager){
-      memberButton.addClass('active');
-    }
-    var managerButton = $('<button type="button" class="btn btn-default btn-mini" value="true">Manager</button>').data('name', userName);
-    if(isManager){
-      managerButton.addClass('active');
-    }
-
-    $('#member-list').append($('<li>')
-      .data('name', userName)
-      .append($('<div class="btn-group is_manager" data-toggle="buttons-radio">')
-        .append(memberButton)
-        .append(managerButton))
-      .append(' ')
-      .append($('<a>').attr('href', '@path/' + userName).text(userName))
-      .append(' ')
-      .append($('<a href="#" class="remove pull-right">(remove)</a>')));
-  }
-
-  function updateMembers(){
-    var members = $('#member-list li').map(function(i, e){
-      var userName = $(e).data('name');
-      return userName + ':' + $('button.active').filter(function(i, e){
-        return $(e).data('name') == userName;
-      }).attr('value');
-    }).get().join(',');
-    $('#members').val(members);
-  }
-});
-</script>

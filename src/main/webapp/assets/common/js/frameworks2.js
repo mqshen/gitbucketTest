@@ -44,6 +44,8 @@ function FastClick(e, t) {
             WeakMap: "WeakMap" in window,
             placeholder_input: "placeholder" in e,
             placeholder_textarea: "placeholder" in t,
+            closest: "function" == typeof e.closest,
+            matches: "function" == typeof e.matches,
             performanceNow: !!(null != (n = window.performance) ? n.now : void 0),
             performanceMark: !!(null != (r = window.performance) ? r.mark : void 0),
             performanceGetEntries: !!(null != (i = window.performance) ? i.getEntries : void 0)
@@ -207,8 +209,8 @@ function FastClick(e, t) {
                 }
                 if (r._eak_seen = i, o[e]) return o[e];
                 if (o[e] = {}, !i[e]) throw new Error("Could not find module " + e);
-                for (var a, s = i[e], l = s.deps, c = s.callback, u = [], f = 0, d = l.length; d > f; f++) u.push("exports" === l[f] ? a = {} : t(n(l[f])));
-                var h = c.apply(this, u);
+                for (var a, s = i[e], c = s.deps, l = s.callback, u = [], f = 0, d = c.length; d > f; f++) u.push("exports" === c[f] ? a = {} : t(n(c[f])));
+                var h = l.apply(this, u);
                 return o[e] = a || h
             }
         }(), e("promise/all", ["./utils", "exports"], function(e, t) {
@@ -225,12 +227,12 @@ function FastClick(e, t) {
                     }
 
                     function o(e, n) {
-                        s[e] = n, 0 === --l && t(s)
+                        s[e] = n, 0 === --c && t(s)
                     }
                     var a, s = [],
-                        l = e.length;
-                    0 === l && t([]);
-                    for (var c = 0; c < e.length; c++) a = e[c], a && i(a.then) ? a.then(r(c), n) : o(c, a)
+                        c = e.length;
+                    0 === c && t([]);
+                    for (var l = 0; l < e.length; l++) a = e[l], a && i(a.then) ? a.then(r(l), n) : o(l, a)
                 })
             }
             var r = e.isArray,
@@ -247,7 +249,7 @@ function FastClick(e, t) {
 
             function n() {
                 var e = 0,
-                    t = new l(i),
+                    t = new c(i),
                     n = document.createTextNode("");
                 return t.observe(n, {
                         characterData: !0
@@ -259,7 +261,7 @@ function FastClick(e, t) {
 
             function r() {
                 return function() {
-                    c.setTimeout(i, 1)
+                    l.setTimeout(i, 1)
                 }
             }
 
@@ -278,10 +280,10 @@ function FastClick(e, t) {
                 1 === n && a()
             }
             var a, s = "undefined" != typeof window ? window : {},
-                l = s.MutationObserver || s.WebKitMutationObserver,
-                c = "undefined" != typeof global ? global : void 0 === this ? window : this,
+                c = s.MutationObserver || s.WebKitMutationObserver,
+                l = "undefined" != typeof global ? global : void 0 === this ? window : this,
                 u = [];
-            a = "undefined" != typeof process && "[object process]" === {}.toString.call(process) ? t() : l ? n() : r(), e.asap = o
+            a = "undefined" != typeof process && "[object process]" === {}.toString.call(process) ? t() : c ? n() : r(), e.asap = o
         }), e("promise/config", ["exports"], function(e) {
             "use strict";
 
@@ -312,13 +314,13 @@ function FastClick(e, t) {
         }), e("promise/promise", ["./config", "./utils", "./all", "./race", "./resolve", "./reject", "./asap", "exports"], function(e, t, n, r, i, o, a, s) {
             "use strict";
 
-            function l(e) {
+            function c(e) {
                 if (!x(e)) throw new TypeError("You must pass a resolver function as the first argument to the promise constructor");
-                if (!(this instanceof l)) throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
-                this._subscribers = [], c(e, this)
+                if (!(this instanceof c)) throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
+                this._subscribers = [], l(e, this)
             }
 
-            function c(e, t) {
+            function l(e, t) {
                 function n(e) {
                     p(t, e)
                 }
@@ -334,19 +336,19 @@ function FastClick(e, t) {
             }
 
             function u(e, t, n, r) {
-                var i, o, a, s, l = x(n);
-                if (l) try {
+                var i, o, a, s, c = x(n);
+                if (c) try {
                     i = n(r), a = !0
-                } catch (c) {
-                    s = !0, o = c
+                } catch (l) {
+                    s = !0, o = l
                 } else i = r, a = !0;
-                h(t, i) || (l && a ? p(t, i) : s ? v(t, o) : e === A ? p(t, i) : e === D && v(t, i))
+                h(t, i) || (c && a ? p(t, i) : s ? v(t, o) : e === N ? p(t, i) : e === D && v(t, i))
             }
 
             function f(e, t, n, r) {
                 var i = e._subscribers,
                     o = i.length;
-                i[o] = t, i[o + A] = n, i[o + D] = r
+                i[o] = t, i[o + N] = n, i[o + D] = r
             }
 
             function d(e, t) {
@@ -374,15 +376,15 @@ function FastClick(e, t) {
             }
 
             function m(e, t) {
-                e._state === S && (e._state = N, e._detail = t, b.async(g, e))
+                e._state === S && (e._state = A, e._detail = t, b.async(g, e))
             }
 
             function v(e, t) {
-                e._state === S && (e._state = N, e._detail = t, b.async(y, e))
+                e._state === S && (e._state = A, e._detail = t, b.async(y, e))
             }
 
             function g(e) {
-                d(e, e._state = A)
+                d(e, e._state = N)
             }
 
             function y(e) {
@@ -392,17 +394,17 @@ function FastClick(e, t) {
                 w = (e.configure, t.objectOrFunction),
                 x = t.isFunction,
                 T = (t.now, n.all),
-                _ = r.race,
-                E = i.resolve,
+                E = r.race,
+                _ = i.resolve,
                 C = o.reject,
                 k = a.asap;
             b.async = k;
             var S = void 0,
-                N = 0,
-                A = 1,
+                A = 0,
+                N = 1,
                 D = 2;
-            l.prototype = {
-                constructor: l,
+            c.prototype = {
+                constructor: c,
                 _state: void 0,
                 _detail: void 0,
                 _subscribers: void 0,
@@ -420,7 +422,7 @@ function FastClick(e, t) {
                 "catch": function(e) {
                     return this.then(null, e)
                 }
-            }, l.all = T, l.race = _, l.resolve = E, l.reject = C, s.Promise = l
+            }, c.all = T, c.race = E, c.resolve = _, c.reject = C, s.Promise = c
         }), e("promise/race", ["./utils", "exports"], function(e, t) {
             "use strict";
 
@@ -473,6 +475,159 @@ function FastClick(e, t) {
             };
             e.objectOrFunction = t, e.isFunction = n, e.isArray = r, e.now = i
         }), t("promise/polyfill").polyfill()
+    }(),
+    function() {
+        "use strict";
+
+        function e(t) {
+            this.map = {};
+            var n = this;
+            t instanceof e ? t.forEach(function(e, t) {
+                t.forEach(function(t) {
+                    n.append(e, t)
+                })
+            }) : t && Object.getOwnPropertyNames(t).forEach(function(e) {
+                n.append(e, t[e])
+            })
+        }
+
+        function t(e) {
+            return e.bodyUsed ? Promise.reject(new TypeError("Already read")) : void(e.bodyUsed = !0)
+        }
+
+        function n(e) {
+            return new Promise(function(t, n) {
+                e.onload = function() {
+                    t(e.result)
+                }, e.onerror = function() {
+                    n(e.error)
+                }
+            })
+        }
+
+        function r(e) {
+            var t = new FileReader;
+            return t.readAsArrayBuffer(e), n(t)
+        }
+
+        function i(e) {
+            var t = new FileReader;
+            return t.readAsText(e), n(t)
+        }
+
+        function o() {
+            return this.bodyUsed = !1, f ? (this.blob = function() {
+                var e = t(this);
+                return e ? e : Promise.resolve(this._bodyBlob)
+            }, this.arrayBuffer = function() {
+                return this.blob().then(r)
+            }, this.text = function() {
+                return this.blob().then(i)
+            }) : this.text = function() {
+                var e = t(this);
+                return e ? e : Promise.resolve(this._bodyText)
+            }, "FormData" in self && (this.formData = function() {
+                return this.text().then(c)
+            }), this.json = function() {
+                return this.text().then(JSON.parse)
+            }, this
+        }
+
+        function a(e) {
+            var t = e.toUpperCase();
+            return d.indexOf(t) > -1 ? t : e
+        }
+
+        function s(t, n) {
+            n = n || {}, this.url = t, this._body = n.body, this.credentials = n.credentials || "omit", this.headers = new e(n.headers), this.method = a(n.method || "GET"), this.mode = n.mode || null, this.referrer = null
+        }
+
+        function c(e) {
+            var t = new FormData;
+            return e.trim().split("&").forEach(function(e) {
+                if (e) {
+                    var n = e.split("="),
+                        r = n.shift().replace(/\+/g, " "),
+                        i = n.join("=").replace(/\+/g, " ");
+                    t.append(decodeURIComponent(r), decodeURIComponent(i))
+                }
+            }), t
+        }
+
+        function l(t) {
+            var n = new e,
+                r = t.getAllResponseHeaders().trim().split("\n");
+            return r.forEach(function(e) {
+                var t = e.trim().split(":"),
+                    r = t.shift().trim(),
+                    i = t.join(":").trim();
+                n.append(r, i)
+            }), n
+        }
+
+        function u(e, t) {
+            t || (t = {}), f ? this._bodyBlob = "string" == typeof e ? new Blob([e]) : e : this._bodyText = e, this.type = "default", this.url = null, this.status = t.status, this.statusText = t.statusText, this.headers = t.headers, this.url = t.url || ""
+        }
+        if (!self.fetch) {
+            e.prototype.append = function(e, t) {
+                e = e.toLowerCase();
+                var n = this.map[e];
+                n || (n = [], this.map[e] = n), n.push(t)
+            }, e.prototype["delete"] = function(e) {
+                delete this.map[e.toLowerCase()]
+            }, e.prototype.get = function(e) {
+                var t = this.map[e.toLowerCase()];
+                return t ? t[0] : null
+            }, e.prototype.getAll = function(e) {
+                return this.map[e.toLowerCase()] || []
+            }, e.prototype.has = function(e) {
+                return this.map.hasOwnProperty(e.toLowerCase())
+            }, e.prototype.set = function(e, t) {
+                this.map[e.toLowerCase()] = [t]
+            }, e.prototype.forEach = function(e) {
+                var t = this;
+                Object.getOwnPropertyNames(this.map).forEach(function(n) {
+                    e(n, t.map[n])
+                })
+            };
+            var f = "FileReader" in self && "Blob" in self && function() {
+                    try {
+                        return new Blob, !0
+                    } catch (e) {
+                        return !1
+                    }
+                }(),
+                d = ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"];
+            s.prototype.fetch = function() {
+                var e = this;
+                return new Promise(function(t, n) {
+                    function r() {
+                        return "responseURL" in i ? i.responseURL : /^X-Request-URL:/m.test(i.getAllResponseHeaders()) ? i.getResponseHeader("X-Request-URL") : void 0
+                    }
+                    var i = new XMLHttpRequest;
+                    i.onload = function() {
+                        var e = 1223 === i.status ? 204 : i.status;
+                        if (100 > e || e > 599) return void n(new TypeError("Network request failed"));
+                        var o = {
+                                status: e,
+                                statusText: i.statusText,
+                                headers: l(i),
+                                url: r()
+                            },
+                            a = "response" in i ? i.response : i.responseText;
+                        t(new u(a, o))
+                    }, i.onerror = function() {
+                        n(new TypeError("Network request failed"))
+                    }, i.open(e.method, e.url), "responseType" in i && f && (i.responseType = "blob"), e.headers.forEach(function(e, t) {
+                        t.forEach(function(t) {
+                            i.setRequestHeader(e, t)
+                        })
+                    }), i.send(void 0 === e._body ? null : e._body)
+                })
+            }, o.call(s.prototype), o.call(u.prototype), self.Headers = e, self.Request = s, self.Response = u, self.fetch = function(e, t) {
+                return new s(e, t).fetch()
+            }, self.fetch.polyfill = !0
+        }
     }(),
     /*
      * Copyright 2012 The Polymer Authors. All rights reserved.
@@ -561,29 +716,29 @@ function FastClick(e, t) {
             this.type = e, this.target = t, this.addedNodes = [], this.removedNodes = [], this.previousSibling = null, this.nextSibling = null, this.attributeName = null, this.attributeNamespace = null, this.oldValue = null
         }
 
-        function l(e) {
+        function c(e) {
             var t = new s(e.type, e.target);
             return t.addedNodes = e.addedNodes.slice(), t.removedNodes = e.removedNodes.slice(), t.previousSibling = e.previousSibling, t.nextSibling = e.nextSibling, t.attributeName = e.attributeName, t.attributeNamespace = e.attributeNamespace, t.oldValue = e.oldValue, t
         }
 
-        function c(e, t) {
+        function l(e, t) {
             return T = new s(e, t)
         }
 
         function u(e) {
-            return _ ? _ : (_ = l(T), _.oldValue = e, _)
+            return E ? E : (E = c(T), E.oldValue = e, E)
         }
 
         function f() {
-            T = _ = void 0
+            T = E = void 0
         }
 
         function d(e) {
-            return e === _ || e === T
+            return e === E || e === T
         }
 
         function h(e, t) {
-            return e === t ? e : _ && d(e) ? _ : null
+            return e === t ? e : E && d(e) ? E : null
         }
 
         function p(e, t, n) {
@@ -636,7 +791,7 @@ function FastClick(e, t) {
                 return this.records_ = [], e
             }
         };
-        var T, _;
+        var T, E;
         p.prototype = {
             enqueue: function(e) {
                 var n = this.observer.records_,
@@ -686,7 +841,7 @@ function FastClick(e, t) {
                         var t = e.attrName,
                             n = e.relatedNode.namespaceURI,
                             r = e.target,
-                            i = new c("attributes", r);
+                            i = new l("attributes", r);
                         i.attributeName = t, i.attributeNamespace = n;
                         var a = e.attrChange === MutationEvent.ADDITION ? null : e.prevValue;
                         o(r, function(e) {
@@ -695,7 +850,7 @@ function FastClick(e, t) {
                         break;
                     case "DOMCharacterDataModified":
                         var r = e.target,
-                            i = c("characterData", r),
+                            i = l("characterData", r),
                             a = e.prevValue;
                         o(r, function(e) {
                             return e.characterData ? e.characterDataOldValue ? u(a) : i : void 0
@@ -704,13 +859,13 @@ function FastClick(e, t) {
                     case "DOMNodeRemoved":
                         this.addTransientObserver(e.target);
                     case "DOMNodeInserted":
-                        var s, l, r = e.relatedNode,
+                        var s, c, r = e.relatedNode,
                             d = e.target;
-                        "DOMNodeInserted" === e.type ? (s = [d], l = []) : (s = [], l = [d]);
+                        "DOMNodeInserted" === e.type ? (s = [d], c = []) : (s = [], c = [d]);
                         var h = d.previousSibling,
                             p = d.nextSibling,
-                            i = c("childList", r);
-                        i.addedNodes = s, i.removedNodes = l, i.previousSibling = h, i.nextSibling = p, o(r, function(e) {
+                            i = l("childList", r);
+                        i.addedNodes = s, i.removedNodes = c, i.previousSibling = h, i.nextSibling = p, o(r, function(e) {
                             return e.childList ? i : void 0
                         })
                 }
@@ -751,7 +906,7 @@ function FastClick(e, t) {
         }
 
         function i(e) {
-            return s(e) ? (l(e), !0) : void f(e)
+            return s(e) ? (c(e), !0) : void f(e)
         }
 
         function o(e) {
@@ -772,28 +927,28 @@ function FastClick(e, t) {
             }
         }
 
-        function l(e) {
+        function c(e) {
             f(e), g(e) && r(e, function(e) {
                 f(e)
             })
         }
 
-        function c(e) {
-            if (D.push(e), !A) {
-                A = !0;
+        function l(e) {
+            if (D.push(e), !N) {
+                N = !0;
                 var t = window.Platform && window.Platform.endOfMicrotask || setTimeout;
                 t(u)
             }
         }
 
         function u() {
-            A = !1;
+            N = !1;
             for (var e, t = D, n = 0, r = t.length; r > n && (e = t[n]); n++) e();
             D = []
         }
 
         function f(e) {
-            N ? c(function() {
+            A ? l(function() {
                 d(e)
             }) : d(e)
         }
@@ -809,7 +964,7 @@ function FastClick(e, t) {
         }
 
         function p(e) {
-            N ? c(function() {
+            A ? l(function() {
                 m(e)
             }) : m(e)
         }
@@ -851,9 +1006,9 @@ function FastClick(e, t) {
                 console.group("mutations (%d) [%s]", e.length, r || "")
             }
             e.forEach(function(e) {
-                "childList" === e.type && ($(e.addedNodes, function(e) {
+                "childList" === e.type && (L(e.addedNodes, function(e) {
                     e.localName && a(e)
-                }), $(e.removedNodes, function(e) {
+                }), L(e.removedNodes, function(e) {
                     e.localName && h(e)
                 }))
             }), k.dom && console.groupEnd()
@@ -870,28 +1025,28 @@ function FastClick(e, t) {
             })
         }
 
-        function _(e) {
+        function E(e) {
             T(e)
         }
 
-        function E(e) {
+        function _(e) {
             k.dom && console.group("upgradeDocument: ", e.baseURI.split("/").pop()), a(e), k.dom && console.groupEnd()
         }
 
         function C(e) {
             e = v(e);
             for (var t, n = e.querySelectorAll("link[rel=" + S + "]"), r = 0, i = n.length; i > r && (t = n[r]); r++) t.import && t.import.__parsed && C(t.import);
-            E(e)
+            _(e)
         }
         var k = window.logFlags || {},
             S = window.HTMLImports ? HTMLImports.IMPORT_LINK_TYPE : "none",
-            N = !window.MutationObserver || window.MutationObserver === window.JsMutationObserver;
-        e.hasPolyfillMutations = N;
-        var A = !1,
+            A = !window.MutationObserver || window.MutationObserver === window.JsMutationObserver;
+        e.hasPolyfillMutations = A;
+        var N = !1,
             D = [],
             j = new MutationObserver(w),
-            $ = Array.prototype.forEach.call.bind(Array.prototype.forEach);
-        e.IMPORT_LINK_TYPE = S, e.watchShadow = y, e.upgradeDocumentTree = C, e.upgradeAll = a, e.upgradeSubtree = o, e.insertedNode = l, e.observeDocument = _, e.upgradeDocument = E, e.takeRecords = x
+            L = Array.prototype.forEach.call.bind(Array.prototype.forEach);
+        e.IMPORT_LINK_TYPE = S, e.watchShadow = y, e.upgradeDocumentTree = C, e.upgradeAll = a, e.upgradeSubtree = o, e.insertedNode = c, e.observeDocument = E, e.upgradeDocument = _, e.takeRecords = x
     }(window.CustomElements),
     /*
      * Copyright 2013 The Polymer Authors. All rights reserved.
@@ -910,8 +1065,8 @@ function FastClick(e, t) {
         }
 
         function n(e) {
-            for (var t = 0; t < E.length; t++)
-                if (e === E[t]) return !0
+            for (var t = 0; t < _.length; t++)
+                if (e === _[t]) return !0
         }
 
         function r(e) {
@@ -942,14 +1097,14 @@ function FastClick(e, t) {
         }
 
         function s(t, n) {
-            return n.is && t.setAttribute("is", n.is), t.removeAttribute("unresolved"), l(t, n), t.__upgraded__ = !0, u(t), e.insertedNode(t), e.upgradeSubtree(t), t
+            return n.is && t.setAttribute("is", n.is), t.removeAttribute("unresolved"), c(t, n), t.__upgraded__ = !0, u(t), e.insertedNode(t), e.upgradeSubtree(t), t
         }
 
-        function l(e, t) {
-            Object.__proto__ ? e.__proto__ = t.prototype : (c(e, t.prototype, t.native), e.__proto__ = t.prototype)
+        function c(e, t) {
+            Object.__proto__ ? e.__proto__ = t.prototype : (l(e, t.prototype, t.native), e.__proto__ = t.prototype)
         }
 
-        function c(e, t, n) {
+        function l(e, t, n) {
             for (var r = {}, i = t; i !== n && i !== HTMLElement.prototype;) {
                 for (var o, a = Object.getOwnPropertyNames(i), s = 0; o = a[s]; s++) r[o] || (Object.defineProperty(e, o, Object.getOwnPropertyDescriptor(i, o)), r[o] = 1);
                 i = Object.getPrototypeOf(i)
@@ -995,7 +1150,7 @@ function FastClick(e, t) {
         }
 
         function v(e, t, n) {
-            return e === k ? g(t, n) : N(e, t)
+            return e === k ? g(t, n) : A(e, t)
         }
 
         function g(e, t) {
@@ -1009,7 +1164,7 @@ function FastClick(e, t) {
                 return r.setAttribute("is", t), r
             }
             var r = S(e);
-            return e.indexOf("-") >= 0 && l(r, HTMLElement), r
+            return e.indexOf("-") >= 0 && c(r, HTMLElement), r
         }
 
         function y(e) {
@@ -1024,7 +1179,7 @@ function FastClick(e, t) {
         }
 
         function b(t) {
-            var n = A.call(this, t);
+            var n = N.call(this, t);
             return e.upgradeAll(n), n
         }
         e || (e = window.CustomElements = {
@@ -1034,15 +1189,15 @@ function FastClick(e, t) {
             x = Boolean(document.registerElement),
             T = !w.register && x && !window.ShadowDOMPolyfill;
         if (T) {
-            var _ = function() {};
-            e.registry = {}, e.upgradeElement = _, e.watchShadow = _, e.upgrade = _, e.upgradeAll = _, e.upgradeSubtree = _, e.observeDocument = _, e.upgradeDocument = _, e.upgradeDocumentTree = _, e.takeRecords = _, e.reservedTagList = []
+            var E = function() {};
+            e.registry = {}, e.upgradeElement = E, e.watchShadow = E, e.upgrade = E, e.upgradeAll = E, e.upgradeSubtree = E, e.observeDocument = E, e.upgradeDocument = E, e.upgradeDocumentTree = E, e.takeRecords = E, e.reservedTagList = []
         } else {
-            var E = ["annotation-xml", "color-profile", "font-face", "font-face-src", "font-face-uri", "font-face-format", "font-face-name", "missing-glyph"],
+            var _ = ["annotation-xml", "color-profile", "font-face", "font-face-src", "font-face-uri", "font-face-format", "font-face-name", "missing-glyph"],
                 C = {},
                 k = "http://www.w3.org/1999/xhtml",
                 S = document.createElement.bind(document),
-                N = document.createElementNS.bind(document),
-                A = Node.prototype.cloneNode;
+                A = document.createElementNS.bind(document),
+                N = Node.prototype.cloneNode;
             document.registerElement = t, document.createElement = g, document.createElementNS = v, Node.prototype.cloneNode = b, e.registry = C, e.upgrade = y
         }
         var D;
@@ -1054,7 +1209,7 @@ function FastClick(e, t) {
                 n = n.__proto__
             }
             return !1
-        }, e.instanceof = D, e.reservedTagList = E, document.register = document.registerElement, e.hasNative = x, e.useNative = T
+        }, e.instanceof = D, e.reservedTagList = _, document.register = document.registerElement, e.hasNative = x, e.useNative = T
     }(window.CustomElements),
     /*
      * Copyright 2013 The Polymer Authors. All rights reserved.
@@ -1153,31 +1308,31 @@ function FastClick(e, t) {
                 s = function(e, t) {
                     this.name = e, this.code = DOMException[e], this.message = t
                 },
-                l = function(e, t) {
+                c = function(e, t) {
                     if ("" === t) throw new s("SYNTAX_ERR", "An invalid or illegal string was specified");
                     if (/\s/.test(t)) throw new s("INVALID_CHARACTER_ERR", "String contains an invalid character");
                     return a.call(e, t)
                 },
-                c = function(e) {
+                l = function(e) {
                     for (var t = o.call(e.getAttribute("class") || ""), n = t ? t.split(/\s+/) : [], r = 0, i = n.length; i > r; r++) this.push(n[r]);
                     this._updateClassName = function() {
                         e.setAttribute("class", this.toString())
                     }
                 },
-                u = c[n] = [],
+                u = l[n] = [],
                 f = function() {
-                    return new c(this)
+                    return new l(this)
                 };
             if (s[n] = Error[n], u.item = function(e) {
                     return this[e] || null
                 }, u.contains = function(e) {
-                    return e += "", -1 !== l(this, e)
+                    return e += "", -1 !== c(this, e)
                 }, u.add = function() {
                     var e, t = arguments,
                         n = 0,
                         r = t.length,
                         i = !1;
-                    do e = t[n] + "", -1 === l(this, e) && (this.push(e), i = !0); while (++n < r);
+                    do e = t[n] + "", -1 === c(this, e) && (this.push(e), i = !0); while (++n < r);
                     i && this._updateClassName()
                 }, u.remove = function() {
                     var e, t, n = arguments,
@@ -1185,7 +1340,7 @@ function FastClick(e, t) {
                         i = n.length,
                         o = !1;
                     do
-                        for (e = n[r] + "", t = l(this, e); - 1 !== t;) this.splice(t, 1), o = !0, t = l(this, e); while (++r < i);
+                        for (e = n[r] + "", t = c(this, e); - 1 !== t;) this.splice(t, 1), o = !0, t = c(this, e); while (++r < i);
                     o && this._updateClassName()
                 }, u.toggle = function(e, t) {
                     e += "";
@@ -1266,10 +1421,10 @@ function FastClick(e, t) {
         }
 
         function a(e, a, s) {
-            function l(e) {
+            function c(e) {
                 b.push(e)
             }
-            var c = a || "scheme start",
+            var l = a || "scheme start",
                 u = 0,
                 f = "",
                 g = !1,
@@ -1278,17 +1433,17 @@ function FastClick(e, t) {
             e: for (;
                 (e[u - 1] != p || 0 == u) && !this._isInvalid;) {
                 var w = e[u];
-                switch (c) {
+                switch (l) {
                     case "scheme start":
                         if (!w || !m.test(w)) {
                             if (a) {
-                                l("Invalid scheme.");
+                                c("Invalid scheme.");
                                 break e
                             }
-                            f = "", c = "no scheme";
+                            f = "", l = "no scheme";
                             continue
                         }
-                        f += w.toLowerCase(), c = "scheme";
+                        f += w.toLowerCase(), l = "scheme";
                         break;
                     case "scheme":
                         if (w && v.test(w)) f += w.toLowerCase();
@@ -1296,93 +1451,93 @@ function FastClick(e, t) {
                             if (":" != w) {
                                 if (a) {
                                     if (p == w) break e;
-                                    l("Code point not allowed in scheme: " + w);
+                                    c("Code point not allowed in scheme: " + w);
                                     break e
                                 }
-                                f = "", u = 0, c = "no scheme";
+                                f = "", u = 0, l = "no scheme";
                                 continue
                             }
                             if (this._scheme = f, f = "", a) break e;
-                            t(this._scheme) && (this._isRelative = !0), c = "file" == this._scheme ? "relative" : this._isRelative && s && s._scheme == this._scheme ? "relative or authority" : this._isRelative ? "authority first slash" : "scheme data"
+                            t(this._scheme) && (this._isRelative = !0), l = "file" == this._scheme ? "relative" : this._isRelative && s && s._scheme == this._scheme ? "relative or authority" : this._isRelative ? "authority first slash" : "scheme data"
                         }
                         break;
                     case "scheme data":
-                        "?" == w ? (query = "?", c = "query") : "#" == w ? (this._fragment = "#", c = "fragment") : p != w && "	" != w && "\n" != w && "\r" != w && (this._schemeData += i(w));
+                        "?" == w ? (query = "?", l = "query") : "#" == w ? (this._fragment = "#", l = "fragment") : p != w && "	" != w && "\n" != w && "\r" != w && (this._schemeData += i(w));
                         break;
                     case "no scheme":
                         if (s && t(s._scheme)) {
-                            c = "relative";
+                            l = "relative";
                             continue
                         }
-                        l("Missing scheme."), n.call(this);
+                        c("Missing scheme."), n.call(this);
                         break;
                     case "relative or authority":
                         if ("/" != w || "/" != e[u + 1]) {
-                            l("Expected /, got: " + w), c = "relative";
+                            c("Expected /, got: " + w), l = "relative";
                             continue
                         }
-                        c = "authority ignore slashes";
+                        l = "authority ignore slashes";
                         break;
                     case "relative":
                         if (this._isRelative = !0, "file" != this._scheme && (this._scheme = s._scheme), p == w) {
                             this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._query = s._query;
                             break e
                         }
-                        if ("/" == w || "\\" == w) "\\" == w && l("\\ is an invalid code point."), c = "relative slash";
-                        else if ("?" == w) this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._query = "?", c = "query";
+                        if ("/" == w || "\\" == w) "\\" == w && c("\\ is an invalid code point."), l = "relative slash";
+                        else if ("?" == w) this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._query = "?", l = "query";
                         else {
                             if ("#" != w) {
                                 var x = e[u + 1],
                                     T = e[u + 2];
-                                ("file" != this._scheme || !m.test(w) || ":" != x && "|" != x || p != T && "/" != T && "\\" != T && "?" != T && "#" != T) && (this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._path.pop()), c = "relative path";
+                                ("file" != this._scheme || !m.test(w) || ":" != x && "|" != x || p != T && "/" != T && "\\" != T && "?" != T && "#" != T) && (this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._path.pop()), l = "relative path";
                                 continue
                             }
-                            this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._query = s._query, this._fragment = "#", c = "fragment"
+                            this._host = s._host, this._port = s._port, this._path = s._path.slice(), this._query = s._query, this._fragment = "#", l = "fragment"
                         }
                         break;
                     case "relative slash":
                         if ("/" != w && "\\" != w) {
-                            "file" != this._scheme && (this._host = s._host, this._port = s._port), c = "relative path";
+                            "file" != this._scheme && (this._host = s._host, this._port = s._port), l = "relative path";
                             continue
                         }
-                        "\\" == w && l("\\ is an invalid code point."), c = "file" == this._scheme ? "file host" : "authority ignore slashes";
+                        "\\" == w && c("\\ is an invalid code point."), l = "file" == this._scheme ? "file host" : "authority ignore slashes";
                         break;
                     case "authority first slash":
                         if ("/" != w) {
-                            l("Expected '/', got: " + w), c = "authority ignore slashes";
+                            c("Expected '/', got: " + w), l = "authority ignore slashes";
                             continue
                         }
-                        c = "authority second slash";
+                        l = "authority second slash";
                         break;
                     case "authority second slash":
-                        if (c = "authority ignore slashes", "/" != w) {
-                            l("Expected '/', got: " + w);
+                        if (l = "authority ignore slashes", "/" != w) {
+                            c("Expected '/', got: " + w);
                             continue
                         }
                         break;
                     case "authority ignore slashes":
                         if ("/" != w && "\\" != w) {
-                            c = "authority";
+                            l = "authority";
                             continue
                         }
-                        l("Expected authority, got: " + w);
+                        c("Expected authority, got: " + w);
                         break;
                     case "authority":
                         if ("@" == w) {
-                            g && (l("@ already seen."), f += "%40"), g = !0;
-                            for (var _ = 0; _ < f.length; _++) {
-                                var E = f[_];
-                                if ("	" != E && "\n" != E && "\r" != E)
-                                    if (":" != E || null !== this._password) {
-                                        var C = i(E);
+                            g && (c("@ already seen."), f += "%40"), g = !0;
+                            for (var E = 0; E < f.length; E++) {
+                                var _ = f[E];
+                                if ("	" != _ && "\n" != _ && "\r" != _)
+                                    if (":" != _ || null !== this._password) {
+                                        var C = i(_);
                                         null !== this._password ? this._password += C : this._username += C
                                     } else this._password = "";
-                                else l("Invalid whitespace in authority.")
+                                else c("Invalid whitespace in authority.")
                             }
                             f = ""
                         } else {
                             if (p == w || "/" == w || "\\" == w || "?" == w || "#" == w) {
-                                u -= f.length, f = "", c = "host";
+                                u -= f.length, f = "", l = "host";
                                 continue
                             }
                             f += w
@@ -1390,20 +1545,20 @@ function FastClick(e, t) {
                         break;
                     case "file host":
                         if (p == w || "/" == w || "\\" == w || "?" == w || "#" == w) {
-                            2 != f.length || !m.test(f[0]) || ":" != f[1] && "|" != f[1] ? 0 == f.length ? c = "relative path start" : (this._host = r.call(this, f), f = "", c = "relative path start") : c = "relative path";
+                            2 != f.length || !m.test(f[0]) || ":" != f[1] && "|" != f[1] ? 0 == f.length ? l = "relative path start" : (this._host = r.call(this, f), f = "", l = "relative path start") : l = "relative path";
                             continue
                         }
-                        "	" == w || "\n" == w || "\r" == w ? l("Invalid whitespace in file host.") : f += w;
+                        "	" == w || "\n" == w || "\r" == w ? c("Invalid whitespace in file host.") : f += w;
                         break;
                     case "host":
                     case "hostname":
                         if (":" != w || y) {
                             if (p == w || "/" == w || "\\" == w || "?" == w || "#" == w) {
-                                if (this._host = r.call(this, f), f = "", c = "relative path start", a) break e;
+                                if (this._host = r.call(this, f), f = "", l = "relative path start", a) break e;
                                 continue
                             }
-                            "	" != w && "\n" != w && "\r" != w ? ("[" == w ? y = !0 : "]" == w && (y = !1), f += w) : l("Invalid code point in host/hostname: " + w)
-                        } else if (this._host = r.call(this, f), f = "", c = "port", "hostname" == a) break e;
+                            "	" != w && "\n" != w && "\r" != w ? ("[" == w ? y = !0 : "]" == w && (y = !1), f += w) : c("Invalid code point in host/hostname: " + w)
+                        } else if (this._host = r.call(this, f), f = "", l = "port", "hostname" == a) break e;
                         break;
                     case "port":
                         if (/[0-9]/.test(w)) f += w;
@@ -1414,25 +1569,25 @@ function FastClick(e, t) {
                                     k != d[this._scheme] && (this._port = k + ""), f = ""
                                 }
                                 if (a) break e;
-                                c = "relative path start";
+                                l = "relative path start";
                                 continue
                             }
-                            "	" == w || "\n" == w || "\r" == w ? l("Invalid code point in port: " + w) : n.call(this)
+                            "	" == w || "\n" == w || "\r" == w ? c("Invalid code point in port: " + w) : n.call(this)
                         }
                         break;
                     case "relative path start":
-                        if ("\\" == w && l("'\\' not allowed in path."), c = "relative path", "/" != w && "\\" != w) continue;
+                        if ("\\" == w && c("'\\' not allowed in path."), l = "relative path", "/" != w && "\\" != w) continue;
                         break;
                     case "relative path":
                         if (p != w && "/" != w && "\\" != w && (a || "?" != w && "#" != w)) "	" != w && "\n" != w && "\r" != w && (f += i(w));
                         else {
-                            "\\" == w && l("\\ not allowed in relative path.");
+                            "\\" == w && c("\\ not allowed in relative path.");
                             var S;
-                            (S = h[f.toLowerCase()]) && (f = S), ".." == f ? (this._path.pop(), "/" != w && "\\" != w && this._path.push("")) : "." == f && "/" != w && "\\" != w ? this._path.push("") : "." != f && ("file" == this._scheme && 0 == this._path.length && 2 == f.length && m.test(f[0]) && "|" == f[1] && (f = f[0] + ":"), this._path.push(f)), f = "", "?" == w ? (this._query = "?", c = "query") : "#" == w && (this._fragment = "#", c = "fragment")
+                            (S = h[f.toLowerCase()]) && (f = S), ".." == f ? (this._path.pop(), "/" != w && "\\" != w && this._path.push("")) : "." == f && "/" != w && "\\" != w ? this._path.push("") : "." != f && ("file" == this._scheme && 0 == this._path.length && 2 == f.length && m.test(f[0]) && "|" == f[1] && (f = f[0] + ":"), this._path.push(f)), f = "", "?" == w ? (this._query = "?", l = "query") : "#" == w && (this._fragment = "#", l = "fragment")
                         }
                         break;
                     case "query":
-                        a || "#" != w ? p != w && "	" != w && "\n" != w && "\r" != w && (this._query += o(w)) : (this._fragment = "#", c = "fragment");
+                        a || "#" != w ? p != w && "	" != w && "\n" != w && "\r" != w && (this._query += o(w)) : (this._fragment = "#", l = "fragment");
                         break;
                     case "fragment":
                         p != w && "	" != w && "\n" != w && "\r" != w && (this._fragment += w)
@@ -1445,17 +1600,17 @@ function FastClick(e, t) {
             this._scheme = "", this._schemeData = "", this._username = "", this._password = null, this._host = "", this._port = "", this._path = [], this._query = "", this._fragment = "", this._isInvalid = !1, this._isRelative = !1
         }
 
-        function l(e, t) {
-            void 0 === t || t instanceof l || (t = new l(String(t))), this._url = e, s.call(this);
+        function c(e, t) {
+            void 0 === t || t instanceof c || (t = new c(String(t))), this._url = e, s.call(this);
             var n = e.replace(/^[ \t\r\n\f]+|[ \t\r\n\f]+$/g, "");
             a.call(this, n, null, t)
         }
-        var c = !1;
+        var l = !1;
         if (!e.forceJURL) try {
             var u = new URL("b", "http://a");
-            c = "http://a/b" === u.href
+            u.pathname = "c%20d", l = "http://a/c%20d" === u.href
         } catch (f) {}
-        if (!c) {
+        if (!l) {
             var d = Object.create(null);
             d.ftp = 21, d.file = 0, d.gopher = 70, d.http = 80, d.https = 443, d.ws = 80, d.wss = 443;
             var h = Object.create(null);
@@ -1463,7 +1618,7 @@ function FastClick(e, t) {
             var p = void 0,
                 m = /[a-zA-Z]/,
                 v = /[a-zA-Z0-9\+\-\.]/;
-            l.prototype = {get href() {
+            c.prototype = {get href() {
                     if (this._isInvalid) return this._url;
                     var e = "";
                     return ("" != this._username || null != this._password) && (e = this._username + (null != this._password ? ":" + this._password : "") + "@"), this.protocol + (this._isRelative ? "//" + e + this.host : "") + this.pathname + this._query + this._fragment
@@ -1512,12 +1667,70 @@ function FastClick(e, t) {
                 },
                 set hash(e) {
                     this._isInvalid || (this._fragment = "#", "#" == e[0] && (e = e.slice(1)), a.call(this, e, "fragment"))
+                },
+                get origin() {
+                    var e;
+                    if (this._isInvalid || !this._scheme) return "";
+                    switch (this._scheme) {
+                        case "data":
+                        case "file":
+                        case "javascript":
+                        case "mailto":
+                            return "null"
+                    }
+                    return e = this.host, e ? this._scheme + "://" + e : ""
                 }
-            }, e.URL = l
+            };
+            var g = e.URL;
+            g && (c.createObjectURL = function() {
+                return g.createObjectURL.apply(g, arguments)
+            }, c.revokeObjectURL = function(e) {
+                g.revokeObjectURL(e)
+            }), e.URL = c
         }
-    }(window),
+    }(this),
+    function(e) {
+        "function" != typeof e.matches && (e.matches = e.msMatchesSelector || e.mozMatchesSelector || e.webkitMatchesSelector || function(e) {
+            for (var t = this, n = (t.document || t.ownerDocument).querySelectorAll(e), r = 0; n[r] && n[r] !== t;) ++r;
+            return !!n[r]
+        }), "function" != typeof e.closest && (e.closest = function(e) {
+            for (var t = this; t && 11 != t.nodeType;) {
+                if (t.matches(e)) return t;
+                t = t.parentElement
+            }
+            return null
+        })
+    }(Element.prototype),
+    function(e) {
+        function t(e) {
+            return "string" == typeof e ? document.createTextNode(e) : e
+        }
+
+        function n(e) {
+            if (e.length) {
+                if (1 === e.length) return t(e[0]);
+                var n, r = document.createDocumentFragment();
+                for (n = 0; n < e.length; n++) r.appendChild(t(e[n]));
+                return r
+            }
+            throw new Error("DOM Exception 8")
+        }
+        "prepend" in e || (e.prepend = function() {
+            this.insertBefore(n(arguments), this.firstChild)
+        }), "append" in e || (e.append = function() {
+            this.appendChild(n(arguments))
+        }), "before" in e || (e.before = function() {
+            this.parentNode && this.parentNode.insertBefore(n(arguments), this)
+        }), "after" in e || (e.after = function() {
+            this.parentNode && this.parentNode.insertBefore(n(arguments), this.nextSibling)
+        }), "replaceWith" in e || (e.replaceWith = function() {
+            this.parentNode && this.parentNode.replaceChild(n(arguments), this)
+        }), "remove" in e || (e.remove = function() {
+            this.parentNode && this.parentNode.removeChild(this)
+        })
+    }(Element.prototype),
     /*!
-     * jQuery JavaScript Library v2.1.1 -ajax/jsonp,-deprecated,-exports/amd,-wrap
+     * jQuery JavaScript Library v2.1.3 -ajax/jsonp,-deprecated,-exports/amd,-wrap
      * http://jquery.com/
      *
      * Includes Sizzle.js
@@ -1527,7 +1740,7 @@ function FastClick(e, t) {
      * Released under the MIT license
      * http://jquery.org/license
      *
-     * Date: 2014-05-02T17:09Z
+     * Date: 2014-12-19T00:21Z
      */
     function(e, t) {
         "object" == typeof module && "object" == typeof module.exports ? module.exports = e.document ? t(e, !0) : function(e) {
@@ -1579,10 +1792,10 @@ function FastClick(e, t) {
                 get: function() {
                     return {}
                 }
-            }), this.expando = Z.expando + Math.random()
+            }), this.expando = Z.expando + s.uid++
         }
 
-        function l(e, t, n) {
+        function c(e, t, n) {
             var r;
             if (void 0 === n && 1 === e.nodeType)
                 if (r = "data-" + t.replace(wt, "-$1").toLowerCase(), n = e.getAttribute(r), "string" == typeof n) {
@@ -1594,7 +1807,7 @@ function FastClick(e, t) {
             return n
         }
 
-        function c() {
+        function l() {
             return !0
         }
 
@@ -1617,7 +1830,7 @@ function FastClick(e, t) {
         }
 
         function p(e) {
-            var t = Ot.exec(e.type);
+            var t = It.exec(e.type);
             return t ? e.type = t[1] : e.removeAttribute("type"), e
         }
 
@@ -1626,14 +1839,14 @@ function FastClick(e, t) {
         }
 
         function v(e, t) {
-            var n, r, i, o, a, s, l, c;
+            var n, r, i, o, a, s, c, l;
             if (1 === t.nodeType) {
-                if (gt.hasData(e) && (o = gt.access(e), a = gt.set(t, o), c = o.events)) {
+                if (gt.hasData(e) && (o = gt.access(e), a = gt.set(t, o), l = o.events)) {
                     delete a.handle, a.events = {};
-                    for (i in c)
-                        for (n = 0, r = c[i].length; r > n; n++) Z.event.add(t, i, c[i][n])
+                    for (i in l)
+                        for (n = 0, r = l[i].length; r > n; n++) Z.event.add(t, i, l[i][n])
                 }
-                yt.hasData(e) && (s = yt.access(e), l = Z.extend({}, s), yt.set(t, l))
+                yt.hasData(e) && (s = yt.access(e), c = Z.extend({}, s), yt.set(t, c))
             }
         }
 
@@ -1644,7 +1857,7 @@ function FastClick(e, t) {
 
         function y(e, t) {
             var n = t.nodeName.toLowerCase();
-            "input" === n && Et.test(e.type) ? t.checked = e.checked : ("input" === n || "textarea" === n) && (t.defaultValue = e.defaultValue)
+            "input" === n && _t.test(e.type) ? t.checked = e.checked : ("input" === n || "textarea" === n) && (t.defaultValue = e.defaultValue)
         }
 
         function b(t, n) {
@@ -1661,7 +1874,7 @@ function FastClick(e, t) {
 
         function x(e, t, n) {
             var r, i, o, a, s = e.style;
-            return n = n || qt(e), n && (a = n.getPropertyValue(t) || n[t]), n && ("" !== a || Z.contains(e.ownerDocument, e) || (a = Z.style(e, t)), zt.test(a) && Ht.test(t) && (r = s.width, i = s.minWidth, o = s.maxWidth, s.minWidth = s.maxWidth = s.width = a, a = n.width, s.width = r, s.minWidth = i, s.maxWidth = o)), void 0 !== a ? a + "" : a
+            return n = n || zt(e), n && (a = n.getPropertyValue(t) || n[t]), n && ("" !== a || Z.contains(e.ownerDocument, e) || (a = Z.style(e, t)), qt.test(a) && Ht.test(t) && (r = s.width, i = s.minWidth, o = s.maxWidth, s.minWidth = s.maxWidth = s.width = a, a = n.width, s.width = r, s.minWidth = i, s.maxWidth = o)), void 0 !== a ? a + "" : a
         }
 
         function T(e, t) {
@@ -1672,14 +1885,14 @@ function FastClick(e, t) {
             }
         }
 
-        function _(e, t) {
+        function E(e, t) {
             if (t in e) return t;
             for (var n = t[0].toUpperCase() + t.slice(1), r = t, i = Gt.length; i--;)
                 if (t = Gt[i] + n, t in e) return t;
             return r
         }
 
-        function E(e, t, n) {
+        function _(e, t, n) {
             var r = Wt.exec(t);
             return r ? Math.max(0, r[1] - (n || 0)) + (r[2] || "px") : t
         }
@@ -1692,26 +1905,26 @@ function FastClick(e, t) {
         function k(e, t, n) {
             var r = !0,
                 i = "width" === t ? e.offsetWidth : e.offsetHeight,
-                o = qt(e),
+                o = zt(e),
                 a = "border-box" === Z.css(e, "boxSizing", !1, o);
             if (0 >= i || null == i) {
-                if (i = x(e, t, o), (0 > i || null == i) && (i = e.style[t]), zt.test(i)) return i;
+                if (i = x(e, t, o), (0 > i || null == i) && (i = e.style[t]), qt.test(i)) return i;
                 r = a && (K.boxSizingReliable() || i === e.style[t]), i = parseFloat(i) || 0
             }
             return i + C(e, t, n || (a ? "border" : "content"), r, o) + "px"
         }
 
         function S(e, t) {
-            for (var n, r, i, o = [], a = 0, s = e.length; s > a; a++) r = e[a], r.style && (o[a] = gt.get(r, "olddisplay"), n = r.style.display, t ? (o[a] || "none" !== n || (r.style.display = ""), "" === r.style.display && _t(r) && (o[a] = gt.access(r, "olddisplay", w(r.nodeName)))) : (i = _t(r), "none" === n && i || gt.set(r, "olddisplay", i ? n : Z.css(r, "display"))));
+            for (var n, r, i, o = [], a = 0, s = e.length; s > a; a++) r = e[a], r.style && (o[a] = gt.get(r, "olddisplay"), n = r.style.display, t ? (o[a] || "none" !== n || (r.style.display = ""), "" === r.style.display && Et(r) && (o[a] = gt.access(r, "olddisplay", w(r.nodeName)))) : (i = Et(r), "none" === n && i || gt.set(r, "olddisplay", i ? n : Z.css(r, "display"))));
             for (a = 0; s > a; a++) r = e[a], r.style && (t && "none" !== r.style.display && "" !== r.style.display || (r.style.display = t ? o[a] || "" : "none"));
             return e
         }
 
-        function N(e, t, n, r, i) {
-            return new N.prototype.init(e, t, n, r, i)
+        function A(e, t, n, r, i) {
+            return new A.prototype.init(e, t, n, r, i)
         }
 
-        function A() {
+        function N() {
             return setTimeout(function() {
                 Kt = void 0
             }), Kt = Z.now()
@@ -1731,19 +1944,19 @@ function FastClick(e, t) {
                 if (r = i[o].call(n, t, e)) return r
         }
 
-        function $(e, t, n) {
-            var r, i, o, a, s, l, c, u, f = this,
+        function L(e, t, n) {
+            var r, i, o, a, s, c, l, u, f = this,
                 d = {},
                 h = e.style,
-                p = e.nodeType && _t(e),
+                p = e.nodeType && Et(e),
                 m = gt.get(e, "fxshow");
-            n.queue || (s = Z._queueHooks(e, "fx"), null == s.unqueued && (s.unqueued = 0, l = s.empty.fire, s.empty.fire = function() {
-                s.unqueued || l()
+            n.queue || (s = Z._queueHooks(e, "fx"), null == s.unqueued && (s.unqueued = 0, c = s.empty.fire, s.empty.fire = function() {
+                s.unqueued || c()
             }), s.unqueued++, f.always(function() {
                 f.always(function() {
                     s.unqueued--, Z.queue(e, "fx").length || s.empty.fire()
                 })
-            })), 1 === e.nodeType && ("height" in t || "width" in t) && (n.overflow = [h.overflow, h.overflowX, h.overflowY], c = Z.css(e, "display"), u = "none" === c ? gt.get(e, "olddisplay") || w(e.nodeName) : c, "inline" === u && "none" === Z.css(e, "float") && (h.display = "inline-block")), n.overflow && (h.overflow = "hidden", f.always(function() {
+            })), 1 === e.nodeType && ("height" in t || "width" in t) && (n.overflow = [h.overflow, h.overflowX, h.overflowY], l = Z.css(e, "display"), u = "none" === l ? gt.get(e, "olddisplay") || w(e.nodeName) : l, "inline" === u && "none" === Z.css(e, "float") && (h.display = "inline-block")), n.overflow && (h.overflow = "hidden", f.always(function() {
                 h.overflow = n.overflow[0], h.overflowX = n.overflow[1], h.overflowY = n.overflow[2]
             }));
             for (r in t)
@@ -1753,8 +1966,8 @@ function FastClick(e, t) {
                         p = !0
                     }
                     d[r] = m && m[r] || Z.style(e, r)
-                } else c = void 0;
-            if (Z.isEmptyObject(d)) "inline" === ("none" === c ? w(e.nodeName) : c) && (h.display = c);
+                } else l = void 0;
+            if (Z.isEmptyObject(d)) "inline" === ("none" === l ? w(e.nodeName) : l) && (h.display = l);
             else {
                 m ? "hidden" in m && (p = m.hidden) : m = gt.access(e, "fxshow", {}), o && (m.hidden = !p), p ? Z(e).show() : f.done(function() {
                     Z(e).hide()
@@ -1767,7 +1980,7 @@ function FastClick(e, t) {
             }
         }
 
-        function L(e, t) {
+        function P(e, t) {
             var n, r, i, o, a;
             for (n in e)
                 if (r = Z.camelCase(n), i = t[r], o = e[n], Z.isArray(o) && (i = o[1], o = e[n] = o[0]), n !== r && (e[r] = o, delete e[n]), a = Z.cssHooks[r], a && "expand" in a) {
@@ -1776,18 +1989,18 @@ function FastClick(e, t) {
                 } else t[r] = i
         }
 
-        function P(e, t, n) {
+        function O(e, t, n) {
             var r, i, o = 0,
                 a = tn.length,
                 s = Z.Deferred().always(function() {
-                    delete l.elem
+                    delete c.elem
                 }),
-                l = function() {
+                c = function() {
                     if (i) return !1;
-                    for (var t = Kt || A(), n = Math.max(0, c.startTime + c.duration - t), r = n / c.duration || 0, o = 1 - r, a = 0, l = c.tweens.length; l > a; a++) c.tweens[a].run(o);
-                    return s.notifyWith(e, [c, o, n]), 1 > o && l ? n : (s.resolveWith(e, [c]), !1)
+                    for (var t = Kt || N(), n = Math.max(0, l.startTime + l.duration - t), r = n / l.duration || 0, o = 1 - r, a = 0, c = l.tweens.length; c > a; a++) l.tweens[a].run(o);
+                    return s.notifyWith(e, [l, o, n]), 1 > o && c ? n : (s.resolveWith(e, [l]), !1)
                 },
-                c = s.promise({
+                l = s.promise({
                     elem: e,
                     props: Z.extend({}, t),
                     opts: Z.extend(!0, {
@@ -1795,32 +2008,32 @@ function FastClick(e, t) {
                     }, n),
                     originalProperties: t,
                     originalOptions: n,
-                    startTime: Kt || A(),
+                    startTime: Kt || N(),
                     duration: n.duration,
                     tweens: [],
                     createTween: function(t, n) {
-                        var r = Z.Tween(e, c.opts, t, n, c.opts.specialEasing[t] || c.opts.easing);
-                        return c.tweens.push(r), r
+                        var r = Z.Tween(e, l.opts, t, n, l.opts.specialEasing[t] || l.opts.easing);
+                        return l.tweens.push(r), r
                     },
                     stop: function(t) {
                         var n = 0,
-                            r = t ? c.tweens.length : 0;
+                            r = t ? l.tweens.length : 0;
                         if (i) return this;
-                        for (i = !0; r > n; n++) c.tweens[n].run(1);
-                        return t ? s.resolveWith(e, [c, t]) : s.rejectWith(e, [c, t]), this
+                        for (i = !0; r > n; n++) l.tweens[n].run(1);
+                        return t ? s.resolveWith(e, [l, t]) : s.rejectWith(e, [l, t]), this
                     }
                 }),
-                u = c.props;
-            for (L(u, c.opts.specialEasing); a > o; o++)
-                if (r = tn[o].call(c, e, u, c.opts)) return r;
-            return Z.map(u, j, c), Z.isFunction(c.opts.start) && c.opts.start.call(e, c), Z.fx.timer(Z.extend(l, {
+                u = l.props;
+            for (P(u, l.opts.specialEasing); a > o; o++)
+                if (r = tn[o].call(l, e, u, l.opts)) return r;
+            return Z.map(u, j, l), Z.isFunction(l.opts.start) && l.opts.start.call(e, l), Z.fx.timer(Z.extend(c, {
                 elem: e,
-                anim: c,
-                queue: c.opts.queue
-            })), c.progress(c.opts.progress).done(c.opts.done, c.opts.complete).fail(c.opts.fail).always(c.opts.always)
+                anim: l,
+                queue: l.opts.queue
+            })), l.progress(l.opts.progress).done(l.opts.done, l.opts.complete).fail(l.opts.fail).always(l.opts.always)
         }
 
-        function I(e) {
+        function $(e) {
             return function(t, n) {
                 "string" != typeof t && (n = t, t = "*");
                 var r, i = 0,
@@ -1830,16 +2043,16 @@ function FastClick(e, t) {
             }
         }
 
-        function O(e, t, n, r) {
+        function I(e, t, n, r) {
             function i(s) {
-                var l;
+                var c;
                 return o[s] = !0, Z.each(e[s] || [], function(e, s) {
-                    var c = s(t, n, r);
-                    return "string" != typeof c || a || o[c] ? a ? !(l = c) : void 0 : (t.dataTypes.unshift(c), i(c), !1)
-                }), l
+                    var l = s(t, n, r);
+                    return "string" != typeof l || a || o[l] ? a ? !(c = l) : void 0 : (t.dataTypes.unshift(l), i(l), !1)
+                }), c
             }
             var o = {},
-                a = e === Tn;
+                a = e === wn;
             return i(t.dataTypes[0]) || !o["*"] && i("*")
         }
 
@@ -1850,18 +2063,18 @@ function FastClick(e, t) {
         }
 
         function F(e, t, n) {
-            for (var r, i, o, a, s = e.contents, l = e.dataTypes;
-                "*" === l[0];) l.shift(), void 0 === r && (r = e.mimeType || t.getResponseHeader("Content-Type"));
+            for (var r, i, o, a, s = e.contents, c = e.dataTypes;
+                "*" === c[0];) c.shift(), void 0 === r && (r = e.mimeType || t.getResponseHeader("Content-Type"));
             if (r)
                 for (i in s)
                     if (s[i] && s[i].test(r)) {
-                        l.unshift(i);
+                        c.unshift(i);
                         break
                     }
-            if (l[0] in n) o = l[0];
+            if (c[0] in n) o = c[0];
             else {
                 for (i in n) {
-                    if (!l[0] || e.converters[i + " " + l[0]]) {
+                    if (!c[0] || e.converters[i + " " + c[0]]) {
                         o = i;
                         break
                     }
@@ -1869,22 +2082,22 @@ function FastClick(e, t) {
                 }
                 o = o || a
             }
-            return o ? (o !== l[0] && l.unshift(o), n[o]) : void 0
+            return o ? (o !== c[0] && c.unshift(o), n[o]) : void 0
         }
 
         function R(e, t, n, r) {
-            var i, o, a, s, l, c = {},
+            var i, o, a, s, c, l = {},
                 u = e.dataTypes.slice();
             if (u[1])
-                for (a in e.converters) c[a.toLowerCase()] = e.converters[a];
+                for (a in e.converters) l[a.toLowerCase()] = e.converters[a];
             for (o = u.shift(); o;)
-                if (e.responseFields[o] && (n[e.responseFields[o]] = t), !l && r && e.dataFilter && (t = e.dataFilter(t, e.dataType)), l = o, o = u.shift())
-                    if ("*" === o) o = l;
-                    else if ("*" !== l && l !== o) {
-                if (a = c[l + " " + o] || c["* " + o], !a)
-                    for (i in c)
-                        if (s = i.split(" "), s[1] === o && (a = c[l + " " + s[0]] || c["* " + s[0]])) {
-                            a === !0 ? a = c[i] : c[i] !== !0 && (o = s[0], u.unshift(s[1]));
+                if (e.responseFields[o] && (n[e.responseFields[o]] = t), !c && r && e.dataFilter && (t = e.dataFilter(t, e.dataType)), c = o, o = u.shift())
+                    if ("*" === o) o = c;
+                    else if ("*" !== c && c !== o) {
+                if (a = l[c + " " + o] || l["* " + o], !a)
+                    for (i in l)
+                        if (s = i.split(" "), s[1] === o && (a = l[c + " " + s[0]] || l["* " + s[0]])) {
+                            a === !0 ? a = l[i] : l[i] !== !0 && (o = s[0], u.unshift(s[1]));
                             break
                         }
                 if (a !== !0)
@@ -1894,7 +2107,7 @@ function FastClick(e, t) {
                     } catch (f) {
                         return {
                             state: "parsererror",
-                            error: a ? f : "No conversion from " + l + " to " + o
+                            error: a ? f : "No conversion from " + c + " to " + o
                         }
                     }
             }
@@ -1907,7 +2120,7 @@ function FastClick(e, t) {
         function U(e, t, n, r) {
             var i;
             if (Z.isArray(t)) Z.each(t, function(t, i) {
-                n || kn.test(e) ? r(e, i) : U(e + "[" + ("object" == typeof i ? t : "") + "]", i, n, r)
+                n || Cn.test(e) ? r(e, i) : U(e + "[" + ("object" == typeof i ? t : "") + "]", i, n, r)
             });
             else if (n || "object" !== Z.type(t)) r(e, t);
             else
@@ -1917,17 +2130,17 @@ function FastClick(e, t) {
         function H(e) {
             return Z.isWindow(e) ? e : 9 === e.nodeType && e.defaultView
         }
-        var z = [],
-            q = z.slice,
-            B = z.concat,
-            W = z.push,
-            V = z.indexOf,
+        var q = [],
+            z = q.slice,
+            B = q.concat,
+            W = q.push,
+            V = q.indexOf,
             X = {},
             Y = X.toString,
             G = X.hasOwnProperty,
             K = {},
             J = e.document,
-            Q = "2.1.1 -ajax/jsonp,-deprecated,-exports/amd,-wrap",
+            Q = "2.1.3 -ajax/jsonp,-deprecated,-exports/amd,-wrap",
             Z = function(e, t) {
                 return new Z.fn.init(e, t)
             },
@@ -1943,10 +2156,10 @@ function FastClick(e, t) {
             selector: "",
             length: 0,
             toArray: function() {
-                return q.call(this)
+                return z.call(this)
             },
             get: function(e) {
-                return null != e ? 0 > e ? this[e + this.length] : this[e] : q.call(this)
+                return null != e ? 0 > e ? this[e + this.length] : this[e] : z.call(this)
             },
             pushStack: function(e) {
                 var t = Z.merge(this.constructor(), e);
@@ -1961,7 +2174,7 @@ function FastClick(e, t) {
                 }))
             },
             slice: function() {
-                return this.pushStack(q.apply(this, arguments))
+                return this.pushStack(z.apply(this, arguments))
             },
             first: function() {
                 return this.eq(0)
@@ -1978,16 +2191,16 @@ function FastClick(e, t) {
                 return this.prevObject || this.constructor(null)
             },
             push: W,
-            sort: z.sort,
-            splice: z.splice
+            sort: q.sort,
+            splice: q.splice
         }, Z.extend = Z.fn.extend = function() {
             var e, t, n, r, i, o, a = arguments[0] || {},
                 s = 1,
-                l = arguments.length,
-                c = !1;
-            for ("boolean" == typeof a && (c = a, a = arguments[s] || {}, s++), "object" == typeof a || Z.isFunction(a) || (a = {}), s === l && (a = this, s--); l > s; s++)
+                c = arguments.length,
+                l = !1;
+            for ("boolean" == typeof a && (l = a, a = arguments[s] || {}, s++), "object" == typeof a || Z.isFunction(a) || (a = {}), s === c && (a = this, s--); c > s; s++)
                 if (null != (e = arguments[s]))
-                    for (t in e) n = a[t], r = e[t], a !== r && (c && r && (Z.isPlainObject(r) || (i = Z.isArray(r))) ? (i ? (i = !1, o = n && Z.isArray(n) ? n : []) : o = n && Z.isPlainObject(n) ? n : {}, a[t] = Z.extend(c, o, r)) : void 0 !== r && (a[t] = r));
+                    for (t in e) n = a[t], r = e[t], a !== r && (l && r && (Z.isPlainObject(r) || (i = Z.isArray(r))) ? (i ? (i = !1, o = n && Z.isArray(n) ? n : []) : o = n && Z.isPlainObject(n) ? n : {}, a[t] = Z.extend(l, o, r)) : void 0 !== r && (a[t] = r));
             return a
         }, Z.extend({
             expando: "jQuery" + (Q + Math.random()).replace(/\D/g, ""),
@@ -2004,7 +2217,7 @@ function FastClick(e, t) {
                 return null != e && e === e.window
             },
             isNumeric: function(e) {
-                return !Z.isArray(e) && e - parseFloat(e) >= 0
+                return !Z.isArray(e) && e - parseFloat(e) + 1 >= 0
             },
             isPlainObject: function(e) {
                 return "object" !== Z.type(e) || e.nodeType || Z.isWindow(e) ? !1 : e.constructor && !G.call(e.constructor.prototype, "isPrototypeOf") ? !1 : !0
@@ -2065,18 +2278,18 @@ function FastClick(e, t) {
                 var i, o = 0,
                     a = e.length,
                     s = n(e),
-                    l = [];
+                    c = [];
                 if (s)
-                    for (; a > o; o++) i = t(e[o], o, r), null != i && l.push(i);
+                    for (; a > o; o++) i = t(e[o], o, r), null != i && c.push(i);
                 else
-                    for (o in e) i = t(e[o], o, r), null != i && l.push(i);
-                return B.apply([], l)
+                    for (o in e) i = t(e[o], o, r), null != i && c.push(i);
+                return B.apply([], c)
             },
             guid: 1,
             proxy: function(e, t) {
                 var n, r, i;
-                return "string" == typeof t && (n = e[t], t = e, e = n), Z.isFunction(e) ? (r = q.call(arguments, 2), i = function() {
-                    return e.apply(t || this, r.concat(q.call(arguments)))
+                return "string" == typeof t && (n = e[t], t = e, e = n), Z.isFunction(e) ? (r = z.call(arguments, 2), i = function() {
+                    return e.apply(t || this, r.concat(z.call(arguments)))
                 }, i.guid = e.guid = e.guid || Z.guid++, i) : void 0
             },
             now: Date.now,
@@ -2086,44 +2299,43 @@ function FastClick(e, t) {
         });
         var it =
             /*!
-             * Sizzle CSS Selector Engine v1.10.19
+             * Sizzle CSS Selector Engine v2.2.0-pre
              * http://sizzlejs.com/
              *
-             * Copyright 2013 jQuery Foundation, Inc. and other contributors
+             * Copyright 2008, 2014 jQuery Foundation, Inc. and other contributors
              * Released under the MIT license
              * http://jquery.org/license
              *
-             * Date: 2014-04-18
+             * Date: 2014-12-16
              */
             function(e) {
                 function t(e, t, n, r) {
-                    var i, o, a, s, l, c, f, h, p, m;
-                    if ((t ? t.ownerDocument || t : U) !== $ && j(t), t = t || $, n = n || [], !e || "string" != typeof e) return n;
-                    if (1 !== (s = t.nodeType) && 9 !== s) return [];
-                    if (P && !r) {
-                        if (i = yt.exec(e))
+                    var i, o, a, s, c, l, f, h, p, m;
+                    if ((t ? t.ownerDocument || t : U) !== L && j(t), t = t || L, n = n || [], s = t.nodeType, "string" != typeof e || !e || 1 !== s && 9 !== s && 11 !== s) return n;
+                    if (!r && O) {
+                        if (11 !== s && (i = yt.exec(e)))
                             if (a = i[1]) {
                                 if (9 === s) {
                                     if (o = t.getElementById(a), !o || !o.parentNode) return n;
                                     if (o.id === a) return n.push(o), n
                                 } else if (t.ownerDocument && (o = t.ownerDocument.getElementById(a)) && F(t, o) && o.id === a) return n.push(o), n
                             } else {
-                                if (i[2]) return Z.apply(n, t.getElementsByTagName(e)), n;
-                                if ((a = i[3]) && x.getElementsByClassName && t.getElementsByClassName) return Z.apply(n, t.getElementsByClassName(a)), n
+                                if (i[2]) return Q.apply(n, t.getElementsByTagName(e)), n;
+                                if ((a = i[3]) && x.getElementsByClassName) return Q.apply(n, t.getElementsByClassName(a)), n
                             }
-                        if (x.qsa && (!I || !I.test(e))) {
-                            if (h = f = R, p = t, m = 9 === s && e, 1 === s && "object" !== t.nodeName.toLowerCase()) {
-                                for (c = C(e), (f = t.getAttribute("id")) ? h = f.replace(wt, "\\$&") : t.setAttribute("id", h), h = "[id='" + h + "'] ", l = c.length; l--;) c[l] = h + d(c[l]);
-                                p = bt.test(e) && u(t.parentNode) || t, m = c.join(",")
+                        if (x.qsa && (!$ || !$.test(e))) {
+                            if (h = f = R, p = t, m = 1 !== s && e, 1 === s && "object" !== t.nodeName.toLowerCase()) {
+                                for (l = C(e), (f = t.getAttribute("id")) ? h = f.replace(wt, "\\$&") : t.setAttribute("id", h), h = "[id='" + h + "'] ", c = l.length; c--;) l[c] = h + d(l[c]);
+                                p = bt.test(e) && u(t.parentNode) || t, m = l.join(",")
                             }
                             if (m) try {
-                                return Z.apply(n, p.querySelectorAll(m)), n
+                                return Q.apply(n, p.querySelectorAll(m)), n
                             } catch (v) {} finally {
                                 f || t.removeAttribute("id")
                             }
                         }
                     }
-                    return S(e.replace(lt, "$1"), t, n, r)
+                    return S(e.replace(ct, "$1"), t, n, r)
                 }
 
                 function n() {
@@ -2139,7 +2351,7 @@ function FastClick(e, t) {
                 }
 
                 function i(e) {
-                    var t = $.createElement("div");
+                    var t = L.createElement("div");
                     try {
                         return !!e(t)
                     } catch (n) {
@@ -2155,7 +2367,7 @@ function FastClick(e, t) {
 
                 function a(e, t) {
                     var n = t && e,
-                        r = n && 1 === e.nodeType && 1 === t.nodeType && (~t.sourceIndex || Y) - (~e.sourceIndex || Y);
+                        r = n && 1 === e.nodeType && 1 === t.nodeType && (~t.sourceIndex || X) - (~e.sourceIndex || X);
                     if (r) return r;
                     if (n)
                         for (; n = n.nextSibling;)
@@ -2170,14 +2382,14 @@ function FastClick(e, t) {
                     }
                 }
 
-                function l(e) {
+                function c(e) {
                     return function(t) {
                         var n = t.nodeName.toLowerCase();
                         return ("input" === n || "button" === n) && t.type === e
                     }
                 }
 
-                function c(e) {
+                function l(e) {
                     return r(function(t) {
                         return t = +t, r(function(n, r) {
                             for (var i, o = e([], n.length, t), a = o.length; a--;) n[i = o[a]] && (n[i] = !(r[i] = n[i]))
@@ -2186,7 +2398,7 @@ function FastClick(e, t) {
                 }
 
                 function u(e) {
-                    return e && typeof e.getElementsByTagName !== X && e
+                    return e && "undefined" != typeof e.getElementsByTagName && e
                 }
 
                 function f() {}
@@ -2199,20 +2411,20 @@ function FastClick(e, t) {
                 function h(e, t, n) {
                     var r = t.dir,
                         i = n && "parentNode" === r,
-                        o = z++;
+                        o = q++;
                     return t.first ? function(t, n, o) {
                         for (; t = t[r];)
                             if (1 === t.nodeType || i) return e(t, n, o)
                     } : function(t, n, a) {
-                        var s, l, c = [H, o];
+                        var s, c, l = [H, o];
                         if (a) {
                             for (; t = t[r];)
                                 if ((1 === t.nodeType || i) && e(t, n, a)) return !0
                         } else
                             for (; t = t[r];)
                                 if (1 === t.nodeType || i) {
-                                    if (l = t[R] || (t[R] = {}), (s = l[r]) && s[0] === H && s[1] === o) return c[2] = s[2];
-                                    if (l[r] = c, c[2] = e(t, n, a)) return !0
+                                    if (c = t[R] || (t[R] = {}), (s = c[r]) && s[0] === H && s[1] === o) return l[2] = s[2];
+                                    if (c[r] = l, l[2] = e(t, n, a)) return !0
                                 }
                     }
                 }
@@ -2231,39 +2443,40 @@ function FastClick(e, t) {
                 }
 
                 function v(e, t, n, r, i) {
-                    for (var o, a = [], s = 0, l = e.length, c = null != t; l > s; s++)(o = e[s]) && (!n || n(o, r, i)) && (a.push(o), c && t.push(s));
+                    for (var o, a = [], s = 0, c = e.length, l = null != t; c > s; s++)(o = e[s]) && (!n || n(o, r, i)) && (a.push(o), l && t.push(s));
                     return a
                 }
 
                 function g(e, t, n, i, o, a) {
-                    return i && !i[R] && (i = g(i)), o && !o[R] && (o = g(o, a)), r(function(r, a, s, l) {
-                        var c, u, f, d = [],
+                    return i && !i[R] && (i = g(i)), o && !o[R] && (o = g(o, a)), r(function(r, a, s, c) {
+                        var l, u, f, d = [],
                             h = [],
                             p = a.length,
                             g = r || m(t || "*", s.nodeType ? [s] : s, []),
-                            y = !e || !r && t ? g : v(g, d, e, s, l),
+                            y = !e || !r && t ? g : v(g, d, e, s, c),
                             b = n ? o || (r ? e : p || i) ? [] : a : y;
-                        if (n && n(y, b, s, l), i)
-                            for (c = v(b, h), i(c, [], s, l), u = c.length; u--;)(f = c[u]) && (b[h[u]] = !(y[h[u]] = f));
+                        if (n && n(y, b, s, c), i)
+                            for (l = v(b, h), i(l, [], s, c), u = l.length; u--;)(f = l[u]) && (b[h[u]] = !(y[h[u]] = f));
                         if (r) {
                             if (o || e) {
                                 if (o) {
-                                    for (c = [], u = b.length; u--;)(f = b[u]) && c.push(y[u] = f);
-                                    o(null, b = [], c, l)
+                                    for (l = [], u = b.length; u--;)(f = b[u]) && l.push(y[u] = f);
+                                    o(null, b = [], l, c)
                                 }
-                                for (u = b.length; u--;)(f = b[u]) && (c = o ? tt.call(r, f) : d[u]) > -1 && (r[c] = !(a[c] = f))
+                                for (u = b.length; u--;)(f = b[u]) && (l = o ? et(r, f) : d[u]) > -1 && (r[l] = !(a[l] = f))
                             }
-                        } else b = v(b === a ? b.splice(p, b.length) : b), o ? o(null, a, b, l) : Z.apply(a, b)
+                        } else b = v(b === a ? b.splice(p, b.length) : b), o ? o(null, a, b, c) : Q.apply(a, b)
                     })
                 }
 
                 function y(e) {
-                    for (var t, n, r, i = e.length, o = T.relative[e[0].type], a = o || T.relative[" "], s = o ? 1 : 0, l = h(function(e) {
+                    for (var t, n, r, i = e.length, o = T.relative[e[0].type], a = o || T.relative[" "], s = o ? 1 : 0, c = h(function(e) {
                             return e === t
-                        }, a, !0), c = h(function(e) {
-                            return tt.call(t, e) > -1
+                        }, a, !0), l = h(function(e) {
+                            return et(t, e) > -1
                         }, a, !0), u = [function(e, n, r) {
-                            return !o && (r || n !== N) || ((t = n).nodeType ? l(e, n, r) : c(e, n, r))
+                            var i = !o && (r || n !== A) || ((t = n).nodeType ? c(e, n, r) : l(e, n, r));
+                            return t = null, i
                         }]; i > s; s++)
                         if (n = T.relative[e[s].type]) u = [h(p(u), n)];
                         else {
@@ -2271,7 +2484,7 @@ function FastClick(e, t) {
                                 for (r = ++s; i > r && !T.relative[e[r].type]; r++);
                                 return g(s > 1 && p(u), s > 1 && d(e.slice(0, s - 1).concat({
                                     value: " " === e[s - 2].type ? "*" : ""
-                                })).replace(lt, "$1"), n, r > s && y(e.slice(s, r)), i > r && y(e = e.slice(r)), i > r && d(e))
+                                })).replace(ct, "$1"), n, r > s && y(e.slice(s, r)), i > r && y(e = e.slice(r)), i > r && d(e))
                             }
                             u.push(n)
                         }
@@ -2281,23 +2494,23 @@ function FastClick(e, t) {
                 function b(e, n) {
                     var i = n.length > 0,
                         o = e.length > 0,
-                        a = function(r, a, s, l, c) {
+                        a = function(r, a, s, c, l) {
                             var u, f, d, h = 0,
                                 p = "0",
                                 m = r && [],
                                 g = [],
-                                y = N,
-                                b = r || o && T.find.TAG("*", c),
+                                y = A,
+                                b = r || o && T.find.TAG("*", l),
                                 w = H += null == y ? 1 : Math.random() || .1,
                                 x = b.length;
-                            for (c && (N = a !== $ && a); p !== x && null != (u = b[p]); p++) {
+                            for (l && (A = a !== L && a); p !== x && null != (u = b[p]); p++) {
                                 if (o && u) {
                                     for (f = 0; d = e[f++];)
                                         if (d(u, a, s)) {
-                                            l.push(u);
+                                            c.push(u);
                                             break
                                         }
-                                    c && (H = w)
+                                    l && (H = w)
                                 }
                                 i && ((u = !d && u) && h--, r && m.push(u))
                             }
@@ -2305,59 +2518,59 @@ function FastClick(e, t) {
                                 for (f = 0; d = n[f++];) d(m, g, a, s);
                                 if (r) {
                                     if (h > 0)
-                                        for (; p--;) m[p] || g[p] || (g[p] = J.call(l));
+                                        for (; p--;) m[p] || g[p] || (g[p] = K.call(c));
                                     g = v(g)
                                 }
-                                Z.apply(l, g), c && !r && g.length > 0 && h + n.length > 1 && t.uniqueSort(l)
+                                Q.apply(c, g), l && !r && g.length > 0 && h + n.length > 1 && t.uniqueSort(c)
                             }
-                            return c && (H = w, N = y), m
+                            return l && (H = w, A = y), m
                         };
                     return i ? r(a) : a
                 }
-                var w, x, T, _, E, C, k, S, N, A, D, j, $, L, P, I, O, M, F, R = "sizzle" + -new Date,
+                var w, x, T, E, _, C, k, S, A, N, D, j, L, P, O, $, I, M, F, R = "sizzle" + 1 * new Date,
                     U = e.document,
                     H = 0,
-                    z = 0,
-                    q = n(),
+                    q = 0,
+                    z = n(),
                     B = n(),
                     W = n(),
                     V = function(e, t) {
                         return e === t && (D = !0), 0
                     },
-                    X = "undefined",
-                    Y = 1 << 31,
-                    G = {}.hasOwnProperty,
-                    K = [],
-                    J = K.pop,
-                    Q = K.push,
-                    Z = K.push,
-                    et = K.slice,
-                    tt = K.indexOf || function(e) {
-                        for (var t = 0, n = this.length; n > t; t++)
-                            if (this[t] === e) return t;
+                    X = 1 << 31,
+                    Y = {}.hasOwnProperty,
+                    G = [],
+                    K = G.pop,
+                    J = G.push,
+                    Q = G.push,
+                    Z = G.slice,
+                    et = function(e, t) {
+                        for (var n = 0, r = e.length; r > n; n++)
+                            if (e[n] === t) return n;
                         return -1
                     },
-                    nt = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",
-                    rt = "[\\x20\\t\\r\\n\\f]",
-                    it = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
-                    ot = it.replace("w", "w#"),
-                    at = "\\[" + rt + "*(" + it + ")(?:" + rt + "*([*^$|!~]?=)" + rt + "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + ot + "))|)" + rt + "*\\]",
-                    st = ":(" + it + ")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|" + at + ")*)|.*)\\)|)",
-                    lt = new RegExp("^" + rt + "+|((?:^|[^\\\\])(?:\\\\.)*)" + rt + "+$", "g"),
-                    ct = new RegExp("^" + rt + "*," + rt + "*"),
-                    ut = new RegExp("^" + rt + "*([>+~]|" + rt + ")" + rt + "*"),
-                    ft = new RegExp("=" + rt + "*([^\\]'\"]*?)" + rt + "*\\]", "g"),
-                    dt = new RegExp(st),
-                    ht = new RegExp("^" + ot + "$"),
+                    tt = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",
+                    nt = "[\\x20\\t\\r\\n\\f]",
+                    rt = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
+                    it = rt.replace("w", "w#"),
+                    ot = "\\[" + nt + "*(" + rt + ")(?:" + nt + "*([*^$|!~]?=)" + nt + "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + it + "))|)" + nt + "*\\]",
+                    at = ":(" + rt + ")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|" + ot + ")*)|.*)\\)|)",
+                    st = new RegExp(nt + "+", "g"),
+                    ct = new RegExp("^" + nt + "+|((?:^|[^\\\\])(?:\\\\.)*)" + nt + "+$", "g"),
+                    lt = new RegExp("^" + nt + "*," + nt + "*"),
+                    ut = new RegExp("^" + nt + "*([>+~]|" + nt + ")" + nt + "*"),
+                    ft = new RegExp("=" + nt + "*([^\\]'\"]*?)" + nt + "*\\]", "g"),
+                    dt = new RegExp(at),
+                    ht = new RegExp("^" + it + "$"),
                     pt = {
-                        ID: new RegExp("^#(" + it + ")"),
-                        CLASS: new RegExp("^\\.(" + it + ")"),
-                        TAG: new RegExp("^(" + it.replace("w", "w*") + ")"),
-                        ATTR: new RegExp("^" + at),
-                        PSEUDO: new RegExp("^" + st),
-                        CHILD: new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + rt + "*(even|odd|(([+-]|)(\\d*)n|)" + rt + "*(?:([+-]|)" + rt + "*(\\d+)|))" + rt + "*\\)|)", "i"),
-                        bool: new RegExp("^(?:" + nt + ")$", "i"),
-                        needsContext: new RegExp("^" + rt + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" + rt + "*((?:-\\d)?\\d*)" + rt + "*\\)|)(?=[^-]|$)", "i")
+                        ID: new RegExp("^#(" + rt + ")"),
+                        CLASS: new RegExp("^\\.(" + rt + ")"),
+                        TAG: new RegExp("^(" + rt.replace("w", "w*") + ")"),
+                        ATTR: new RegExp("^" + ot),
+                        PSEUDO: new RegExp("^" + at),
+                        CHILD: new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + nt + "*(even|odd|(([+-]|)(\\d*)n|)" + nt + "*(?:([+-]|)" + nt + "*(\\d+)|))" + nt + "*\\)|)", "i"),
+                        bool: new RegExp("^(?:" + tt + ")$", "i"),
+                        needsContext: new RegExp("^" + nt + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" + nt + "*((?:-\\d)?\\d*)" + nt + "*\\)|)(?=[^-]|$)", "i")
                     },
                     mt = /^(?:input|select|textarea|button)$/i,
                     vt = /^h\d$/i,
@@ -2365,43 +2578,39 @@ function FastClick(e, t) {
                     yt = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
                     bt = /[+~]/,
                     wt = /'|\\/g,
-                    xt = new RegExp("\\\\([\\da-f]{1,6}" + rt + "?|(" + rt + ")|.)", "ig"),
+                    xt = new RegExp("\\\\([\\da-f]{1,6}" + nt + "?|(" + nt + ")|.)", "ig"),
                     Tt = function(e, t, n) {
                         var r = "0x" + t - 65536;
                         return r !== r || n ? t : 0 > r ? String.fromCharCode(r + 65536) : String.fromCharCode(r >> 10 | 55296, 1023 & r | 56320)
+                    },
+                    Et = function() {
+                        j()
                     };
                 try {
-                    Z.apply(K = et.call(U.childNodes), U.childNodes), K[U.childNodes.length].nodeType
+                    Q.apply(G = Z.call(U.childNodes), U.childNodes), G[U.childNodes.length].nodeType
                 } catch (_t) {
-                    Z = {
-                        apply: K.length ? function(e, t) {
-                            Q.apply(e, et.call(t))
+                    Q = {
+                        apply: G.length ? function(e, t) {
+                            J.apply(e, Z.call(t))
                         } : function(e, t) {
                             for (var n = e.length, r = 0; e[n++] = t[r++];);
                             e.length = n - 1
                         }
                     }
                 }
-                x = t.support = {}, E = t.isXML = function(e) {
+                x = t.support = {}, _ = t.isXML = function(e) {
                     var t = e && (e.ownerDocument || e).documentElement;
                     return t ? "HTML" !== t.nodeName : !1
                 }, j = t.setDocument = function(e) {
-                    var t, n = e ? e.ownerDocument || e : U,
-                        r = n.defaultView;
-                    return n !== $ && 9 === n.nodeType && n.documentElement ? ($ = n, L = n.documentElement, P = !E(n), r && r !== r.top && (r.addEventListener ? r.addEventListener("unload", function() {
-                        j()
-                    }, !1) : r.attachEvent && r.attachEvent("onunload", function() {
-                        j()
-                    })), x.attributes = i(function(e) {
+                    var t, n, r = e ? e.ownerDocument || e : U;
+                    return r !== L && 9 === r.nodeType && r.documentElement ? (L = r, P = r.documentElement, n = r.defaultView, n && n !== n.top && (n.addEventListener ? n.addEventListener("unload", Et, !1) : n.attachEvent && n.attachEvent("onunload", Et)), O = !_(r), x.attributes = i(function(e) {
                         return e.className = "i", !e.getAttribute("className")
                     }), x.getElementsByTagName = i(function(e) {
-                        return e.appendChild(n.createComment("")), !e.getElementsByTagName("*").length
-                    }), x.getElementsByClassName = gt.test(n.getElementsByClassName) && i(function(e) {
-                        return e.innerHTML = "<div class='a'></div><div class='a i'></div>", e.firstChild.className = "i", 2 === e.getElementsByClassName("i").length
-                    }), x.getById = i(function(e) {
-                        return L.appendChild(e).id = R, !n.getElementsByName || !n.getElementsByName(R).length
+                        return e.appendChild(r.createComment("")), !e.getElementsByTagName("*").length
+                    }), x.getElementsByClassName = gt.test(r.getElementsByClassName), x.getById = i(function(e) {
+                        return P.appendChild(e).id = R, !r.getElementsByName || !r.getElementsByName(R).length
                     }), x.getById ? (T.find.ID = function(e, t) {
-                        if (typeof t.getElementById !== X && P) {
+                        if ("undefined" != typeof t.getElementById && O) {
                             var n = t.getElementById(e);
                             return n && n.parentNode ? [n] : []
                         }
@@ -2413,11 +2622,11 @@ function FastClick(e, t) {
                     }) : (delete T.find.ID, T.filter.ID = function(e) {
                         var t = e.replace(xt, Tt);
                         return function(e) {
-                            var n = typeof e.getAttributeNode !== X && e.getAttributeNode("id");
+                            var n = "undefined" != typeof e.getAttributeNode && e.getAttributeNode("id");
                             return n && n.value === t
                         }
                     }), T.find.TAG = x.getElementsByTagName ? function(e, t) {
-                        return typeof t.getElementsByTagName !== X ? t.getElementsByTagName(e) : void 0
+                        return "undefined" != typeof t.getElementsByTagName ? t.getElementsByTagName(e) : x.qsa ? t.querySelectorAll(e) : void 0
                     } : function(e, t) {
                         var n, r = [],
                             i = 0,
@@ -2428,15 +2637,15 @@ function FastClick(e, t) {
                         }
                         return o
                     }, T.find.CLASS = x.getElementsByClassName && function(e, t) {
-                        return typeof t.getElementsByClassName !== X && P ? t.getElementsByClassName(e) : void 0
-                    }, O = [], I = [], (x.qsa = gt.test(n.querySelectorAll)) && (i(function(e) {
-                        e.innerHTML = "<select msallowclip=''><option selected=''></option></select>", e.querySelectorAll("[msallowclip^='']").length && I.push("[*^$]=" + rt + "*(?:''|\"\")"), e.querySelectorAll("[selected]").length || I.push("\\[" + rt + "*(?:value|" + nt + ")"), e.querySelectorAll(":checked").length || I.push(":checked")
+                        return O ? t.getElementsByClassName(e) : void 0
+                    }, I = [], $ = [], (x.qsa = gt.test(r.querySelectorAll)) && (i(function(e) {
+                        P.appendChild(e).innerHTML = "<a id='" + R + "'></a><select id='" + R + "-\f]' msallowcapture=''><option selected=''></option></select>", e.querySelectorAll("[msallowcapture^='']").length && $.push("[*^$]=" + nt + "*(?:''|\"\")"), e.querySelectorAll("[selected]").length || $.push("\\[" + nt + "*(?:value|" + tt + ")"), e.querySelectorAll("[id~=" + R + "-]").length || $.push("~="), e.querySelectorAll(":checked").length || $.push(":checked"), e.querySelectorAll("a#" + R + "+*").length || $.push(".#.+[+~]")
                     }), i(function(e) {
-                        var t = n.createElement("input");
-                        t.setAttribute("type", "hidden"), e.appendChild(t).setAttribute("name", "D"), e.querySelectorAll("[name=d]").length && I.push("name" + rt + "*[*^$|!~]?="), e.querySelectorAll(":enabled").length || I.push(":enabled", ":disabled"), e.querySelectorAll("*,:x"), I.push(",.*:")
-                    })), (x.matchesSelector = gt.test(M = L.matches || L.webkitMatchesSelector || L.mozMatchesSelector || L.oMatchesSelector || L.msMatchesSelector)) && i(function(e) {
-                        x.disconnectedMatch = M.call(e, "div"), M.call(e, "[s!='']:x"), O.push("!=", st)
-                    }), I = I.length && new RegExp(I.join("|")), O = O.length && new RegExp(O.join("|")), t = gt.test(L.compareDocumentPosition), F = t || gt.test(L.contains) ? function(e, t) {
+                        var t = r.createElement("input");
+                        t.setAttribute("type", "hidden"), e.appendChild(t).setAttribute("name", "D"), e.querySelectorAll("[name=d]").length && $.push("name" + nt + "*[*^$|!~]?="), e.querySelectorAll(":enabled").length || $.push(":enabled", ":disabled"), e.querySelectorAll("*,:x"), $.push(",.*:")
+                    })), (x.matchesSelector = gt.test(M = P.matches || P.webkitMatchesSelector || P.mozMatchesSelector || P.oMatchesSelector || P.msMatchesSelector)) && i(function(e) {
+                        x.disconnectedMatch = M.call(e, "div"), M.call(e, "[s!='']:x"), I.push("!=", at)
+                    }), $ = $.length && new RegExp($.join("|")), I = I.length && new RegExp(I.join("|")), t = gt.test(P.compareDocumentPosition), F = t || gt.test(P.contains) ? function(e, t) {
                         var n = 9 === e.nodeType ? e.documentElement : e,
                             r = t && t.parentNode;
                         return e === r || !(!r || 1 !== r.nodeType || !(n.contains ? n.contains(r) : e.compareDocumentPosition && 16 & e.compareDocumentPosition(r)))
@@ -2447,59 +2656,59 @@ function FastClick(e, t) {
                         return !1
                     }, V = t ? function(e, t) {
                         if (e === t) return D = !0, 0;
-                        var r = !e.compareDocumentPosition - !t.compareDocumentPosition;
-                        return r ? r : (r = (e.ownerDocument || e) === (t.ownerDocument || t) ? e.compareDocumentPosition(t) : 1, 1 & r || !x.sortDetached && t.compareDocumentPosition(e) === r ? e === n || e.ownerDocument === U && F(U, e) ? -1 : t === n || t.ownerDocument === U && F(U, t) ? 1 : A ? tt.call(A, e) - tt.call(A, t) : 0 : 4 & r ? -1 : 1)
+                        var n = !e.compareDocumentPosition - !t.compareDocumentPosition;
+                        return n ? n : (n = (e.ownerDocument || e) === (t.ownerDocument || t) ? e.compareDocumentPosition(t) : 1, 1 & n || !x.sortDetached && t.compareDocumentPosition(e) === n ? e === r || e.ownerDocument === U && F(U, e) ? -1 : t === r || t.ownerDocument === U && F(U, t) ? 1 : N ? et(N, e) - et(N, t) : 0 : 4 & n ? -1 : 1)
                     } : function(e, t) {
                         if (e === t) return D = !0, 0;
-                        var r, i = 0,
+                        var n, i = 0,
                             o = e.parentNode,
                             s = t.parentNode,
-                            l = [e],
-                            c = [t];
-                        if (!o || !s) return e === n ? -1 : t === n ? 1 : o ? -1 : s ? 1 : A ? tt.call(A, e) - tt.call(A, t) : 0;
+                            c = [e],
+                            l = [t];
+                        if (!o || !s) return e === r ? -1 : t === r ? 1 : o ? -1 : s ? 1 : N ? et(N, e) - et(N, t) : 0;
                         if (o === s) return a(e, t);
-                        for (r = e; r = r.parentNode;) l.unshift(r);
-                        for (r = t; r = r.parentNode;) c.unshift(r);
-                        for (; l[i] === c[i];) i++;
-                        return i ? a(l[i], c[i]) : l[i] === U ? -1 : c[i] === U ? 1 : 0
-                    }, n) : $
+                        for (n = e; n = n.parentNode;) c.unshift(n);
+                        for (n = t; n = n.parentNode;) l.unshift(n);
+                        for (; c[i] === l[i];) i++;
+                        return i ? a(c[i], l[i]) : c[i] === U ? -1 : l[i] === U ? 1 : 0
+                    }, r) : L
                 }, t.matches = function(e, n) {
                     return t(e, null, null, n)
                 }, t.matchesSelector = function(e, n) {
-                    if ((e.ownerDocument || e) !== $ && j(e), n = n.replace(ft, "='$1']"), !(!x.matchesSelector || !P || O && O.test(n) || I && I.test(n))) try {
+                    if ((e.ownerDocument || e) !== L && j(e), n = n.replace(ft, "='$1']"), !(!x.matchesSelector || !O || I && I.test(n) || $ && $.test(n))) try {
                         var r = M.call(e, n);
                         if (r || x.disconnectedMatch || e.document && 11 !== e.document.nodeType) return r
                     } catch (i) {}
-                    return t(n, $, null, [e]).length > 0
+                    return t(n, L, null, [e]).length > 0
                 }, t.contains = function(e, t) {
-                    return (e.ownerDocument || e) !== $ && j(e), F(e, t)
+                    return (e.ownerDocument || e) !== L && j(e), F(e, t)
                 }, t.attr = function(e, t) {
-                    (e.ownerDocument || e) !== $ && j(e);
+                    (e.ownerDocument || e) !== L && j(e);
                     var n = T.attrHandle[t.toLowerCase()],
-                        r = n && G.call(T.attrHandle, t.toLowerCase()) ? n(e, t, !P) : void 0;
-                    return void 0 !== r ? r : x.attributes || !P ? e.getAttribute(t) : (r = e.getAttributeNode(t)) && r.specified ? r.value : null
+                        r = n && Y.call(T.attrHandle, t.toLowerCase()) ? n(e, t, !O) : void 0;
+                    return void 0 !== r ? r : x.attributes || !O ? e.getAttribute(t) : (r = e.getAttributeNode(t)) && r.specified ? r.value : null
                 }, t.error = function(e) {
                     throw new Error("Syntax error, unrecognized expression: " + e)
                 }, t.uniqueSort = function(e) {
                     var t, n = [],
                         r = 0,
                         i = 0;
-                    if (D = !x.detectDuplicates, A = !x.sortStable && e.slice(0), e.sort(V), D) {
+                    if (D = !x.detectDuplicates, N = !x.sortStable && e.slice(0), e.sort(V), D) {
                         for (; t = e[i++];) t === e[i] && (r = n.push(i));
                         for (; r--;) e.splice(n[r], 1)
                     }
-                    return A = null, e
-                }, _ = t.getText = function(e) {
+                    return N = null, e
+                }, E = t.getText = function(e) {
                     var t, n = "",
                         r = 0,
                         i = e.nodeType;
                     if (i) {
                         if (1 === i || 9 === i || 11 === i) {
                             if ("string" == typeof e.textContent) return e.textContent;
-                            for (e = e.firstChild; e; e = e.nextSibling) n += _(e)
+                            for (e = e.firstChild; e; e = e.nextSibling) n += E(e)
                         } else if (3 === i || 4 === i) return e.nodeValue
                     } else
-                        for (; t = e[r++];) n += _(t);
+                        for (; t = e[r++];) n += E(t);
                     return n
                 }, T = t.selectors = {
                     cacheLength: 50,
@@ -2545,15 +2754,15 @@ function FastClick(e, t) {
                             }
                         },
                         CLASS: function(e) {
-                            var t = q[e + " "];
-                            return t || (t = new RegExp("(^|" + rt + ")" + e + "(" + rt + "|$)")) && q(e, function(e) {
-                                return t.test("string" == typeof e.className && e.className || typeof e.getAttribute !== X && e.getAttribute("class") || "")
+                            var t = z[e + " "];
+                            return t || (t = new RegExp("(^|" + nt + ")" + e + "(" + nt + "|$)")) && z(e, function(e) {
+                                return t.test("string" == typeof e.className && e.className || "undefined" != typeof e.getAttribute && e.getAttribute("class") || "")
                             })
                         },
                         ATTR: function(e, n, r) {
                             return function(i) {
                                 var o = t.attr(i, e);
-                                return null == o ? "!=" === n : n ? (o += "", "=" === n ? o === r : "!=" === n ? o !== r : "^=" === n ? r && 0 === o.indexOf(r) : "*=" === n ? r && o.indexOf(r) > -1 : "$=" === n ? r && o.slice(-r.length) === r : "~=" === n ? (" " + o + " ").indexOf(r) > -1 : "|=" === n ? o === r || o.slice(0, r.length + 1) === r + "-" : !1) : !0
+                                return null == o ? "!=" === n : n ? (o += "", "=" === n ? o === r : "!=" === n ? o !== r : "^=" === n ? r && 0 === o.indexOf(r) : "*=" === n ? r && o.indexOf(r) > -1 : "$=" === n ? r && o.slice(-r.length) === r : "~=" === n ? (" " + o.replace(st, " ") + " ").indexOf(r) > -1 : "|=" === n ? o === r || o.slice(0, r.length + 1) === r + "-" : !1) : !0
                             }
                         },
                         CHILD: function(e, t, n, r, i) {
@@ -2562,11 +2771,11 @@ function FastClick(e, t) {
                                 s = "of-type" === t;
                             return 1 === r && 0 === i ? function(e) {
                                 return !!e.parentNode
-                            } : function(t, n, l) {
-                                var c, u, f, d, h, p, m = o !== a ? "nextSibling" : "previousSibling",
+                            } : function(t, n, c) {
+                                var l, u, f, d, h, p, m = o !== a ? "nextSibling" : "previousSibling",
                                     v = t.parentNode,
                                     g = s && t.nodeName.toLowerCase(),
-                                    y = !l && !s;
+                                    y = !c && !s;
                                 if (v) {
                                     if (o) {
                                         for (; m;) {
@@ -2577,12 +2786,12 @@ function FastClick(e, t) {
                                         return !0
                                     }
                                     if (p = [a ? v.firstChild : v.lastChild], a && y) {
-                                        for (u = v[R] || (v[R] = {}), c = u[e] || [], h = c[0] === H && c[1], d = c[0] === H && c[2], f = h && v.childNodes[h]; f = ++h && f && f[m] || (d = h = 0) || p.pop();)
+                                        for (u = v[R] || (v[R] = {}), l = u[e] || [], h = l[0] === H && l[1], d = l[0] === H && l[2], f = h && v.childNodes[h]; f = ++h && f && f[m] || (d = h = 0) || p.pop();)
                                             if (1 === f.nodeType && ++d && f === t) {
                                                 u[e] = [H, h, d];
                                                 break
                                             }
-                                    } else if (y && (c = (t[R] || (t[R] = {}))[e]) && c[0] === H) d = c[1];
+                                    } else if (y && (l = (t[R] || (t[R] = {}))[e]) && l[0] === H) d = l[1];
                                     else
                                         for (;
                                             (f = ++h && f && f[m] || (d = h = 0) || p.pop()) && ((s ? f.nodeName.toLowerCase() !== g : 1 !== f.nodeType) || !++d || (y && ((f[R] || (f[R] = {}))[e] = [H, d]), f !== t)););
@@ -2593,7 +2802,7 @@ function FastClick(e, t) {
                         PSEUDO: function(e, n) {
                             var i, o = T.pseudos[e] || T.setFilters[e.toLowerCase()] || t.error("unsupported pseudo: " + e);
                             return o[R] ? o(n) : o.length > 1 ? (i = [e, e, "", n], T.setFilters.hasOwnProperty(e.toLowerCase()) ? r(function(e, t) {
-                                for (var r, i = o(e, n), a = i.length; a--;) r = tt.call(e, i[a]), e[r] = !(t[r] = i[a])
+                                for (var r, i = o(e, n), a = i.length; a--;) r = et(e, i[a]), e[r] = !(t[r] = i[a])
                             }) : function(e) {
                                 return o(e, 0, i)
                             }) : o
@@ -2603,11 +2812,11 @@ function FastClick(e, t) {
                         not: r(function(e) {
                             var t = [],
                                 n = [],
-                                i = k(e.replace(lt, "$1"));
+                                i = k(e.replace(ct, "$1"));
                             return i[R] ? r(function(e, t, n, r) {
                                 for (var o, a = i(e, null, r, []), s = e.length; s--;)(o = a[s]) && (e[s] = !(t[s] = o))
                             }) : function(e, r, o) {
-                                return t[0] = e, i(t, null, o, n), !n.pop()
+                                return t[0] = e, i(t, null, o, n), t[0] = null, !n.pop()
                             }
                         }),
                         has: r(function(e) {
@@ -2616,16 +2825,17 @@ function FastClick(e, t) {
                             }
                         }),
                         contains: r(function(e) {
-                            return function(t) {
-                                return (t.textContent || t.innerText || _(t)).indexOf(e) > -1
-                            }
+                            return e = e.replace(xt, Tt),
+                                function(t) {
+                                    return (t.textContent || t.innerText || E(t)).indexOf(e) > -1
+                                }
                         }),
                         lang: r(function(e) {
                             return ht.test(e || "") || t.error("unsupported lang: " + e), e = e.replace(xt, Tt).toLowerCase(),
                                 function(t) {
                                     var n;
                                     do
-                                        if (n = P ? t.lang : t.getAttribute("xml:lang") || t.getAttribute("lang")) return n = n.toLowerCase(), n === e || 0 === n.indexOf(e + "-");
+                                        if (n = O ? t.lang : t.getAttribute("xml:lang") || t.getAttribute("lang")) return n = n.toLowerCase(), n === e || 0 === n.indexOf(e + "-");
                                     while ((t = t.parentNode) && 1 === t.nodeType);
                                     return !1
                                 }
@@ -2635,10 +2845,10 @@ function FastClick(e, t) {
                             return n && n.slice(1) === t.id
                         },
                         root: function(e) {
-                            return e === L
+                            return e === P
                         },
                         focus: function(e) {
-                            return e === $.activeElement && (!$.hasFocus || $.hasFocus()) && !!(e.type || e.href || ~e.tabIndex)
+                            return e === L.activeElement && (!L.hasFocus || L.hasFocus()) && !!(e.type || e.href || ~e.tabIndex)
                         },
                         enabled: function(e) {
                             return e.disabled === !1
@@ -2675,28 +2885,28 @@ function FastClick(e, t) {
                             var t;
                             return "input" === e.nodeName.toLowerCase() && "text" === e.type && (null == (t = e.getAttribute("type")) || "text" === t.toLowerCase())
                         },
-                        first: c(function() {
+                        first: l(function() {
                             return [0]
                         }),
-                        last: c(function(e, t) {
+                        last: l(function(e, t) {
                             return [t - 1]
                         }),
-                        eq: c(function(e, t, n) {
+                        eq: l(function(e, t, n) {
                             return [0 > n ? n + t : n]
                         }),
-                        even: c(function(e, t) {
+                        even: l(function(e, t) {
                             for (var n = 0; t > n; n += 2) e.push(n);
                             return e
                         }),
-                        odd: c(function(e, t) {
+                        odd: l(function(e, t) {
                             for (var n = 1; t > n; n += 2) e.push(n);
                             return e
                         }),
-                        lt: c(function(e, t, n) {
+                        lt: l(function(e, t, n) {
                             for (var r = 0 > n ? n + t : n; --r >= 0;) e.push(r);
                             return e
                         }),
-                        gt: c(function(e, t, n) {
+                        gt: l(function(e, t, n) {
                             for (var r = 0 > n ? n + t : n; ++r < t;) e.push(r);
                             return e
                         })
@@ -2712,23 +2922,23 @@ function FastClick(e, t) {
                 for (w in {
                         submit: !0,
                         reset: !0
-                    }) T.pseudos[w] = l(w);
+                    }) T.pseudos[w] = c(w);
                 return f.prototype = T.filters = T.pseudos, T.setFilters = new f, C = t.tokenize = function(e, n) {
-                    var r, i, o, a, s, l, c, u = B[e + " "];
+                    var r, i, o, a, s, c, l, u = B[e + " "];
                     if (u) return n ? 0 : u.slice(0);
-                    for (s = e, l = [], c = T.preFilter; s;) {
-                        (!r || (i = ct.exec(s))) && (i && (s = s.slice(i[0].length) || s), l.push(o = [])), r = !1, (i = ut.exec(s)) && (r = i.shift(), o.push({
+                    for (s = e, c = [], l = T.preFilter; s;) {
+                        (!r || (i = lt.exec(s))) && (i && (s = s.slice(i[0].length) || s), c.push(o = [])), r = !1, (i = ut.exec(s)) && (r = i.shift(), o.push({
                             value: r,
-                            type: i[0].replace(lt, " ")
+                            type: i[0].replace(ct, " ")
                         }), s = s.slice(r.length));
-                        for (a in T.filter) !(i = pt[a].exec(s)) || c[a] && !(i = c[a](i)) || (r = i.shift(), o.push({
+                        for (a in T.filter) !(i = pt[a].exec(s)) || l[a] && !(i = l[a](i)) || (r = i.shift(), o.push({
                             value: r,
                             type: a,
                             matches: i
                         }), s = s.slice(r.length));
                         if (!r) break
                     }
-                    return n ? s.length : s ? t.error(e) : B(e, l).slice(0)
+                    return n ? s.length : s ? t.error(e) : B(e, c).slice(0)
                 }, k = t.compile = function(e, t) {
                     var n, r = [],
                         i = [],
@@ -2739,22 +2949,22 @@ function FastClick(e, t) {
                     }
                     return o
                 }, S = t.select = function(e, t, n, r) {
-                    var i, o, a, s, l, c = "function" == typeof e && e,
-                        f = !r && C(e = c.selector || e);
+                    var i, o, a, s, c, l = "function" == typeof e && e,
+                        f = !r && C(e = l.selector || e);
                     if (n = n || [], 1 === f.length) {
-                        if (o = f[0] = f[0].slice(0), o.length > 2 && "ID" === (a = o[0]).type && x.getById && 9 === t.nodeType && P && T.relative[o[1].type]) {
+                        if (o = f[0] = f[0].slice(0), o.length > 2 && "ID" === (a = o[0]).type && x.getById && 9 === t.nodeType && O && T.relative[o[1].type]) {
                             if (t = (T.find.ID(a.matches[0].replace(xt, Tt), t) || [])[0], !t) return n;
-                            c && (t = t.parentNode), e = e.slice(o.shift().value.length)
+                            l && (t = t.parentNode), e = e.slice(o.shift().value.length)
                         }
                         for (i = pt.needsContext.test(e) ? 0 : o.length; i-- && (a = o[i], !T.relative[s = a.type]);)
-                            if ((l = T.find[s]) && (r = l(a.matches[0].replace(xt, Tt), bt.test(o[0].type) && u(t.parentNode) || t))) {
-                                if (o.splice(i, 1), e = r.length && d(o), !e) return Z.apply(n, r), n;
+                            if ((c = T.find[s]) && (r = c(a.matches[0].replace(xt, Tt), bt.test(o[0].type) && u(t.parentNode) || t))) {
+                                if (o.splice(i, 1), e = r.length && d(o), !e) return Q.apply(n, r), n;
                                 break
                             }
                     }
-                    return (c || k(e, f))(r, t, !P, n, bt.test(e) && u(t.parentNode) || t), n
+                    return (l || k(e, f))(r, t, !O, n, bt.test(e) && u(t.parentNode) || t), n
                 }, x.sortStable = R.split("").sort(V).join("") === R, x.detectDuplicates = !!D, j(), x.sortDetached = i(function(e) {
-                    return 1 & e.compareDocumentPosition($.createElement("div"))
+                    return 1 & e.compareDocumentPosition(L.createElement("div"))
                 }), i(function(e) {
                     return e.innerHTML = "<a href='#'></a>", "#" === e.firstChild.getAttribute("href")
                 }) || o("type|href|height|width", function(e, t, n) {
@@ -2765,7 +2975,7 @@ function FastClick(e, t) {
                     return n || "input" !== e.nodeName.toLowerCase() ? void 0 : e.defaultValue
                 }), i(function(e) {
                     return null == e.getAttribute("disabled")
-                }) || o(nt, function(e, t, n) {
+                }) || o(tt, function(e, t, n) {
                     var r;
                     return n ? void 0 : e[t] === !0 ? t.toLowerCase() : (r = e.getAttributeNode(t)) && r.specified ? r.value : null
                 }), t
@@ -2801,12 +3011,12 @@ function FastClick(e, t) {
                 return !!r(this, "string" == typeof e && ot.test(e) ? Z(e) : e || [], !1).length
             }
         });
-        var lt, ct = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,
+        var ct, lt = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,
             ut = Z.fn.init = function(e, t) {
                 var n, r;
                 if (!e) return this;
                 if ("string" == typeof e) {
-                    if (n = "<" === e[0] && ">" === e[e.length - 1] && e.length >= 3 ? [null, e, null] : ct.exec(e), !n || !n[1] && t) return !t || t.jquery ? (t || lt).find(e) : this.constructor(t).find(e);
+                    if (n = "<" === e[0] && ">" === e[e.length - 1] && e.length >= 3 ? [null, e, null] : lt.exec(e), !n || !n[1] && t) return !t || t.jquery ? (t || ct).find(e) : this.constructor(t).find(e);
                     if (n[1]) {
                         if (t = t instanceof Z ? t[0] : t, Z.merge(this, Z.parseHTML(n[1], t && t.nodeType ? t.ownerDocument || t : J, !0)), at.test(n[1]) && Z.isPlainObject(t))
                             for (n in t) Z.isFunction(this[n]) ? this[n](t[n]) : this.attr(n, t[n]);
@@ -2814,9 +3024,9 @@ function FastClick(e, t) {
                     }
                     return r = J.getElementById(n[2]), r && r.parentNode && (this.length = 1, this[0] = r), this.context = J, this.selector = e, this
                 }
-                return e.nodeType ? (this.context = this[0] = e, this.length = 1, this) : Z.isFunction(e) ? "undefined" != typeof lt.ready ? lt.ready(e) : e(Z) : (void 0 !== e.selector && (this.selector = e.selector, this.context = e.context), Z.makeArray(e, this))
+                return e.nodeType ? (this.context = this[0] = e, this.length = 1, this) : Z.isFunction(e) ? "undefined" != typeof ct.ready ? ct.ready(e) : e(Z) : (void 0 !== e.selector && (this.selector = e.selector, this.context = e.context), Z.makeArray(e, this))
             };
-        ut.prototype = Z.fn, lt = Z(J);
+        ut.prototype = Z.fn, ct = Z(J);
         var ft = /^(?:parents|prev(?:Until|All))/,
             dt = {
                 children: !0,
@@ -2913,55 +3123,55 @@ function FastClick(e, t) {
             pt = {};
         Z.Callbacks = function(e) {
             e = "string" == typeof e ? pt[e] || o(e) : Z.extend({}, e);
-            var t, n, r, i, a, s, l = [],
-                c = !e.once && [],
+            var t, n, r, i, a, s, c = [],
+                l = !e.once && [],
                 u = function(o) {
-                    for (t = e.memory && o, n = !0, s = i || 0, i = 0, a = l.length, r = !0; l && a > s; s++)
-                        if (l[s].apply(o[0], o[1]) === !1 && e.stopOnFalse) {
+                    for (t = e.memory && o, n = !0, s = i || 0, i = 0, a = c.length, r = !0; c && a > s; s++)
+                        if (c[s].apply(o[0], o[1]) === !1 && e.stopOnFalse) {
                             t = !1;
                             break
                         }
-                    r = !1, l && (c ? c.length && u(c.shift()) : t ? l = [] : f.disable())
+                    r = !1, c && (l ? l.length && u(l.shift()) : t ? c = [] : f.disable())
                 },
                 f = {
                     add: function() {
-                        if (l) {
-                            var n = l.length;
+                        if (c) {
+                            var n = c.length;
                             ! function o(t) {
                                 Z.each(t, function(t, n) {
                                     var r = Z.type(n);
-                                    "function" === r ? e.unique && f.has(n) || l.push(n) : n && n.length && "string" !== r && o(n)
+                                    "function" === r ? e.unique && f.has(n) || c.push(n) : n && n.length && "string" !== r && o(n)
                                 })
-                            }(arguments), r ? a = l.length : t && (i = n, u(t))
+                            }(arguments), r ? a = c.length : t && (i = n, u(t))
                         }
                         return this
                     },
                     remove: function() {
-                        return l && Z.each(arguments, function(e, t) {
+                        return c && Z.each(arguments, function(e, t) {
                             for (var n;
-                                (n = Z.inArray(t, l, n)) > -1;) l.splice(n, 1), r && (a >= n && a--, s >= n && s--)
+                                (n = Z.inArray(t, c, n)) > -1;) c.splice(n, 1), r && (a >= n && a--, s >= n && s--)
                         }), this
                     },
                     has: function(e) {
-                        return e ? Z.inArray(e, l) > -1 : !(!l || !l.length)
+                        return e ? Z.inArray(e, c) > -1 : !(!c || !c.length)
                     },
                     empty: function() {
-                        return l = [], a = 0, this
+                        return c = [], a = 0, this
                     },
                     disable: function() {
-                        return l = c = t = void 0, this
+                        return c = l = t = void 0, this
                     },
                     disabled: function() {
-                        return !l
-                    },
-                    lock: function() {
-                        return c = void 0, t || f.disable(), this
-                    },
-                    locked: function() {
                         return !c
                     },
+                    lock: function() {
+                        return l = void 0, t || f.disable(), this
+                    },
+                    locked: function() {
+                        return !l
+                    },
                     fireWith: function(e, t) {
-                        return !l || n && !c || (t = t || [], t = [e, t.slice ? t.slice() : t], r ? c.push(t) : u(t)), this
+                        return !c || n && !l || (t = t || [], t = [e, t.slice ? t.slice() : t], r ? l.push(t) : u(t)), this
                     },
                     fire: function() {
                         return f.fireWith(this, arguments), this
@@ -3015,18 +3225,18 @@ function FastClick(e, t) {
             },
             when: function(e) {
                 var t, n, r, i = 0,
-                    o = q.call(arguments),
+                    o = z.call(arguments),
                     a = o.length,
                     s = 1 !== a || e && Z.isFunction(e.promise) ? a : 0,
-                    l = 1 === s ? e : Z.Deferred(),
-                    c = function(e, n, r) {
+                    c = 1 === s ? e : Z.Deferred(),
+                    l = function(e, n, r) {
                         return function(i) {
-                            n[e] = this, r[e] = arguments.length > 1 ? q.call(arguments) : i, r === t ? l.notifyWith(n, r) : --s || l.resolveWith(n, r)
+                            n[e] = this, r[e] = arguments.length > 1 ? z.call(arguments) : i, r === t ? c.notifyWith(n, r) : --s || c.resolveWith(n, r)
                         }
                     };
                 if (a > 1)
-                    for (t = new Array(a), n = new Array(a), r = new Array(a); a > i; i++) o[i] && Z.isFunction(o[i].promise) ? o[i].promise().done(c(i, r, o)).fail(l.reject).progress(c(i, n, t)) : --s;
-                return s || l.resolveWith(r, o), l.promise()
+                    for (t = new Array(a), n = new Array(a), r = new Array(a); a > i; i++) o[i] && Z.isFunction(o[i].promise) ? o[i].promise().done(l(i, r, o)).fail(c.reject).progress(l(i, n, t)) : --s;
+                return s || c.resolveWith(r, o), c.promise()
             }
         });
         var mt;
@@ -3046,16 +3256,16 @@ function FastClick(e, t) {
         }, Z.ready.promise();
         var vt = Z.access = function(e, t, n, r, i, o, a) {
             var s = 0,
-                l = e.length,
-                c = null == n;
+                c = e.length,
+                l = null == n;
             if ("object" === Z.type(n)) {
                 i = !0;
                 for (s in n) Z.access(e, t, s, n[s], !0, o, a)
-            } else if (void 0 !== r && (i = !0, Z.isFunction(r) || (a = !0), c && (a ? (t.call(e, r), t = null) : (c = t, t = function(e, t, n) {
-                    return c.call(Z(e), n)
+            } else if (void 0 !== r && (i = !0, Z.isFunction(r) || (a = !0), l && (a ? (t.call(e, r), t = null) : (l = t, t = function(e, t, n) {
+                    return l.call(Z(e), n)
                 })), t))
-                for (; l > s; s++) t(e[s], n, a ? r : r.call(e[s], s, t(e[s], n)));
-            return i ? e : c ? t.call(e) : l ? t(e[0], n) : o
+                for (; c > s; s++) t(e[s], n, a ? r : r.call(e[s], s, t(e[s], n)));
+            return i ? e : l ? t.call(e) : c ? t(e[0], n) : o
         };
         Z.acceptData = function(e) {
             return 1 === e.nodeType || 9 === e.nodeType || !+e.nodeType
@@ -3135,7 +3345,7 @@ function FastClick(e, t) {
                     a = o && o.attributes;
                 if (void 0 === e) {
                     if (this.length && (i = yt.get(o), 1 === o.nodeType && !gt.get(o, "hasDataAttrs"))) {
-                        for (n = a.length; n--;) a[n] && (r = a[n].name, 0 === r.indexOf("data-") && (r = Z.camelCase(r.slice(5)), l(o, r, i[r])));
+                        for (n = a.length; n--;) a[n] && (r = a[n].name, 0 === r.indexOf("data-") && (r = Z.camelCase(r.slice(5)), c(o, r, i[r])));
                         gt.set(o, "hasDataAttrs", !0)
                     }
                     return i
@@ -3147,7 +3357,7 @@ function FastClick(e, t) {
                     if (o && void 0 === t) {
                         if (n = yt.get(o, e), void 0 !== n) return n;
                         if (n = yt.get(o, r), void 0 !== n) return n;
-                        if (n = l(o, r, void 0), void 0 !== n) return n
+                        if (n = c(o, r, void 0), void 0 !== n) return n
                     } else this.each(function() {
                         var n = yt.get(this, r);
                         yt.set(this, r, t), -1 !== e.indexOf("-") && void 0 !== n && yt.set(this, e, t)
@@ -3213,10 +3423,10 @@ function FastClick(e, t) {
         });
         var xt = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source,
             Tt = ["Top", "Right", "Bottom", "Left"],
-            _t = function(e, t) {
+            Et = function(e, t) {
                 return e = t || e, "none" === Z.css(e, "display") || !Z.contains(e.ownerDocument, e)
             },
-            Et = /^(?:checkbox|radio)$/i;
+            _t = /^(?:checkbox|radio)$/i;
         ! function() {
             var e = J.createDocumentFragment(),
                 t = e.appendChild(J.createElement("div")),
@@ -3227,16 +3437,16 @@ function FastClick(e, t) {
         K.focusinBubbles = "onfocusin" in e;
         var kt = /^key/,
             St = /^(?:mouse|pointer|contextmenu)|click/,
-            Nt = /^(?:focusinfocus|focusoutblur)$/,
-            At = /^([^.]*)(?:\.(.+)|)$/;
+            At = /^(?:focusinfocus|focusoutblur)$/,
+            Nt = /^([^.]*)(?:\.(.+)|)$/;
         Z.event = {
             global: {},
             add: function(e, t, n, r, i) {
-                var o, a, s, l, c, u, f, d, h, p, m, v = gt.get(e);
+                var o, a, s, c, l, u, f, d, h, p, m, v = gt.get(e);
                 if (v)
-                    for (n.handler && (o = n, n = o.handler, i = o.selector), n.guid || (n.guid = Z.guid++), (l = v.events) || (l = v.events = {}), (a = v.handle) || (a = v.handle = function(t) {
+                    for (n.handler && (o = n, n = o.handler, i = o.selector), n.guid || (n.guid = Z.guid++), (c = v.events) || (c = v.events = {}), (a = v.handle) || (a = v.handle = function(t) {
                             return typeof Z !== Ct && Z.event.triggered !== t.type ? Z.event.dispatch.apply(e, arguments) : void 0
-                        }), t = (t || "").match(ht) || [""], c = t.length; c--;) s = At.exec(t[c]) || [], h = m = s[1], p = (s[2] || "").split(".").sort(), h && (f = Z.event.special[h] || {}, h = (i ? f.delegateType : f.bindType) || h, f = Z.event.special[h] || {}, u = Z.extend({
+                        }), t = (t || "").match(ht) || [""], l = t.length; l--;) s = Nt.exec(t[l]) || [], h = m = s[1], p = (s[2] || "").split(".").sort(), h && (f = Z.event.special[h] || {}, h = (i ? f.delegateType : f.bindType) || h, f = Z.event.special[h] || {}, u = Z.extend({
                         type: h,
                         origType: m,
                         data: r,
@@ -3245,58 +3455,58 @@ function FastClick(e, t) {
                         selector: i,
                         needsContext: i && Z.expr.match.needsContext.test(i),
                         namespace: p.join(".")
-                    }, o), (d = l[h]) || (d = l[h] = [], d.delegateCount = 0, f.setup && f.setup.call(e, r, p, a) !== !1 || e.addEventListener && e.addEventListener(h, a, !1)), f.add && (f.add.call(e, u), u.handler.guid || (u.handler.guid = n.guid)), i ? d.splice(d.delegateCount++, 0, u) : d.push(u), Z.event.global[h] = !0)
+                    }, o), (d = c[h]) || (d = c[h] = [], d.delegateCount = 0, f.setup && f.setup.call(e, r, p, a) !== !1 || e.addEventListener && e.addEventListener(h, a, !1)), f.add && (f.add.call(e, u), u.handler.guid || (u.handler.guid = n.guid)), i ? d.splice(d.delegateCount++, 0, u) : d.push(u), Z.event.global[h] = !0)
             },
             remove: function(e, t, n, r, i) {
-                var o, a, s, l, c, u, f, d, h, p, m, v = gt.hasData(e) && gt.get(e);
-                if (v && (l = v.events)) {
-                    for (t = (t || "").match(ht) || [""], c = t.length; c--;)
-                        if (s = At.exec(t[c]) || [], h = m = s[1], p = (s[2] || "").split(".").sort(), h) {
-                            for (f = Z.event.special[h] || {}, h = (r ? f.delegateType : f.bindType) || h, d = l[h] || [], s = s[2] && new RegExp("(^|\\.)" + p.join("\\.(?:.*\\.|)") + "(\\.|$)"), a = o = d.length; o--;) u = d[o], !i && m !== u.origType || n && n.guid !== u.guid || s && !s.test(u.namespace) || r && r !== u.selector && ("**" !== r || !u.selector) || (d.splice(o, 1), u.selector && d.delegateCount--, f.remove && f.remove.call(e, u));
-                            a && !d.length && (f.teardown && f.teardown.call(e, p, v.handle) !== !1 || Z.removeEvent(e, h, v.handle), delete l[h])
+                var o, a, s, c, l, u, f, d, h, p, m, v = gt.hasData(e) && gt.get(e);
+                if (v && (c = v.events)) {
+                    for (t = (t || "").match(ht) || [""], l = t.length; l--;)
+                        if (s = Nt.exec(t[l]) || [], h = m = s[1], p = (s[2] || "").split(".").sort(), h) {
+                            for (f = Z.event.special[h] || {}, h = (r ? f.delegateType : f.bindType) || h, d = c[h] || [], s = s[2] && new RegExp("(^|\\.)" + p.join("\\.(?:.*\\.|)") + "(\\.|$)"), a = o = d.length; o--;) u = d[o], !i && m !== u.origType || n && n.guid !== u.guid || s && !s.test(u.namespace) || r && r !== u.selector && ("**" !== r || !u.selector) || (d.splice(o, 1), u.selector && d.delegateCount--, f.remove && f.remove.call(e, u));
+                            a && !d.length && (f.teardown && f.teardown.call(e, p, v.handle) !== !1 || Z.removeEvent(e, h, v.handle), delete c[h])
                         } else
-                            for (h in l) Z.event.remove(e, h + t[c], n, r, !0);
-                    Z.isEmptyObject(l) && (delete v.handle, gt.remove(e, "events"))
+                            for (h in c) Z.event.remove(e, h + t[l], n, r, !0);
+                    Z.isEmptyObject(c) && (delete v.handle, gt.remove(e, "events"))
                 }
             },
             trigger: function(t, n, r, i) {
-                var o, a, s, l, c, u, f, d = [r || J],
+                var o, a, s, c, l, u, f, d = [r || J],
                     h = G.call(t, "type") ? t.type : t,
                     p = G.call(t, "namespace") ? t.namespace.split(".") : [];
-                if (a = s = r = r || J, 3 !== r.nodeType && 8 !== r.nodeType && !Nt.test(h + Z.event.triggered) && (h.indexOf(".") >= 0 && (p = h.split("."), h = p.shift(), p.sort()), c = h.indexOf(":") < 0 && "on" + h, t = t[Z.expando] ? t : new Z.Event(h, "object" == typeof t && t), t.isTrigger = i ? 2 : 3, t.namespace = p.join("."), t.namespace_re = t.namespace ? new RegExp("(^|\\.)" + p.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, t.result = void 0, t.target || (t.target = r), n = null == n ? [t] : Z.makeArray(n, [t]), f = Z.event.special[h] || {}, i || !f.trigger || f.trigger.apply(r, n) !== !1)) {
+                if (a = s = r = r || J, 3 !== r.nodeType && 8 !== r.nodeType && !At.test(h + Z.event.triggered) && (h.indexOf(".") >= 0 && (p = h.split("."), h = p.shift(), p.sort()), l = h.indexOf(":") < 0 && "on" + h, t = t[Z.expando] ? t : new Z.Event(h, "object" == typeof t && t), t.isTrigger = i ? 2 : 3, t.namespace = p.join("."), t.namespace_re = t.namespace ? new RegExp("(^|\\.)" + p.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, t.result = void 0, t.target || (t.target = r), n = null == n ? [t] : Z.makeArray(n, [t]), f = Z.event.special[h] || {}, i || !f.trigger || f.trigger.apply(r, n) !== !1)) {
                     if (!i && !f.noBubble && !Z.isWindow(r)) {
-                        for (l = f.delegateType || h, Nt.test(l + h) || (a = a.parentNode); a; a = a.parentNode) d.push(a), s = a;
+                        for (c = f.delegateType || h, At.test(c + h) || (a = a.parentNode); a; a = a.parentNode) d.push(a), s = a;
                         s === (r.ownerDocument || J) && d.push(s.defaultView || s.parentWindow || e)
                     }
                     for (o = 0;
-                        (a = d[o++]) && !t.isPropagationStopped();) t.type = o > 1 ? l : f.bindType || h, u = (gt.get(a, "events") || {})[t.type] && gt.get(a, "handle"), u && u.apply(a, n), u = c && a[c], u && u.apply && Z.acceptData(a) && (t.result = u.apply(a, n), t.result === !1 && t.preventDefault());
-                    return t.type = h, i || t.isDefaultPrevented() || f._default && f._default.apply(d.pop(), n) !== !1 || !Z.acceptData(r) || c && Z.isFunction(r[h]) && !Z.isWindow(r) && (s = r[c], s && (r[c] = null), Z.event.triggered = h, r[h](), Z.event.triggered = void 0, s && (r[c] = s)), t.result
+                        (a = d[o++]) && !t.isPropagationStopped();) t.type = o > 1 ? c : f.bindType || h, u = (gt.get(a, "events") || {})[t.type] && gt.get(a, "handle"), u && u.apply(a, n), u = l && a[l], u && u.apply && Z.acceptData(a) && (t.result = u.apply(a, n), t.result === !1 && t.preventDefault());
+                    return t.type = h, i || t.isDefaultPrevented() || f._default && f._default.apply(d.pop(), n) !== !1 || !Z.acceptData(r) || l && Z.isFunction(r[h]) && !Z.isWindow(r) && (s = r[l], s && (r[l] = null), Z.event.triggered = h, r[h](), Z.event.triggered = void 0, s && (r[l] = s)), t.result
                 }
             },
             dispatch: function(e) {
                 e = Z.event.fix(e);
                 var t, n, r, i, o, a = [],
-                    s = q.call(arguments),
-                    l = (gt.get(this, "events") || {})[e.type] || [],
-                    c = Z.event.special[e.type] || {};
-                if (s[0] = e, e.delegateTarget = this, !c.preDispatch || c.preDispatch.call(this, e) !== !1) {
-                    for (a = Z.event.handlers.call(this, e, l), t = 0;
+                    s = z.call(arguments),
+                    c = (gt.get(this, "events") || {})[e.type] || [],
+                    l = Z.event.special[e.type] || {};
+                if (s[0] = e, e.delegateTarget = this, !l.preDispatch || l.preDispatch.call(this, e) !== !1) {
+                    for (a = Z.event.handlers.call(this, e, c), t = 0;
                         (i = a[t++]) && !e.isPropagationStopped();)
                         for (e.currentTarget = i.elem, n = 0;
                             (o = i.handlers[n++]) && !e.isImmediatePropagationStopped();)(!e.namespace_re || e.namespace_re.test(o.namespace)) && (e.handleObj = o, e.data = o.data, r = ((Z.event.special[o.origType] || {}).handle || o.handler).apply(i.elem, s), void 0 !== r && (e.result = r) === !1 && (e.preventDefault(), e.stopPropagation()));
-                    return c.postDispatch && c.postDispatch.call(this, e), e.result
+                    return l.postDispatch && l.postDispatch.call(this, e), e.result
                 }
             },
             handlers: function(e, t) {
                 var n, r, i, o, a = [],
                     s = t.delegateCount,
-                    l = e.target;
-                if (s && l.nodeType && (!e.button || "click" !== e.type))
-                    for (; l !== this; l = l.parentNode || this)
-                        if (l.disabled !== !0 || "click" !== e.type) {
-                            for (r = [], n = 0; s > n; n++) o = t[n], i = o.selector + " ", void 0 === r[i] && (r[i] = o.needsContext ? Z(i, this).index(l) >= 0 : Z.find(i, this, null, [l]).length), r[i] && r.push(o);
+                    c = e.target;
+                if (s && c.nodeType && (!e.button || "click" !== e.type))
+                    for (; c !== this; c = c.parentNode || this)
+                        if (c.disabled !== !0 || "click" !== e.type) {
+                            for (r = [], n = 0; s > n; n++) o = t[n], i = o.selector + " ", void 0 === r[i] && (r[i] = o.needsContext ? Z(i, this).index(c) >= 0 : Z.find(i, this, null, [c]).length), r[i] && r.push(o);
                             r.length && a.push({
-                                elem: l,
+                                elem: c,
                                 handlers: r
                             })
                         }
@@ -3369,22 +3579,22 @@ function FastClick(e, t) {
         }, Z.removeEvent = function(e, t, n) {
             e.removeEventListener && e.removeEventListener(t, n, !1)
         }, Z.Event = function(e, t) {
-            return this instanceof Z.Event ? (e && e.type ? (this.originalEvent = e, this.type = e.type, this.isDefaultPrevented = e.defaultPrevented || void 0 === e.defaultPrevented && e.returnValue === !1 ? c : u) : this.type = e, t && Z.extend(this, t), this.timeStamp = e && e.timeStamp || Z.now(), void(this[Z.expando] = !0)) : new Z.Event(e, t)
+            return this instanceof Z.Event ? (e && e.type ? (this.originalEvent = e, this.type = e.type, this.isDefaultPrevented = e.defaultPrevented || void 0 === e.defaultPrevented && e.returnValue === !1 ? l : u) : this.type = e, t && Z.extend(this, t), this.timeStamp = e && e.timeStamp || Z.now(), void(this[Z.expando] = !0)) : new Z.Event(e, t)
         }, Z.Event.prototype = {
             isDefaultPrevented: u,
             isPropagationStopped: u,
             isImmediatePropagationStopped: u,
             preventDefault: function() {
                 var e = this.originalEvent;
-                this.isDefaultPrevented = c, e && e.preventDefault && e.preventDefault()
+                this.isDefaultPrevented = l, e && e.preventDefault && e.preventDefault()
             },
             stopPropagation: function() {
                 var e = this.originalEvent;
-                this.isPropagationStopped = c, e && e.stopPropagation && e.stopPropagation()
+                this.isPropagationStopped = l, e && e.stopPropagation && e.stopPropagation()
             },
             stopImmediatePropagation: function() {
                 var e = this.originalEvent;
-                this.isImmediatePropagationStopped = c, e && e.stopImmediatePropagation && e.stopImmediatePropagation(), this.stopPropagation()
+                this.isImmediatePropagationStopped = l, e && e.stopImmediatePropagation && e.stopImmediatePropagation(), this.stopPropagation()
             }
         }, Z.each({
             mouseenter: "mouseover",
@@ -3463,11 +3673,11 @@ function FastClick(e, t) {
         });
         var Dt = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi,
             jt = /<([\w:]+)/,
-            $t = /<|&#?\w+;/,
-            Lt = /<(?:script|style|link)/i,
-            Pt = /checked\s*(?:[^=]|=\s*.checked.)/i,
-            It = /^$|\/(?:java|ecma)script/i,
-            Ot = /^true\/(.*)/,
+            Lt = /<|&#?\w+;/,
+            Pt = /<(?:script|style|link)/i,
+            Ot = /checked\s*(?:[^=]|=\s*.checked.)/i,
+            $t = /^$|\/(?:java|ecma)script/i,
+            It = /^true\/(.*)/,
             Mt = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g,
             Ft = {
                 option: [1, "<select multiple='multiple'>", "</select>"],
@@ -3480,26 +3690,26 @@ function FastClick(e, t) {
         Ft.optgroup = Ft.option, Ft.tbody = Ft.tfoot = Ft.colgroup = Ft.caption = Ft.thead, Ft.th = Ft.td, Z.extend({
             clone: function(e, t, n) {
                 var r, i, o, a, s = e.cloneNode(!0),
-                    l = Z.contains(e.ownerDocument, e);
+                    c = Z.contains(e.ownerDocument, e);
                 if (!(K.noCloneChecked || 1 !== e.nodeType && 11 !== e.nodeType || Z.isXMLDoc(e)))
                     for (a = g(s), o = g(e), r = 0, i = o.length; i > r; r++) y(o[r], a[r]);
                 if (t)
                     if (n)
                         for (o = o || g(e), a = a || g(s), r = 0, i = o.length; i > r; r++) v(o[r], a[r]);
                     else v(e, s);
-                return a = g(s, "script"), a.length > 0 && m(a, !l && g(e, "script")), s
+                return a = g(s, "script"), a.length > 0 && m(a, !c && g(e, "script")), s
             },
             buildFragment: function(e, t, n, r) {
-                for (var i, o, a, s, l, c, u = t.createDocumentFragment(), f = [], d = 0, h = e.length; h > d; d++)
+                for (var i, o, a, s, c, l, u = t.createDocumentFragment(), f = [], d = 0, h = e.length; h > d; d++)
                     if (i = e[d], i || 0 === i)
                         if ("object" === Z.type(i)) Z.merge(f, i.nodeType ? [i] : i);
-                        else if ($t.test(i)) {
-                    for (o = o || u.appendChild(t.createElement("div")), a = (jt.exec(i) || ["", ""])[1].toLowerCase(), s = Ft[a] || Ft._default, o.innerHTML = s[1] + i.replace(Dt, "<$1></$2>") + s[2], c = s[0]; c--;) o = o.lastChild;
+                        else if (Lt.test(i)) {
+                    for (o = o || u.appendChild(t.createElement("div")), a = (jt.exec(i) || ["", ""])[1].toLowerCase(), s = Ft[a] || Ft._default, o.innerHTML = s[1] + i.replace(Dt, "<$1></$2>") + s[2], l = s[0]; l--;) o = o.lastChild;
                     Z.merge(f, o.childNodes), o = u.firstChild, o.textContent = ""
                 } else f.push(t.createTextNode(i));
                 for (u.textContent = "", d = 0; i = f[d++];)
-                    if ((!r || -1 === Z.inArray(i, r)) && (l = Z.contains(i.ownerDocument, i), o = g(u.appendChild(i), "script"), l && m(o), n))
-                        for (c = 0; i = o[c++];) It.test(i.type || "") && n.push(i);
+                    if ((!r || -1 === Z.inArray(i, r)) && (c = Z.contains(i.ownerDocument, i), o = g(u.appendChild(i), "script"), c && m(o), n))
+                        for (l = 0; i = o[l++];) $t.test(i.type || "") && n.push(i);
                 return u
             },
             cleanData: function(e) {
@@ -3565,7 +3775,7 @@ function FastClick(e, t) {
                         n = 0,
                         r = this.length;
                     if (void 0 === e && 1 === t.nodeType) return t.innerHTML;
-                    if ("string" == typeof e && !Lt.test(e) && !Ft[(jt.exec(e) || ["", ""])[1].toLowerCase()]) {
+                    if ("string" == typeof e && !Pt.test(e) && !Ft[(jt.exec(e) || ["", ""])[1].toLowerCase()]) {
                         e = e.replace(Dt, "<$1></$2>");
                         try {
                             for (; r > n; n++) t = this[n] || {}, 1 === t.nodeType && (Z.cleanData(g(t, !1)), t.innerHTML = e);
@@ -3586,20 +3796,20 @@ function FastClick(e, t) {
             },
             domManip: function(e, t) {
                 e = B.apply([], e);
-                var n, r, i, o, a, s, l = 0,
-                    c = this.length,
+                var n, r, i, o, a, s, c = 0,
+                    l = this.length,
                     u = this,
-                    f = c - 1,
+                    f = l - 1,
                     d = e[0],
                     m = Z.isFunction(d);
-                if (m || c > 1 && "string" == typeof d && !K.checkClone && Pt.test(d)) return this.each(function(n) {
+                if (m || l > 1 && "string" == typeof d && !K.checkClone && Ot.test(d)) return this.each(function(n) {
                     var r = u.eq(n);
                     m && (e[0] = d.call(this, n, r.html())), r.domManip(e, t)
                 });
-                if (c && (n = Z.buildFragment(e, this[0].ownerDocument, !1, this), r = n.firstChild, 1 === n.childNodes.length && (n = r), r)) {
-                    for (i = Z.map(g(n, "script"), h), o = i.length; c > l; l++) a = n, l !== f && (a = Z.clone(a, !0, !0), o && Z.merge(i, g(a, "script"))), t.call(this[l], a, l);
+                if (l && (n = Z.buildFragment(e, this[0].ownerDocument, !1, this), r = n.firstChild, 1 === n.childNodes.length && (n = r), r)) {
+                    for (i = Z.map(g(n, "script"), h), o = i.length; l > c; c++) a = n, c !== f && (a = Z.clone(a, !0, !0), o && Z.merge(i, g(a, "script"))), t.call(this[c], a, c);
                     if (o)
-                        for (s = i[i.length - 1].ownerDocument, Z.map(i, p), l = 0; o > l; l++) a = i[l], It.test(a.type || "") && !gt.access(a, "globalEval") && Z.contains(s, a) && (a.src ? Z._evalUrl && Z._evalUrl(a.src) : Z.globalEval(a.textContent.replace(Mt, "")))
+                        for (s = i[i.length - 1].ownerDocument, Z.map(i, p), c = 0; o > c; c++) a = i[c], $t.test(a.type || "") && !gt.access(a, "globalEval") && Z.contains(s, a) && (a.src ? Z._evalUrl && Z._evalUrl(a.src) : Z.globalEval(a.textContent.replace(Mt, "")))
                 }
                 return this
             }
@@ -3617,9 +3827,9 @@ function FastClick(e, t) {
         });
         var Rt, Ut = {},
             Ht = /^margin/,
-            zt = new RegExp("^(" + xt + ")(?!px)[a-z%]+$", "i"),
-            qt = function(e) {
-                return e.ownerDocument.defaultView.getComputedStyle(e, null)
+            qt = new RegExp("^(" + xt + ")(?!px)[a-z%]+$", "i"),
+            zt = function(t) {
+                return t.ownerDocument.defaultView.opener ? t.ownerDocument.defaultView.getComputedStyle(t, null) : e.getComputedStyle(t, null)
             };
         ! function() {
             function t() {
@@ -3639,7 +3849,7 @@ function FastClick(e, t) {
                 },
                 reliableMarginRight: function() {
                     var t, n = a.appendChild(J.createElement("div"));
-                    return n.style.cssText = a.style.cssText = "-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;display:block;margin:0;border:0;padding:0", n.style.marginRight = n.style.width = "0", a.style.width = "1px", i.appendChild(o), t = !parseFloat(e.getComputedStyle(n, null).marginRight), i.removeChild(o), t
+                    return n.style.cssText = a.style.cssText = "-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;display:block;margin:0;border:0;padding:0", n.style.marginRight = n.style.width = "0", a.style.width = "1px", i.appendChild(o), t = !parseFloat(e.getComputedStyle(n, null).marginRight), i.removeChild(o), a.removeChild(n), t
                 }
             }))
         }(), Z.swap = function(e, t, n, r) {
@@ -3693,13 +3903,13 @@ function FastClick(e, t) {
             style: function(e, t, n, r) {
                 if (e && 3 !== e.nodeType && 8 !== e.nodeType && e.style) {
                     var i, o, a, s = Z.camelCase(t),
-                        l = e.style;
-                    return t = Z.cssProps[s] || (Z.cssProps[s] = _(l, s)), a = Z.cssHooks[t] || Z.cssHooks[s], void 0 === n ? a && "get" in a && void 0 !== (i = a.get(e, !1, r)) ? i : l[t] : (o = typeof n, "string" === o && (i = Vt.exec(n)) && (n = (i[1] + 1) * i[2] + parseFloat(Z.css(e, t)), o = "number"), null != n && n === n && ("number" !== o || Z.cssNumber[s] || (n += "px"), K.clearCloneStyle || "" !== n || 0 !== t.indexOf("background") || (l[t] = "inherit"), a && "set" in a && void 0 === (n = a.set(e, n, r)) || (l[t] = n)), void 0)
+                        c = e.style;
+                    return t = Z.cssProps[s] || (Z.cssProps[s] = E(c, s)), a = Z.cssHooks[t] || Z.cssHooks[s], void 0 === n ? a && "get" in a && void 0 !== (i = a.get(e, !1, r)) ? i : c[t] : (o = typeof n, "string" === o && (i = Vt.exec(n)) && (n = (i[1] + 1) * i[2] + parseFloat(Z.css(e, t)), o = "number"), null != n && n === n && ("number" !== o || Z.cssNumber[s] || (n += "px"), K.clearCloneStyle || "" !== n || 0 !== t.indexOf("background") || (c[t] = "inherit"), a && "set" in a && void 0 === (n = a.set(e, n, r)) || (c[t] = n)), void 0)
                 }
             },
             css: function(e, t, n, r) {
                 var i, o, a, s = Z.camelCase(t);
-                return t = Z.cssProps[s] || (Z.cssProps[s] = _(e.style, s)), a = Z.cssHooks[t] || Z.cssHooks[s], a && "get" in a && (i = a.get(e, !0, n)), void 0 === i && (i = x(e, t, r)), "normal" === i && t in Yt && (i = Yt[t]), "" === n || n ? (o = parseFloat(i), n === !0 || Z.isNumeric(o) ? o || 0 : i) : i
+                return t = Z.cssProps[s] || (Z.cssProps[s] = E(e.style, s)), a = Z.cssHooks[t] || Z.cssHooks[s], a && "get" in a && (i = a.get(e, !0, n)), void 0 === i && (i = x(e, t, r)), "normal" === i && t in Yt && (i = Yt[t]), "" === n || n ? (o = parseFloat(i), n === !0 || Z.isNumeric(o) ? o || 0 : i) : i
             }
         }), Z.each(["height", "width"], function(e, t) {
             Z.cssHooks[t] = {
@@ -3709,8 +3919,8 @@ function FastClick(e, t) {
                     }) : k(e, t, r) : void 0
                 },
                 set: function(e, n, r) {
-                    var i = r && qt(e);
-                    return E(e, n, r ? C(e, t, r, "border-box" === Z.css(e, "boxSizing", !1, i), i) : 0)
+                    var i = r && zt(e);
+                    return _(e, n, r ? C(e, t, r, "border-box" === Z.css(e, "boxSizing", !1, i), i) : 0)
                 }
             }
         }), Z.cssHooks.marginRight = T(K.reliableMarginRight, function(e, t) {
@@ -3727,14 +3937,14 @@ function FastClick(e, t) {
                     for (var r = 0, i = {}, o = "string" == typeof n ? n.split(" ") : [n]; 4 > r; r++) i[e + Tt[r] + t] = o[r] || o[r - 2] || o[0];
                     return i
                 }
-            }, Ht.test(e) || (Z.cssHooks[e + t].set = E)
+            }, Ht.test(e) || (Z.cssHooks[e + t].set = _)
         }), Z.fn.extend({
             css: function(e, t) {
                 return vt(this, function(e, t, n) {
                     var r, i, o = {},
                         a = 0;
                     if (Z.isArray(t)) {
-                        for (r = qt(e), i = t.length; i > a; a++) o[t[a]] = Z.css(e, t[a], !1, r);
+                        for (r = zt(e), i = t.length; i > a; a++) o[t[a]] = Z.css(e, t[a], !1, r);
                         return o
                     }
                     return void 0 !== n ? Z.style(e, t, n) : Z.css(e, t)
@@ -3748,23 +3958,23 @@ function FastClick(e, t) {
             },
             toggle: function(e) {
                 return "boolean" == typeof e ? e ? this.show() : this.hide() : this.each(function() {
-                    _t(this) ? Z(this).show() : Z(this).hide()
+                    Et(this) ? Z(this).show() : Z(this).hide()
                 })
             }
-        }), Z.Tween = N, N.prototype = {
-            constructor: N,
+        }), Z.Tween = A, A.prototype = {
+            constructor: A,
             init: function(e, t, n, r, i, o) {
                 this.elem = e, this.prop = n, this.easing = i || "swing", this.options = t, this.start = this.now = this.cur(), this.end = r, this.unit = o || (Z.cssNumber[n] ? "" : "px")
             },
             cur: function() {
-                var e = N.propHooks[this.prop];
-                return e && e.get ? e.get(this) : N.propHooks._default.get(this)
+                var e = A.propHooks[this.prop];
+                return e && e.get ? e.get(this) : A.propHooks._default.get(this)
             },
             run: function(e) {
-                var t, n = N.propHooks[this.prop];
-                return this.pos = t = this.options.duration ? Z.easing[this.easing](e, this.options.duration * e, 0, 1, this.options.duration) : e, this.now = (this.end - this.start) * t + this.start, this.options.step && this.options.step.call(this.elem, this.now, this), n && n.set ? n.set(this) : N.propHooks._default.set(this), this
+                var t, n = A.propHooks[this.prop];
+                return this.pos = t = this.options.duration ? Z.easing[this.easing](e, this.options.duration * e, 0, 1, this.options.duration) : e, this.now = (this.end - this.start) * t + this.start, this.options.step && this.options.step.call(this.elem, this.now, this), n && n.set ? n.set(this) : A.propHooks._default.set(this), this
             }
-        }, N.prototype.init.prototype = N.prototype, N.propHooks = {
+        }, A.prototype.init.prototype = A.prototype, A.propHooks = {
             _default: {
                 get: function(e) {
                     var t;
@@ -3774,7 +3984,7 @@ function FastClick(e, t) {
                     Z.fx.step[e.prop] ? Z.fx.step[e.prop](e) : e.elem.style && (null != e.elem.style[Z.cssProps[e.prop]] || Z.cssHooks[e.prop]) ? Z.style(e.elem, e.prop, e.now + e.unit) : e.elem[e.prop] = e.now
                 }
             }
-        }, N.propHooks.scrollTop = N.propHooks.scrollLeft = {
+        }, A.propHooks.scrollTop = A.propHooks.scrollLeft = {
             set: function(e) {
                 e.elem.nodeType && e.elem.parentNode && (e.elem[e.prop] = e.now)
             }
@@ -3785,11 +3995,11 @@ function FastClick(e, t) {
             swing: function(e) {
                 return .5 - Math.cos(e * Math.PI) / 2
             }
-        }, Z.fx = N.prototype.init, Z.fx.step = {};
+        }, Z.fx = A.prototype.init, Z.fx.step = {};
         var Kt, Jt, Qt = /^(?:toggle|show|hide)$/,
             Zt = new RegExp("^(?:([+-])=|)(" + xt + ")([a-z%]*)$", "i"),
             en = /queueHooks$/,
-            tn = [$],
+            tn = [L],
             nn = {
                 "*": [function(e, t) {
                     var n = this.createTween(e, t),
@@ -3798,15 +4008,15 @@ function FastClick(e, t) {
                         o = i && i[3] || (Z.cssNumber[e] ? "" : "px"),
                         a = (Z.cssNumber[e] || "px" !== o && +r) && Zt.exec(Z.css(n.elem, e)),
                         s = 1,
-                        l = 20;
+                        c = 20;
                     if (a && a[3] !== o) {
                         o = o || a[3], i = i || [], a = +r || 1;
-                        do s = s || ".5", a /= s, Z.style(n.elem, e, a + o); while (s !== (s = n.cur() / r) && 1 !== s && --l)
+                        do s = s || ".5", a /= s, Z.style(n.elem, e, a + o); while (s !== (s = n.cur() / r) && 1 !== s && --c)
                     }
                     return i && (a = n.start = +a || +r || 0, n.unit = o, n.end = i[1] ? a + (i[1] + 1) * i[2] : +i[2]), n
                 }]
             };
-        Z.Animation = Z.extend(P, {
+        Z.Animation = Z.extend(O, {
                 tweener: function(e, t) {
                     Z.isFunction(e) ? (t = e, e = ["*"]) : e = e.split(" ");
                     for (var n, r = 0, i = e.length; i > r; r++) n = e[r], nn[n] = nn[n] || [], nn[n].unshift(t)
@@ -3825,7 +4035,7 @@ function FastClick(e, t) {
                 }, r
             }, Z.fn.extend({
                 fadeTo: function(e, t, n, r) {
-                    return this.filter(_t).css("opacity", 0).show().end().animate({
+                    return this.filter(Et).css("opacity", 0).show().end().animate({
                         opacity: t
                     }, e, n, r)
                 },
@@ -3833,7 +4043,7 @@ function FastClick(e, t) {
                     var i = Z.isEmptyObject(e),
                         o = Z.speed(t, n, r),
                         a = function() {
-                            var t = P(this, Z.extend({}, e), o);
+                            var t = O(this, Z.extend({}, e), o);
                             (i || gt.get(this, "finish")) && t.stop(!0)
                         };
                     return a.finish = a, i || o.queue === !1 ? this.each(a) : this.queue(o.queue, a)
@@ -3994,18 +4204,18 @@ function FastClick(e, t) {
         }), Z.each(["tabIndex", "readOnly", "maxLength", "cellSpacing", "cellPadding", "rowSpan", "colSpan", "useMap", "frameBorder", "contentEditable"], function() {
             Z.propFix[this.toLowerCase()] = this
         });
-        var ln = /[\t\r\n\f]/g;
+        var cn = /[\t\r\n\f]/g;
         Z.fn.extend({
             addClass: function(e) {
                 var t, n, r, i, o, a, s = "string" == typeof e && e,
-                    l = 0,
-                    c = this.length;
+                    c = 0,
+                    l = this.length;
                 if (Z.isFunction(e)) return this.each(function(t) {
                     Z(this).addClass(e.call(this, t, this.className))
                 });
                 if (s)
-                    for (t = (e || "").match(ht) || []; c > l; l++)
-                        if (n = this[l], r = 1 === n.nodeType && (n.className ? (" " + n.className + " ").replace(ln, " ") : " ")) {
+                    for (t = (e || "").match(ht) || []; l > c; c++)
+                        if (n = this[c], r = 1 === n.nodeType && (n.className ? (" " + n.className + " ").replace(cn, " ") : " ")) {
                             for (o = 0; i = t[o++];) r.indexOf(" " + i + " ") < 0 && (r += i + " ");
                             a = Z.trim(r), n.className !== a && (n.className = a)
                         }
@@ -4013,14 +4223,14 @@ function FastClick(e, t) {
             },
             removeClass: function(e) {
                 var t, n, r, i, o, a, s = 0 === arguments.length || "string" == typeof e && e,
-                    l = 0,
-                    c = this.length;
+                    c = 0,
+                    l = this.length;
                 if (Z.isFunction(e)) return this.each(function(t) {
                     Z(this).removeClass(e.call(this, t, this.className))
                 });
                 if (s)
-                    for (t = (e || "").match(ht) || []; c > l; l++)
-                        if (n = this[l], r = 1 === n.nodeType && (n.className ? (" " + n.className + " ").replace(ln, " ") : "")) {
+                    for (t = (e || "").match(ht) || []; l > c; c++)
+                        if (n = this[c], r = 1 === n.nodeType && (n.className ? (" " + n.className + " ").replace(cn, " ") : "")) {
                             for (o = 0; i = t[o++];)
                                 for (; r.indexOf(" " + i + " ") >= 0;) r = r.replace(" " + i + " ", " ");
                             a = e ? Z.trim(r) : "", n.className !== a && (n.className = a)
@@ -4039,11 +4249,11 @@ function FastClick(e, t) {
             },
             hasClass: function(e) {
                 for (var t = " " + e + " ", n = 0, r = this.length; r > n; n++)
-                    if (1 === this[n].nodeType && (" " + this[n].className + " ").replace(ln, " ").indexOf(t) >= 0) return !0;
+                    if (1 === this[n].nodeType && (" " + this[n].className + " ").replace(cn, " ").indexOf(t) >= 0) return !0;
                 return !1
             }
         });
-        var cn = /\r/g;
+        var ln = /\r/g;
         Z.fn.extend({
             val: function(e) {
                 var t, n, r, i = this[0]; {
@@ -4053,7 +4263,7 @@ function FastClick(e, t) {
                             return null == e ? "" : e + ""
                         })), t = Z.valHooks[this.type] || Z.valHooks[this.nodeName.toLowerCase()], t && "set" in t && void 0 !== t.set(this, i, "value") || (this.value = i))
                     });
-                    if (i) return t = Z.valHooks[i.type] || Z.valHooks[i.nodeName.toLowerCase()], t && "get" in t && void 0 !== (n = t.get(i, "value")) ? n : (n = i.value, "string" == typeof n ? n.replace(cn, "") : null == n ? "" : n)
+                    if (i) return t = Z.valHooks[i.type] || Z.valHooks[i.nodeName.toLowerCase()], t && "get" in t && void 0 !== (n = t.get(i, "value")) ? n : (n = i.value, "string" == typeof n ? n.replace(ln, "") : null == n ? "" : n)
                 }
             }
         }), Z.extend({
@@ -4066,8 +4276,8 @@ function FastClick(e, t) {
                 },
                 select: {
                     get: function(e) {
-                        for (var t, n, r = e.options, i = e.selectedIndex, o = "select-one" === e.type || 0 > i, a = o ? null : [], s = o ? i + 1 : r.length, l = 0 > i ? s : o ? i : 0; s > l; l++)
-                            if (n = r[l], !(!n.selected && l !== i || (K.optDisabled ? n.disabled : null !== n.getAttribute("disabled")) || n.parentNode.disabled && Z.nodeName(n.parentNode, "optgroup"))) {
+                        for (var t, n, r = e.options, i = e.selectedIndex, o = "select-one" === e.type || 0 > i, a = o ? null : [], s = o ? i + 1 : r.length, c = 0 > i ? s : o ? i : 0; s > c; c++)
+                            if (n = r[c], !(!n.selected && c !== i || (K.optDisabled ? n.disabled : null !== n.getAttribute("disabled")) || n.parentNode.disabled && Z.nodeName(n.parentNode, "optgroup"))) {
                                 if (t = Z(n).val(), o) return t;
                                 a.push(t)
                             }
@@ -4122,35 +4332,32 @@ function FastClick(e, t) {
             }
             return (!t || t.getElementsByTagName("parsererror").length) && Z.error("Invalid XML: " + e), t
         };
-        var dn, hn, pn = /#.*$/,
-            mn = /([?&])_=[^&]*/,
-            vn = /^(.*?):[ \t]*([^\r\n]*)$/gm,
-            gn = /^(?:about|app|app-storage|.+-extension|file|res|widget):$/,
-            yn = /^(?:GET|HEAD)$/,
-            bn = /^\/\//,
-            wn = /^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,
-            xn = {},
-            Tn = {},
-            _n = "*/".concat("*");
-        try {
-            hn = location.href
-        } catch (En) {
-            hn = J.createElement("a"), hn.href = "", hn = hn.href
-        }
-        dn = wn.exec(hn.toLowerCase()) || [], Z.extend({
+        var dn = /#.*$/,
+            hn = /([?&])_=[^&]*/,
+            pn = /^(.*?):[ \t]*([^\r\n]*)$/gm,
+            mn = /^(?:about|app|app-storage|.+-extension|file|res|widget):$/,
+            vn = /^(?:GET|HEAD)$/,
+            gn = /^\/\//,
+            yn = /^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,
+            bn = {},
+            wn = {},
+            xn = "*/".concat("*"),
+            Tn = e.location.href,
+            En = yn.exec(Tn.toLowerCase()) || [];
+        Z.extend({
             active: 0,
             lastModified: {},
             etag: {},
             ajaxSettings: {
-                url: hn,
+                url: Tn,
                 type: "GET",
-                isLocal: gn.test(dn[1]),
+                isLocal: mn.test(En[1]),
                 global: !0,
                 processData: !0,
                 async: !0,
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 accepts: {
-                    "*": _n,
+                    "*": xn,
                     text: "text/plain",
                     html: "text/html",
                     xml: "application/xml, text/xml",
@@ -4180,15 +4387,15 @@ function FastClick(e, t) {
             ajaxSetup: function(e, t) {
                 return t ? M(M(e, Z.ajaxSettings), t) : M(Z.ajaxSettings, e)
             },
-            ajaxPrefilter: I(xn),
-            ajaxTransport: I(Tn),
+            ajaxPrefilter: $(bn),
+            ajaxTransport: $(wn),
             ajax: function(e, t) {
                 function n(e, t, n, a) {
-                    var l, u, g, y, w, T = t;
-                    2 !== b && (b = 2, s && clearTimeout(s), r = void 0, o = a || "", x.readyState = e > 0 ? 4 : 0, l = e >= 200 && 300 > e || 304 === e, n && (y = F(f, x, n)), y = R(f, y, x, l), l ? (f.ifModified && (w = x.getResponseHeader("Last-Modified"), w && (Z.lastModified[i] = w), w = x.getResponseHeader("etag"), w && (Z.etag[i] = w)), 204 === e || "HEAD" === f.type ? T = "nocontent" : 304 === e ? T = "notmodified" : (T = y.state, u = y.data, g = y.error, l = !g)) : (g = T, (e || !T) && (T = "error", 0 > e && (e = 0))), x.status = e, x.statusText = (t || T) + "", l ? p.resolveWith(d, [u, T, x]) : p.rejectWith(d, [x, T, g]), x.statusCode(v), v = void 0, c && h.trigger(l ? "ajaxSuccess" : "ajaxError", [x, f, l ? u : g]), m.fireWith(d, [x, T]), c && (h.trigger("ajaxComplete", [x, f]), --Z.active || Z.event.trigger("ajaxStop")))
+                    var c, u, g, y, w, T = t;
+                    2 !== b && (b = 2, s && clearTimeout(s), r = void 0, o = a || "", x.readyState = e > 0 ? 4 : 0, c = e >= 200 && 300 > e || 304 === e, n && (y = F(f, x, n)), y = R(f, y, x, c), c ? (f.ifModified && (w = x.getResponseHeader("Last-Modified"), w && (Z.lastModified[i] = w), w = x.getResponseHeader("etag"), w && (Z.etag[i] = w)), 204 === e || "HEAD" === f.type ? T = "nocontent" : 304 === e ? T = "notmodified" : (T = y.state, u = y.data, g = y.error, c = !g)) : (g = T, (e || !T) && (T = "error", 0 > e && (e = 0))), x.status = e, x.statusText = (t || T) + "", c ? p.resolveWith(d, [u, T, x]) : p.rejectWith(d, [x, T, g]), x.statusCode(v), v = void 0, l && h.trigger(c ? "ajaxSuccess" : "ajaxError", [x, f, c ? u : g]), m.fireWith(d, [x, T]), l && (h.trigger("ajaxComplete", [x, f]), --Z.active || Z.event.trigger("ajaxStop")))
                 }
                 "object" == typeof e && (t = e, e = void 0), t = t || {};
-                var r, i, o, a, s, l, c, u, f = Z.ajaxSetup({}, t),
+                var r, i, o, a, s, c, l, u, f = Z.ajaxSetup({}, t),
                     d = f.context || f,
                     h = f.context && (d.nodeType || d.jquery) ? Z(d) : Z.event,
                     p = Z.Deferred(),
@@ -4204,7 +4411,7 @@ function FastClick(e, t) {
                             var t;
                             if (2 === b) {
                                 if (!a)
-                                    for (a = {}; t = vn.exec(o);) a[t[1].toLowerCase()] = t[2];
+                                    for (a = {}; t = pn.exec(o);) a[t[1].toLowerCase()] = t[2];
                                 t = a[e.toLowerCase()]
                             }
                             return null == t ? null : t
@@ -4232,8 +4439,8 @@ function FastClick(e, t) {
                             return r && r.abort(t), n(0, t), this
                         }
                     };
-                if (p.promise(x).complete = m.add, x.success = x.done, x.error = x.fail, f.url = ((e || f.url || hn) + "").replace(pn, "").replace(bn, dn[1] + "//"), f.type = t.method || t.type || f.method || f.type, f.dataTypes = Z.trim(f.dataType || "*").toLowerCase().match(ht) || [""], null == f.crossDomain && (l = wn.exec(f.url.toLowerCase()), f.crossDomain = !(!l || l[1] === dn[1] && l[2] === dn[2] && (l[3] || ("http:" === l[1] ? "80" : "443")) === (dn[3] || ("http:" === dn[1] ? "80" : "443")))), f.data && f.processData && "string" != typeof f.data && (f.data = Z.param(f.data, f.traditional)), O(xn, f, t, x), 2 === b) return x;
-                c = f.global, c && 0 === Z.active++ && Z.event.trigger("ajaxStart"), f.type = f.type.toUpperCase(), f.hasContent = !yn.test(f.type), i = f.url, f.hasContent || (f.data && (i = f.url += (fn.test(i) ? "&" : "?") + f.data, delete f.data), f.cache === !1 && (f.url = mn.test(i) ? i.replace(mn, "$1_=" + un++) : i + (fn.test(i) ? "&" : "?") + "_=" + un++)), f.ifModified && (Z.lastModified[i] && x.setRequestHeader("If-Modified-Since", Z.lastModified[i]), Z.etag[i] && x.setRequestHeader("If-None-Match", Z.etag[i])), (f.data && f.hasContent && f.contentType !== !1 || t.contentType) && x.setRequestHeader("Content-Type", f.contentType), x.setRequestHeader("Accept", f.dataTypes[0] && f.accepts[f.dataTypes[0]] ? f.accepts[f.dataTypes[0]] + ("*" !== f.dataTypes[0] ? ", " + _n + "; q=0.01" : "") : f.accepts["*"]);
+                if (p.promise(x).complete = m.add, x.success = x.done, x.error = x.fail, f.url = ((e || f.url || Tn) + "").replace(dn, "").replace(gn, En[1] + "//"), f.type = t.method || t.type || f.method || f.type, f.dataTypes = Z.trim(f.dataType || "*").toLowerCase().match(ht) || [""], null == f.crossDomain && (c = yn.exec(f.url.toLowerCase()), f.crossDomain = !(!c || c[1] === En[1] && c[2] === En[2] && (c[3] || ("http:" === c[1] ? "80" : "443")) === (En[3] || ("http:" === En[1] ? "80" : "443")))), f.data && f.processData && "string" != typeof f.data && (f.data = Z.param(f.data, f.traditional)), I(bn, f, t, x), 2 === b) return x;
+                l = Z.event && f.global, l && 0 === Z.active++ && Z.event.trigger("ajaxStart"), f.type = f.type.toUpperCase(), f.hasContent = !vn.test(f.type), i = f.url, f.hasContent || (f.data && (i = f.url += (fn.test(i) ? "&" : "?") + f.data, delete f.data), f.cache === !1 && (f.url = hn.test(i) ? i.replace(hn, "$1_=" + un++) : i + (fn.test(i) ? "&" : "?") + "_=" + un++)), f.ifModified && (Z.lastModified[i] && x.setRequestHeader("If-Modified-Since", Z.lastModified[i]), Z.etag[i] && x.setRequestHeader("If-None-Match", Z.etag[i])), (f.data && f.hasContent && f.contentType !== !1 || t.contentType) && x.setRequestHeader("Content-Type", f.contentType), x.setRequestHeader("Accept", f.dataTypes[0] && f.accepts[f.dataTypes[0]] ? f.accepts[f.dataTypes[0]] + ("*" !== f.dataTypes[0] ? ", " + xn + "; q=0.01" : "") : f.accepts["*"]);
                 for (u in f.headers) x.setRequestHeader(u, f.headers[u]);
                 if (f.beforeSend && (f.beforeSend.call(d, x, f) === !1 || 2 === b)) return x.abort();
                 w = "abort";
@@ -4242,8 +4449,8 @@ function FastClick(e, t) {
                         error: 1,
                         complete: 1
                     }) x[u](f[u]);
-                if (r = O(Tn, f, t, x)) {
-                    x.readyState = 1, c && h.trigger("ajaxSend", [x, f]), f.async && f.timeout > 0 && (s = setTimeout(function() {
+                if (r = I(wn, f, t, x)) {
+                    x.readyState = 1, l && h.trigger("ajaxSend", [x, f]), f.async && f.timeout > 0 && (s = setTimeout(function() {
                         x.abort("timeout")
                     }, f.timeout));
                     try {
@@ -4271,10 +4478,6 @@ function FastClick(e, t) {
                     success: r
                 })
             }
-        }), Z.each(["ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend"], function(e, t) {
-            Z.fn[t] = function(e) {
-                return this.on(t, e)
-            }
         }), Z._evalUrl = function(e) {
             return Z.ajax({
                 url: e,
@@ -4289,10 +4492,10 @@ function FastClick(e, t) {
         }, Z.expr.filters.visible = function(e) {
             return !Z.expr.filters.hidden(e)
         };
-        var Cn = /%20/g,
-            kn = /\[\]$/,
-            Sn = /\r?\n/g,
-            Nn = /^(?:submit|button|image|reset|file)$/i,
+        var _n = /%20/g,
+            Cn = /\[\]$/,
+            kn = /\r?\n/g,
+            Sn = /^(?:submit|button|image|reset|file)$/i,
             An = /^(?:input|select|textarea|keygen)/i;
         Z.param = function(e, t) {
             var n, r = [],
@@ -4304,7 +4507,7 @@ function FastClick(e, t) {
             });
             else
                 for (n in e) U(n, e[n], t, i);
-            return r.join("&").replace(Cn, "+")
+            return r.join("&").replace(_n, "+")
         }, Z.fn.extend({
             serialize: function() {
                 return Z.param(this.serializeArray())
@@ -4315,17 +4518,17 @@ function FastClick(e, t) {
                     return e ? Z.makeArray(e) : this
                 }).filter(function() {
                     var e = this.type;
-                    return this.name && !Z(this).is(":disabled") && An.test(this.nodeName) && !Nn.test(e) && (this.checked || !Et.test(e))
+                    return this.name && !Z(this).is(":disabled") && An.test(this.nodeName) && !Sn.test(e) && (this.checked || !_t.test(e))
                 }).map(function(e, t) {
                     var n = Z(this).val();
                     return null == n ? null : Z.isArray(n) ? Z.map(n, function(e) {
                         return {
                             name: t.name,
-                            value: e.replace(Sn, "\r\n")
+                            value: e.replace(kn, "\r\n")
                         }
                     }) : {
                         name: t.name,
-                        value: n.replace(Sn, "\r\n")
+                        value: n.replace(kn, "\r\n")
                     }
                 }).get()
             }
@@ -4334,32 +4537,32 @@ function FastClick(e, t) {
                 return new XMLHttpRequest
             } catch (e) {}
         };
-        var Dn = 0,
-            jn = {},
-            $n = {
+        var Nn = 0,
+            Dn = {},
+            jn = {
                 0: 200,
                 1223: 204
             },
             Ln = Z.ajaxSettings.xhr();
-        e.ActiveXObject && Z(e).on("unload", function() {
-            for (var e in jn) jn[e]()
+        e.attachEvent && e.attachEvent("onunload", function() {
+            for (var e in Dn) Dn[e]()
         }), K.cors = !!Ln && "withCredentials" in Ln, K.ajax = Ln = !!Ln, Z.ajaxTransport(function(e) {
             var t;
             return K.cors || Ln && !e.crossDomain ? {
                 send: function(n, r) {
                     var i, o = e.xhr(),
-                        a = ++Dn;
+                        a = ++Nn;
                     if (o.open(e.type, e.url, e.async, e.username, e.password), e.xhrFields)
                         for (i in e.xhrFields) o[i] = e.xhrFields[i];
                     e.mimeType && o.overrideMimeType && o.overrideMimeType(e.mimeType), e.crossDomain || n["X-Requested-With"] || (n["X-Requested-With"] = "XMLHttpRequest");
                     for (i in n) o.setRequestHeader(i, n[i]);
                     t = function(e) {
                         return function() {
-                            t && (delete jn[a], t = o.onload = o.onerror = null, "abort" === e ? o.abort() : "error" === e ? r(o.status, o.statusText) : r($n[o.status] || o.status, o.statusText, "string" == typeof o.responseText ? {
+                            t && (delete Dn[a], t = o.onload = o.onerror = null, "abort" === e ? o.abort() : "error" === e ? r(o.status, o.statusText) : r(jn[o.status] || o.status, o.statusText, "string" == typeof o.responseText ? {
                                 text: o.responseText
                             } : void 0, o.getAllResponseHeaders()))
                         }
-                    }, o.onload = t(), o.onerror = t("error"), t = jn[a] = t("abort");
+                    }, o.onload = t(), o.onerror = t("error"), t = Dn[a] = t("abort");
                     try {
                         o.send(e.hasContent && e.data || null)
                     } catch (s) {
@@ -4424,18 +4627,22 @@ function FastClick(e, t) {
             }).complete(n && function(e, t) {
                 a.each(n, o || [e.responseText, t, e])
             }), this
-        }, Z.expr.filters.animated = function(e) {
+        }, Z.each(["ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend"], function(e, t) {
+            Z.fn[t] = function(e) {
+                return this.on(t, e)
+            }
+        }), Z.expr.filters.animated = function(e) {
             return Z.grep(Z.timers, function(t) {
                 return e === t.elem
             }).length
         };
-        var In = e.document.documentElement;
+        var On = e.document.documentElement;
         Z.offset = {
             setOffset: function(e, t, n) {
-                var r, i, o, a, s, l, c, u = Z.css(e, "position"),
+                var r, i, o, a, s, c, l, u = Z.css(e, "position"),
                     f = Z(e),
                     d = {};
-                "static" === u && (e.style.position = "relative"), s = f.offset(), o = Z.css(e, "top"), l = Z.css(e, "left"), c = ("absolute" === u || "fixed" === u) && (o + l).indexOf("auto") > -1, c ? (r = f.position(), a = r.top, i = r.left) : (a = parseFloat(o) || 0, i = parseFloat(l) || 0), Z.isFunction(t) && (t = t.call(e, n, s)), null != t.top && (d.top = t.top - s.top + a), null != t.left && (d.left = t.left - s.left + i), "using" in t ? t.using.call(e, d) : f.css(d)
+                "static" === u && (e.style.position = "relative"), s = f.offset(), o = Z.css(e, "top"), c = Z.css(e, "left"), l = ("absolute" === u || "fixed" === u) && (o + c).indexOf("auto") > -1, l ? (r = f.position(), a = r.top, i = r.left) : (a = parseFloat(o) || 0, i = parseFloat(c) || 0), Z.isFunction(t) && (t = t.call(e, n, s)), null != t.top && (d.top = t.top - s.top + a), null != t.left && (d.left = t.left - s.left + i), "using" in t ? t.using.call(e, d) : f.css(d)
             }
         }, Z.fn.extend({
             offset: function(e) {
@@ -4468,8 +4675,8 @@ function FastClick(e, t) {
             },
             offsetParent: function() {
                 return this.map(function() {
-                    for (var e = this.offsetParent || In; e && !Z.nodeName(e, "html") && "static" === Z.css(e, "position");) e = e.offsetParent;
-                    return e || In
+                    for (var e = this.offsetParent || On; e && !Z.nodeName(e, "html") && "static" === Z.css(e, "position");) e = e.offsetParent;
+                    return e || On
                 })
             }
         }), Z.each({
@@ -4485,7 +4692,7 @@ function FastClick(e, t) {
             }
         }), Z.each(["top", "left"], function(e, t) {
             Z.cssHooks[t] = T(K.pixelPosition, function(e, n) {
-                return n ? (n = x(e, t), zt.test(n) ? Z(e).position()[t] + "px" : n) : void 0
+                return n ? (n = x(e, t), qt.test(n) ? Z(e).position()[t] + "px" : n) : void 0
             })
         }), Z.each({
             Height: "height",
@@ -4506,10 +4713,10 @@ function FastClick(e, t) {
                 }
             })
         });
-        var On = e.jQuery,
-            Mn = e.$;
+        var $n = e.jQuery,
+            In = e.$;
         return Z.noConflict = function(t) {
-            return e.$ === Z && (e.$ = Mn), t && e.jQuery === Z && (e.jQuery = On), Z
+            return e.$ === Z && (e.$ = In), t && e.jQuery === Z && (e.jQuery = $n), Z
         }, typeof t === Ct && (e.jQuery = e.$ = Z), Z
     }),
     function(e) {
@@ -4521,12 +4728,12 @@ function FastClick(e, t) {
 
         function n(e, t) {
             e = e.slice(0).concat(e["default"]);
-            var n, r, i, o, a, s, l = e.length,
-                c = t,
+            var n, r, i, o, a, s, c = e.length,
+                l = t,
                 u = [];
             do
-                if (f.exec(""), (i = f.exec(c)) && (c = i[3], i[2] || !c))
-                    for (n = 0; l > n; n++)
+                if (f.exec(""), (i = f.exec(l)) && (l = i[3], i[2] || !l))
+                    for (n = 0; c > n; n++)
                         if (s = e[n], a = s.selector(i[1])) {
                             for (r = u.length, o = !1; r--;)
                                 if (u[r].index === s && u[r].key === a) {
@@ -4570,12 +4777,12 @@ function FastClick(e, t) {
                 return e.id ? [e.id] : void 0
             }
         });
-        var l = /^\.((?:[\w\u00c0-\uFFFF\-]|\\.)+)/g;
+        var c = /^\.((?:[\w\u00c0-\uFFFF\-]|\\.)+)/g;
         t.prototype.indexes.push({
             name: "CLASS",
             selector: function(e) {
                 var t;
-                return (t = e.match(l)) ? t[0].slice(1) : void 0
+                return (t = e.match(c)) ? t[0].slice(1) : void 0
             },
             element: function(e) {
                 var t = e.className;
@@ -4585,12 +4792,12 @@ function FastClick(e, t) {
                 }
             }
         });
-        var c = /^((?:[\w\u00c0-\uFFFF\-]|\\.)+)/g;
+        var l = /^((?:[\w\u00c0-\uFFFF\-]|\\.)+)/g;
         t.prototype.indexes.push({
             name: "TAG",
             selector: function(e) {
                 var t;
-                return (t = e.match(c)) ? t[0].toUpperCase() : void 0
+                return (t = e.match(l)) ? t[0].toUpperCase() : void 0
             },
             element: function(e) {
                 return [e.nodeName.toUpperCase()]
@@ -4617,99 +4824,99 @@ function FastClick(e, t) {
         }();
         var f = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g;
         t.prototype.logDefaultIndexUsed = function() {}, t.prototype.add = function(e, t) {
-            var i, o, a, s, l, c, f, d, h = this.activeIndexes,
+            var i, o, a, s, c, l, f, d, h = this.activeIndexes,
                 p = this.selectors;
             if ("string" == typeof e) {
                 for (i = {
                         id: this.uid++,
                         selector: e,
                         data: t
-                    }, f = n(this.indexes, e), o = 0; o < f.length; o++) d = f[o], s = d.key, a = d.index, l = r(h, a), l || (l = Object.create(a), l.map = new u, h.push(l)), a === this.indexes["default"] && this.logDefaultIndexUsed(i), c = l.map.get(s), c || (c = [], l.map.set(s, c)), c.push(i);
+                    }, f = n(this.indexes, e), o = 0; o < f.length; o++) d = f[o], s = d.key, a = d.index, c = r(h, a), c || (c = Object.create(a), c.map = new u, h.push(c)), a === this.indexes["default"] && this.logDefaultIndexUsed(i), l = c.map.get(s), l || (l = [], c.map.set(s, l)), l.push(i);
                 this.size++, p.push(e)
             }
         }, t.prototype.remove = function(e, t) {
             if ("string" == typeof e) {
-                var r, i, o, a, s, l, c, u, f = this.activeIndexes,
+                var r, i, o, a, s, c, l, u, f = this.activeIndexes,
                     d = {},
                     h = 1 === arguments.length;
                 for (r = n(this.indexes, e), o = 0; o < r.length; o++)
                     for (i = r[o], a = f.length; a--;)
-                        if (l = f[a], i.index.isPrototypeOf(l)) {
-                            if (c = l.map.get(i.key))
-                                for (s = c.length; s--;) u = c[s], u.selector !== e || !h && u.data !== t || (c.splice(s, 1), d[u.id] = !0);
+                        if (c = f[a], i.index.isPrototypeOf(c)) {
+                            if (l = c.map.get(i.key))
+                                for (s = l.length; s--;) u = l[s], u.selector !== e || !h && u.data !== t || (l.splice(s, 1), d[u.id] = !0);
                             break
                         }
                 this.size -= Object.keys(d).length
             }
         }, t.prototype.queryAll = function(e) {
             if (!this.selectors.length) return [];
-            var t, n, r, o, a, s, l, c, u = {},
+            var t, n, r, o, a, s, c, l, u = {},
                 f = [],
                 d = this.querySelectorAll(this.selectors.join(", "), e);
             for (t = 0, r = d.length; r > t; t++)
-                for (a = d[t], s = this.matches(a), n = 0, o = s.length; o > n; n++) c = s[n], u[c.id] ? l = u[c.id] : (l = {
-                    id: c.id,
-                    selector: c.selector,
-                    data: c.data,
+                for (a = d[t], s = this.matches(a), n = 0, o = s.length; o > n; n++) l = s[n], u[l.id] ? c = u[l.id] : (c = {
+                    id: l.id,
+                    selector: l.selector,
+                    data: l.data,
                     elements: []
-                }, u[c.id] = l, f.push(l)), l.elements.push(a);
+                }, u[l.id] = c, f.push(c)), c.elements.push(a);
             return f.sort(i)
         }, t.prototype.matches = function(e) {
             if (!e) return [];
-            var t, n, r, o, a, s, l, c, u, f, d, h = this.activeIndexes,
+            var t, n, r, o, a, s, c, l, u, f, d, h = this.activeIndexes,
                 p = {},
                 m = [];
             for (t = 0, o = h.length; o > t; t++)
-                if (l = h[t], c = l.element(e))
-                    for (n = 0, a = c.length; a > n; n++)
-                        if (u = l.map.get(c[n]))
+                if (c = h[t], l = c.element(e))
+                    for (n = 0, a = l.length; a > n; n++)
+                        if (u = c.map.get(l[n]))
                             for (r = 0, s = u.length; s > r; r++) f = u[r], d = f.id, !p[d] && this.matchesSelector(e, f.selector) && (p[d] = !0, m.push(f));
             return m.sort(i)
         }, e.SelectorSet = t
     }(window),
     function() {
-        var e, t, n, r, i, o, a, s, l, c, u, f, d, h, p, m, v, g, y, b, w, x, T, _, E;
+        var e, t, n, r, i, o, a, s, c, l, u, f, d, h, p, m, v, g, y, b, w, x, T, E, _;
         h = function() {
             var e, t, n;
             return e = document.createElement("div"), t = document.createElement("div"), n = document.createElement("div"), e.appendChild(t), t.appendChild(n), e.innerHTML = "", n.parentNode !== t
-        }(), E = 0, s = [], T = new SelectorSet, T.querySelectorAll = $.find, T.matchesSelector = $.find.matchesSelector, f = new WeakMap, n = new WeakMap, d = new WeakMap, b = function(e, t) {
+        }(), _ = 0, s = [], T = new SelectorSet, T.querySelectorAll = $.find, T.matchesSelector = $.find.matchesSelector, f = new WeakMap, n = new WeakMap, d = new WeakMap, b = function(e, t) {
             var n, r;
             (n = f.get(e)) || (n = [], f.set(e, n)), -1 === n.indexOf(t.id) && (null != t.initialize && (r = t.initialize.call(e, e)), d.set(e, r), n.push(t.id))
         }, y = function(e, t) {
             var r, i, o, a;
             (r = n.get(e)) || (r = [], n.set(e, r)), -1 === r.indexOf(t.id) && (t.elements.push(e), (i = d.get(e)) && ("length" in i || null != (o = i.add) && o.call(e, e)), null != (a = t.add) && a.call(e, e), r.push(t.id))
         }, w = function(e, t) {
-            var r, i, o, a, l, c, u, f, h, p, m;
+            var r, i, o, a, c, l, u, f, h, p, m;
             if (r = n.get(e))
                 if (t) o = t.elements.indexOf(e), -1 !== o && t.elements.splice(o, 1), o = r.indexOf(t.id), -1 !== o && ((a = d.get(e)) && ("length" in a || null != (u = a.remove) && u.call(e, e)), null != (f = t.remove) && f.call(e, e), r.splice(o, 1)), 0 === r.length && n["delete"](e);
                 else {
-                    for (h = r.slice(0), l = 0, c = h.length; c > l; l++) i = h[l], t = s[i], t && (o = t.elements.indexOf(e), -1 !== o && t.elements.splice(o, 1), (a = d.get(e)) && null != (p = a.remove) && p.call(e, e), null != (m = t.remove) && m.call(e, e));
+                    for (h = r.slice(0), c = 0, l = h.length; l > c; c++) i = h[c], t = s[i], t && (o = t.elements.indexOf(e), -1 !== o && t.elements.splice(o, 1), (a = d.get(e)) && null != (p = a.remove) && p.call(e, e), null != (m = t.remove) && m.call(e, e));
                     n["delete"](e)
                 }
         }, r = function(e, t) {
-            var n, r, i, o, a, s, l, c, u, f, d, h, p, m, v;
+            var n, r, i, o, a, s, c, l, u, f, d, h, p, m, v;
             for (a = 0, u = t.length; u > a; a++)
                 if (i = t[a], i.nodeType === Node.ELEMENT_NODE) {
                     for (p = T.matches(i), s = 0, f = p.length; f > s; s++) n = p[s].data, e.push(["add", i, n]);
-                    for (m = T.queryAll(i), l = 0, d = m.length; d > l; l++)
-                        for (v = m[l], n = v.data, o = v.elements, c = 0, h = o.length; h > c; c++) r = o[c], e.push(["add", r, n])
+                    for (m = T.queryAll(i), c = 0, d = m.length; d > c; c++)
+                        for (v = m[c], n = v.data, o = v.elements, l = 0, h = o.length; h > l; l++) r = o[l], e.push(["add", r, n])
                 }
         }, p = function(e, t) {
-            var n, r, i, o, a, s, l;
+            var n, r, i, o, a, s, c;
             for (i = 0, a = t.length; a > i; i++)
                 if (r = t[i], r.nodeType === Node.ELEMENT_NODE)
-                    for (e.push(["remove", r]), l = r.getElementsByTagName("*"), o = 0, s = l.length; s > o; o++) n = l[o], e.push(["remove", n])
+                    for (e.push(["remove", r]), c = r.getElementsByTagName("*"), o = 0, s = c.length; s > o; o++) n = c[o], e.push(["remove", n])
         }, g = function(e) {
-            var t, n, r, i, o, a, l;
+            var t, n, r, i, o, a, c;
             for (r = 0, o = s.length; o > r; r++)
                 if (n = s[r])
-                    for (l = n.elements, i = 0, a = l.length; a > i; i++) t = l[i], t.parentNode || e.push(["remove", t])
+                    for (c = n.elements, i = 0, a = c.length; a > i; i++) t = c[i], t.parentNode || e.push(["remove", t])
         }, v = function(e, t) {
-            var r, i, o, a, l, c, u, f, d;
+            var r, i, o, a, c, l, u, f, d;
             if (t.nodeType === Node.ELEMENT_NODE) {
-                for (d = T.matches(t), l = 0, u = d.length; u > l; l++) r = d[l].data, e.push(["add", t, r]);
+                for (d = T.matches(t), c = 0, u = d.length; u > c; c++) r = d[c].data, e.push(["add", t, r]);
                 if (o = n.get(t))
-                    for (c = 0, f = o.length; f > c; c++) i = o[c], (a = s[i]) && (T.matchesSelector(t, a.selector) || e.push(["remove", t, a]))
+                    for (l = 0, f = o.length; f > l; l++) i = o[l], (a = s[i]) && (T.matchesSelector(t, a.selector) || e.push(["remove", t, a]))
             }
         }, m = function(e, t) {
             var n, r, i, o;
@@ -4718,7 +4925,7 @@ function FastClick(e, t) {
         }, i = function(e) {
             var t, n, r, i, o, a;
             for (i = 0, o = e.length; o > i; i++) a = e[i], r = a[0], t = a[1], n = a[2], "add" === r ? (b(t, n), y(t, n)) : "remove" === r && w(t, n)
-        }, _ = function(e) {
+        }, E = function(e) {
             var t, n, r, i;
             for (i = e.elements, n = 0, r = i.length; r > n; n++) t = i[n], w(t, e);
             T.remove(e.selector, e), delete s[e.id], $.observe.count--
@@ -4727,14 +4934,14 @@ function FastClick(e, t) {
             return null != t.call && (t = {
                 initialize: t
             }), n = {
-                id: E++,
+                id: _++,
                 selector: e,
                 initialize: t.initialize || t.init,
                 add: t.add,
                 remove: t.remove,
                 elements: [],
                 stop: function() {
-                    return _(n)
+                    return E(n)
                 }
             }, T.add(e, n), s[n.id] = n, x(), $.observe.count++, n
         }, t = !1, x = function() {
@@ -4745,14 +4952,14 @@ function FastClick(e, t) {
         }, $.observe.count = 0, $(document).on("observe:dirty", function(e) {
             var t;
             t = [], m(t, e.target), i(t)
-        }), o = [], l = function() {
-            var e, t, n, r, a, s, l, c, u;
-            for (e = [], a = o, o = [], s = 0, c = a.length; c > s; s++)
-                for (r = a[s], n = r.form ? r.form.elements : r.ownerDocument.getElementsByTagName("input"), l = 0, u = n.length; u > l; l++) t = n[l], v(e, t);
+        }), o = [], c = function() {
+            var e, t, n, r, a, s, c, l, u;
+            for (e = [], a = o, o = [], s = 0, l = a.length; l > s; s++)
+                for (r = a[s], n = r.form ? r.form.elements : r.ownerDocument.getElementsByTagName("input"), c = 0, u = n.length; u > c; c++) t = n[c], v(e, t);
             i(e)
-        }, c = function(e) {
-            o.push(e.target), setImmediate(l)
-        }, document.addEventListener("change", c, !1), $(document).on("change", c), u = function(e) {
+        }, l = function(e) {
+            o.push(e.target), setImmediate(c)
+        }, document.addEventListener("change", l, !1), $(document).on("change", l), u = function(e) {
             var t, n, o, a;
             for (t = [], o = 0, a = e.length; a > o; o++) n = e[o], "childList" === n.type ? (r(t, n.addedNodes), p(t, n.removedNodes)) : "attributes" === n.type && v(t, n.target);
             h && g(t), i(t)
@@ -4766,12 +4973,12 @@ function FastClick(e, t) {
         }, !1)
     }.call(this),
     function() {
-        var e, t, n, r, i, o, a, s, l;
+        var e, t, n, r, i, o, a, s, c;
         s = $.fn.clone, $.fn.clone = function() {
             var e, t, n, r, i;
             for (t = s.apply(this, arguments), i = t.find("[placeholder]"), n = 0, r = i.length; r > n; n++) e = i[n], e.value === e.getAttribute("placeholder") && (e.value = "");
             return t
-        }, l = [], GitHub.support.placeholder_input || l.push("input[placeholder]"), GitHub.support.placeholder_textarea || l.push("textarea[placeholder]"), l = l.join(", "), l && (e = function() {
+        }, c = [], GitHub.support.placeholder_input || c.push("input[placeholder]"), GitHub.support.placeholder_textarea || c.push("textarea[placeholder]"), c = c.join(", "), c && (e = function() {
             try {
                 return document.activeElement
             } catch (e) {}
@@ -4786,17 +4993,17 @@ function FastClick(e, t) {
         }, o = function() {
             var e;
             return e = $(this), setTimeout(function() {
-                return e.find(l).each(a)
+                return e.find(c).each(a)
             }, 10)
         }, n = function(e) {
             var t;
             return a.call(e), t = $(e.form), $(e).on("focus", i).on("blur", r), t.data("placeholder-handlers") ? void 0 : t.data("placeholder-handlers", !0).on("reset", o).on("submit", function() {
-                t.find(l).each(i), o.call(this)
+                t.find(c).each(i), o.call(this)
             })
-        }, $.observe(l, function() {
+        }, $.observe(c, function() {
             n(this)
         }), $(window).on("beforeunload", function() {
-            $(l).each(i)
+            $(c).each(i)
         }))
     }.call(this),
     function(e, t) {
@@ -4830,28 +5037,28 @@ function FastClick(e, t) {
             o = e.SelectorSet,
             a = t.event.add,
             s = t.event.remove,
-            l = {};
+            c = {};
         if (!o) throw "SelectorSet undefined - https://github.com/josh/jquery-selector-set";
-        t.event.add = function(e, n, s, c, u) {
-            if (e !== i || n.match(/\./) || c || !u) a.call(this, e, n, s, c, u);
+        t.event.add = function(e, n, s, l, u) {
+            if (e !== i || n.match(/\./) || l || !u) a.call(this, e, n, s, l, u);
             else
                 for (var f = n.match(/\S+/g), d = f.length; d--;) {
                     var h = f[d],
                         p = t.event.special[h] || {};
                     h = p.delegateType || h;
-                    var m = l[h];
-                    m || (m = l[h] = {
+                    var m = c[h];
+                    m || (m = c[h] = {
                         handler: r,
                         selectorSet: new o
                     }, m.selectorSet.matchesSelector = t.find.matchesSelector, a.call(this, e, h, m)), m.selectorSet.add(u, s), t.expr.cacheLength++, t.find.compile && t.find.compile(u)
                 }
         }, t.event.remove = function(e, n, r, o, a) {
             if (e === i && n && !n.match(/\./) && o)
-                for (var c = n.match(/\S+/g), u = c.length; u--;) {
-                    var f = c[u],
+                for (var l = n.match(/\S+/g), u = l.length; u--;) {
+                    var f = l[u],
                         d = t.event.special[f] || {};
                     f = d.delegateType || f;
-                    var h = l[f];
+                    var h = c[f];
                     h && h.selectorSet.remove(o, r)
                 }
             s.call(this, e, n, r, o, a)
@@ -4876,43 +5083,52 @@ function FastClick(e, t) {
             var t, n, r, i;
             return e === window ? "window" : (n = [e.nodeName.toLowerCase()], (null != (r = e.id) ? r.length : void 0) && n.push("#" + e.id), t = "function" == typeof e.getAttribute && null != (i = e.getAttribute("class")) ? i.trim().split(/\s+/).join(".") : void 0, (null != t ? t.length : void 0) && n.push("." + t), n.join(""))
         }
-    }.call(this), // copyright chris wanstrath
+    }.call(this),
+    /*!
+     * Copyright 2012, Chris Wanstrath
+     * Released under the MIT License
+     * https://github.com/defunkt/jquery-pjax
+     */
     function(e) {
         function t(t, r, i) {
             var o = this;
             return this.on("click.pjax", t, function(t) {
-                var a = e.extend({}, d(r, i));
+                var a = e.extend({}, h(r, i));
                 a.container || (a.container = e(this).attr("data-pjax") || o), n(t, a)
             })
         }
 
         function n(t, n, r) {
-            r = d(n, r);
+            r = h(n, r);
             var o = t.currentTarget;
             if ("A" !== o.tagName.toUpperCase()) throw "$.fn.pjax or $.pjax.click requires an anchor element";
-            if (!(t.which > 1 || t.metaKey || t.ctrlKey || t.shiftKey || t.altKey || location.protocol !== o.protocol || location.hostname !== o.hostname || o.hash && o.href.replace(o.hash, "") === location.href.replace(location.hash, "") || o.href === location.href + "#" || t.isDefaultPrevented())) {
+            if (!(t.which > 1 || t.metaKey || t.ctrlKey || t.shiftKey || t.altKey || location.protocol !== o.protocol || location.hostname !== o.hostname || o.href.indexOf("#") > -1 && d(o) == d(location) || t.isDefaultPrevented())) {
                 var a = {
                         url: o.href,
                         container: e(o).attr("data-pjax"),
                         target: o
                     },
                     s = e.extend({}, a, r),
-                    l = e.Event("pjax:click");
-                e(o).trigger(l, [s]), l.isDefaultPrevented() || (i(s), t.preventDefault(), e(o).trigger("pjax:clicked", [s]))
+                    c = e.Event("pjax:click");
+                e(o).trigger(c, [s]), c.isDefaultPrevented() || (i(s), t.preventDefault(), e(o).trigger("pjax:clicked", [s]))
             }
         }
 
         function r(t, n, r) {
-            r = d(n, r);
+            r = h(n, r);
             var o = t.currentTarget;
             if ("FORM" !== o.tagName.toUpperCase()) throw "$.pjax.submit requires a form element";
             var a = {
                 type: o.method.toUpperCase(),
                 url: o.action,
-                data: e(o).serializeArray(),
                 container: e(o).attr("data-pjax"),
                 target: o
             };
+            if ("GET" !== a.type && void 0 !== window.FormData) a.data = new FormData(o), a.processData = !1, a.contentType = !1;
+            else {
+                if (e(o).find(":file").length) return;
+                a.data = e(o).serializeArray()
+            }
             i(e.extend({}, a, r)), t.preventDefault()
         }
 
@@ -4925,28 +5141,31 @@ function FastClick(e, t) {
             t = e.extend(!0, {}, e.ajaxSettings, i.defaults, t), e.isFunction(t.url) && (t.url = t.url());
             var r = t.target,
                 o = f(t.url).hash,
-                s = t.context = h(t.container);
-            t.data || (t.data = {}), t.data._pjax = s.selector;
-            var l;
+                s = t.context = p(t.container);
+            t.data || (t.data = {}), e.isArray(t.data) ? t.data.push({
+                name: "_pjax",
+                value: s.selector
+            }) : t.data._pjax = s.selector;
+            var c;
             t.beforeSend = function(e, r) {
-                return "GET" !== r.type && (r.timeout = 0), e.setRequestHeader("X-PJAX", "true"), e.setRequestHeader("X-PJAX-Container", s.selector), n("pjax:beforeSend", [e, r]) ? (r.timeout > 0 && (l = setTimeout(function() {
+                return "GET" !== r.type && (r.timeout = 0), e.setRequestHeader("X-PJAX", "true"), e.setRequestHeader("X-PJAX-Container", s.selector), n("pjax:beforeSend", [e, r]) ? (r.timeout > 0 && (c = setTimeout(function() {
                     n("pjax:timeout", [e, t]) && e.abort("timeout")
                 }, r.timeout), r.timeout = 0), void(t.requestUrl = f(r.url).href)) : !1
             }, t.complete = function(e, r) {
-                l && clearTimeout(l), n("pjax:complete", [e, r, t]), n("pjax:end", [e, t])
+                c && clearTimeout(c), n("pjax:complete", [e, r, t]), n("pjax:end", [e, t])
             }, t.error = function(e, r, i) {
-                var o = v("", e, t),
+                var o = g("", e, t),
                     s = n("pjax:error", [e, r, i, t]);
                 "GET" == t.type && "abort" !== r && s && a(o.url)
-            }, t.success = function(r, l, u) {
+            }, t.success = function(r, c, u) {
                 var d = i.state,
                     h = "function" == typeof e.pjax.defaults.version ? e.pjax.defaults.version() : e.pjax.defaults.version,
                     p = u.getResponseHeader("X-PJAX-Version"),
-                    m = v(r, u, t);
+                    m = g(r, u, t);
                 if (h && p && h !== p) return void a(m.url);
                 if (!m.contents) return void a(m.url);
                 i.state = {
-                    id: t.id || c(),
+                    id: t.id || l(),
                     url: m.url,
                     title: m.title,
                     container: s.selector,
@@ -4955,21 +5174,21 @@ function FastClick(e, t) {
                 }, (t.push || t.replace) && window.history.replaceState(i.state, m.title, m.url);
                 try {
                     document.activeElement.blur()
-                } catch (y) {}
+                } catch (v) {}
                 m.title && (document.title = m.title), n("pjax:beforeReplace", [m.contents, t], {
                     state: i.state,
                     previousState: d
                 }), s.html(m.contents);
                 var b = s.find("input[autofocus], textarea[autofocus]").last()[0];
-                if (b && document.activeElement !== b && b.focus(), g(m.scripts), "number" == typeof t.scrollTo && e(window).scrollTop(t.scrollTo), "" !== o) {
+                if (b && document.activeElement !== b && b.focus(), y(m.scripts), "number" == typeof t.scrollTo && e(window).scrollTop(t.scrollTo), "" !== o) {
                     var w = f(m.url);
                     w.hash = o, i.state.url = w.href, window.history.replaceState(i.state, m.title, w.href);
-                    var x = e(w.hash);
-                    x.length && e(window).scrollTop(x.offset().top)
+                    var x = document.getElementById(w.hash.slice(1));
+                    x && e(window).scrollTop(e(x).offset().top)
                 }
-                n("pjax:success", [r, l, u, t])
+                n("pjax:success", [r, c, u, t])
             }, i.state || (i.state = {
-                id: c(),
+                id: l(),
                 url: window.location.href,
                 title: document.title,
                 container: s.selector,
@@ -4979,7 +5198,7 @@ function FastClick(e, t) {
             var d = i.xhr;
             d && d.readyState < 4 && (d.onreadystatechange = e.noop, d.abort()), i.options = t;
             var d = i.xhr = e.ajax(t);
-            return d.readyState > 0 && (t.push && !t.replace && (y(i.state.id, s.clone().contents()), window.history.pushState(null, "", u(t.requestUrl))), n("pjax:start", [d, t]), n("pjax:send", [d, t])), i.xhr
+            return d.readyState > 0 && (t.push && !t.replace && (b(i.state.id, s.clone().contents()), window.history.pushState(null, "", u(t.requestUrl))), n("pjax:start", [d, t]), n("pjax:send", [d, t])), i.xhr
         }
 
         function o(t, n) {
@@ -4989,28 +5208,28 @@ function FastClick(e, t) {
                 replace: !0,
                 scrollTo: !1
             };
-            return i(e.extend(r, d(t, n)))
+            return i(e.extend(r, h(t, n)))
         }
 
         function a(e) {
-            window.history.replaceState(null, "", "#"), window.location.replace(e)
+            window.history.replaceState(null, "", i.state.url), window.location.replace(e)
         }
 
         function s(t) {
             var n = i.state,
                 r = t.state;
             if (r && r.container) {
-                if (_ && E == r.url) return;
+                if (C && k == r.url) return;
                 if (i.state && i.state.id === r.id) return;
                 var o = e(r.container);
                 if (o.length) {
-                    var s, l = k[r.id];
-                    i.state && (s = i.state.id < r.id ? "forward" : "back", b(s, i.state.id, o.clone().contents()));
-                    var c = e.Event("pjax:popstate", {
+                    var s, c = A[r.id];
+                    i.state && (s = i.state.id < r.id ? "forward" : "back", w(s, i.state.id, o.clone().contents()));
+                    var l = e.Event("pjax:popstate", {
                         state: r,
                         direction: s
                     });
-                    o.trigger(c);
+                    o.trigger(l);
                     var u = {
                         id: r.id,
                         url: r.url,
@@ -5020,21 +5239,21 @@ function FastClick(e, t) {
                         timeout: r.timeout,
                         scrollTo: !1
                     };
-                    if (l) {
+                    if (c) {
                         o.trigger("pjax:start", [null, u]), i.state = r, r.title && (document.title = r.title);
                         var f = e.Event("pjax:beforeReplace", {
                             state: r,
                             previousState: n
                         });
-                        o.trigger(f, [l, u]), o.html(l), o.trigger("pjax:end", [null, u])
+                        o.trigger(f, [c, u]), o.html(c), o.trigger("pjax:end", [null, u])
                     } else i(u);
                     o[0].offsetHeight
                 } else a(location.href)
             }
-            _ = !1
+            C = !1
         }
 
-        function l(t) {
+        function c(t) {
             var n = e.isFunction(t.url) ? t.url() : t.url,
                 r = t.type ? t.type.toUpperCase() : "GET",
                 i = e("<form>", {
@@ -5065,7 +5284,7 @@ function FastClick(e, t) {
             e(document.body).append(i), i.submit()
         }
 
-        function c() {
+        function l() {
             return (new Date).getTime()
         }
 
@@ -5078,13 +5297,17 @@ function FastClick(e, t) {
             return t.href = e, t
         }
 
-        function d(t, n) {
-            return t && n ? n.container = t : n = e.isPlainObject(t) ? t : {
-                container: t
-            }, n.container && (n.container = h(n.container)), n
+        function d(e) {
+            return e.href.replace(/#.*/, "")
         }
 
-        function h(t) {
+        function h(t, n) {
+            return t && n ? n.container = t : n = e.isPlainObject(t) ? t : {
+                container: t
+            }, n.container && (n.container = p(n.container)), n
+        }
+
+        function p(t) {
             if (t = e(t), t.length) {
                 if ("" !== t.selector && t.context === document) return t;
                 if (t.attr("id")) return e("#" + t.attr("id"));
@@ -5093,31 +5316,32 @@ function FastClick(e, t) {
             throw "no pjax container for " + t.selector
         }
 
-        function p(e, t) {
+        function m(e, t) {
             return e.filter(t).add(e.find(t))
         }
 
-        function m(t) {
+        function v(t) {
             return e.parseHTML(t, document, !0)
         }
 
-        function v(t, n, r) {
-            var i = {};
-            if (i.url = u(n.getResponseHeader("X-PJAX-URL") || r.requestUrl), /<html/i.test(t)) var o = e(m(t.match(/<head[^>]*>([\s\S.]*)<\/head>/i)[0])),
-                a = e(m(t.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
-            else var o = a = e(m(t));
-            if (0 === a.length) return i;
-            if (i.title = p(o, "title").last().text(), r.fragment) {
-                if ("body" === r.fragment) var s = a;
-                else var s = p(a, r.fragment).first();
-                s.length && (i.contents = s.contents(), i.title || (i.title = s.attr("title") || s.data("title")))
-            } else /<html/i.test(t) || (i.contents = a);
+        function g(t, n, r) {
+            var i = {},
+                o = /<html/i.test(t);
+            if (i.url = u(n.getResponseHeader("X-PJAX-URL") || r.requestUrl), o) var a = e(v(t.match(/<head[^>]*>([\s\S.]*)<\/head>/i)[0])),
+                s = e(v(t.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
+            else var a = s = e(v(t));
+            if (0 === s.length) return i;
+            if (i.title = m(a, "title").last().text(), r.fragment) {
+                if ("body" === r.fragment) var c = s;
+                else var c = m(s, r.fragment).first();
+                c.length && (i.contents = "body" === r.fragment ? c : c.contents(), i.title || (i.title = c.attr("title") || c.data("title")))
+            } else o || (i.contents = s);
             return i.contents && (i.contents = i.contents.not(function() {
                 return e(this).is("title")
-            }), i.contents.find("title").remove(), i.scripts = p(i.contents, "script[src]").remove(), i.contents = i.contents.not(i.scripts)), i.title && (i.title = e.trim(i.title)), i
+            }), i.contents.find("title").remove(), i.scripts = m(i.contents, "script[src]").remove(), i.contents = i.contents.not(i.scripts)), i.title && (i.title = e.trim(i.title)), i
         }
 
-        function g(t) {
+        function y(t) {
             if (t) {
                 var n = e("script[src]");
                 t.each(function() {
@@ -5126,32 +5350,36 @@ function FastClick(e, t) {
                             return this.src === t
                         });
                     if (!r.length) {
-                        var i = document.createElement("script");
-                        i.type = e(this).attr("type"), i.src = e(this).attr("src"), document.head.appendChild(i)
+                        var i = document.createElement("script"),
+                            o = e(this).attr("type");
+                        o && (i.type = o), i.src = e(this).attr("src"), document.head.appendChild(i)
                     }
                 })
             }
         }
 
-        function y(e, t) {
-            for (k[e] = t, N.push(e); S.length;) delete k[S.shift()];
-            for (; N.length > i.defaults.maxCacheLength;) delete k[N.shift()]
+        function b(e, t) {
+            A[e] = t, D.push(e), x(N, 0), x(D, i.defaults.maxCacheLength)
         }
 
-        function b(e, t, n) {
-            var r, i;
-            k[t] = n, "forward" === e ? (r = N, i = S) : (r = S, i = N), r.push(t), (t = i.pop()) && delete k[t]
+        function w(e, t, n) {
+            var r, o;
+            A[t] = n, "forward" === e ? (r = D, o = N) : (r = N, o = D), r.push(t), (t = o.pop()) && delete A[t], x(r, i.defaults.maxCacheLength)
         }
 
-        function w() {
+        function x(e, t) {
+            for (; e.length > t;) delete A[e.shift()]
+        }
+
+        function T() {
             return e("meta").filter(function() {
                 var t = e(this).attr("http-equiv");
                 return t && "X-PJAX-VERSION" === t.toUpperCase()
             }).attr("content")
         }
 
-        function x() {
-            e.fn.pjax = t, e.pjax = i, e.pjax.enable = e.noop, e.pjax.disable = T, e.pjax.click = n, e.pjax.submit = r, e.pjax.reload = o, e.pjax.defaults = {
+        function E() {
+            e.fn.pjax = t, e.pjax = i, e.pjax.enable = e.noop, e.pjax.disable = _, e.pjax.click = n, e.pjax.submit = r, e.pjax.reload = o, e.pjax.defaults = {
                 timeout: 650,
                 push: !0,
                 replace: !1,
@@ -5159,25 +5387,25 @@ function FastClick(e, t) {
                 dataType: "html",
                 scrollTo: 0,
                 maxCacheLength: 20,
-                version: w
+                version: T
             }, e(window).on("popstate.pjax", s)
         }
 
-        function T() {
+        function _() {
             e.fn.pjax = function() {
                 return this
-            }, e.pjax = l, e.pjax.enable = x, e.pjax.disable = e.noop, e.pjax.click = e.noop, e.pjax.submit = e.noop, e.pjax.reload = function() {
+            }, e.pjax = c, e.pjax.enable = E, e.pjax.disable = e.noop, e.pjax.click = e.noop, e.pjax.submit = e.noop, e.pjax.reload = function() {
                 window.location.reload()
             }, e(window).off("popstate.pjax", s)
         }
-        var _ = !0,
-            E = window.location.href,
-            C = window.history.state;
-        C && C.container && (i.state = C), "state" in window.history && (_ = !1);
-        var k = {},
-            S = [],
-            N = [];
-        e.inArray("state", e.event.props) < 0 && e.event.props.push("state"), e.support.pjax = window.history && window.history.pushState && window.history.replaceState && !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/), e.support.pjax ? x() : T()
+        var C = !0,
+            k = window.location.href,
+            S = window.history.state;
+        S && S.container && (i.state = S), "state" in window.history && (C = !1);
+        var A = {},
+            N = [],
+            D = [];
+        e.inArray("state", e.event.props) < 0 && e.event.props.push("state"), e.support.pjax = window.history && window.history.pushState && window.history.replaceState && !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]\D|WebApps\/.+CFNetwork)/), e.support.pjax ? E() : _()
     }(jQuery),
     function() {
         ("undefined" == typeof Zepto || null === Zepto) && $.ajaxSetup({
@@ -5247,9 +5475,9 @@ function FastClick(e, t) {
     }.call(this),
     function() {
         $(document).on("submit:prepare", "form", function() {
-            var e, t, n, r, i, o, a, s, l;
+            var e, t, n, r, i, o, a, s, c;
             for (s = $(this).find("input[type=submit][data-disable-with]"), r = 0, o = s.length; o > r; r++) t = s[r], t = $(t), t.attr("data-enable-with", t.val() || "Submit"), (n = t.attr("data-disable-with")) && t.val(n), t[0].disabled = !0;
-            for (l = $(this).find("button[type=submit][data-disable-with]"), i = 0, a = l.length; a > i; i++) e = l[i], e = $(e), e.attr("data-enable-with", e.html() || ""), (n = e.attr("data-disable-with")) && e.html(n), e[0].disabled = !0
+            for (c = $(this).find("button[type=submit][data-disable-with]"), i = 0, a = c.length; a > i; i++) e = c[i], e = $(e), e.attr("data-enable-with", e.html() || ""), (n = e.attr("data-disable-with")) && e.html(n), e[0].disabled = !0
         }), $(document).on("ajaxComplete", "form", function() {
             var e, t, n, r, i, o, a, s;
             for (a = $(this).find("input[type=submit][data-enable-with]"), n = 0, i = a.length; i > n; n++) t = a[n], $(t).val($(t).attr("data-enable-with")), t.disabled = !1;
@@ -5268,7 +5496,6 @@ function FastClick(e, t) {
             return n = $(this), r = {}, r.context = this, (i = n.attr("data-method")) && (r.type = i), (o = this.href) && (r.url = o), (t = n.attr("data-type")) && (r.dataType = t), $.ajax(r), e.preventDefault(), !1
         }), $(document).on("submit", "form[data-remote]", function(e) {
             var t, n, r, i, o, a;
-            console.log(this.action);
             return r = $(this), i = {}, i.context = this, (o = r.attr("method")) && (i.type = o), (a = this.action) && (i.url = a), (t = r.serializeArray()) && (i.data = t), (n = r.attr("data-type")) && (i.dataType = n), $.ajax(i), e.preventDefault(), !1
         }), $(document).on("ajaxSend", "[data-remote]", function(e, t) {
             $(this).data("remote-xhr", t)
@@ -5352,32 +5579,32 @@ function FastClick(e, t) {
             return i
         }
 
-        function l(e, t, n, r, i, o) {
+        function c(e, t, n, r, i, o) {
             for (var a = 32767 & t, s = t >> 15; --o >= 0;) {
-                var l = 32767 & this[e],
-                    c = this[e++] >> 15,
-                    u = s * l + c * a;
-                l = a * l + ((32767 & u) << 15) + n[r] + (1073741823 & i), i = (l >>> 30) + (u >>> 15) + s * c + (i >>> 30), n[r++] = 1073741823 & l
+                var c = 32767 & this[e],
+                    l = this[e++] >> 15,
+                    u = s * c + l * a;
+                c = a * c + ((32767 & u) << 15) + n[r] + (1073741823 & i), i = (c >>> 30) + (u >>> 15) + s * l + (i >>> 30), n[r++] = 1073741823 & c
             }
             return i
         }
 
-        function c(e, t, n, r, i, o) {
+        function l(e, t, n, r, i, o) {
             for (var a = 16383 & t, s = t >> 14; --o >= 0;) {
-                var l = 16383 & this[e],
-                    c = this[e++] >> 14,
-                    u = s * l + c * a;
-                l = a * l + ((16383 & u) << 14) + n[r] + i, i = (l >> 28) + (u >> 14) + s * c, n[r++] = 268435455 & l
+                var c = 16383 & this[e],
+                    l = this[e++] >> 14,
+                    u = s * c + l * a;
+                c = a * c + ((16383 & u) << 14) + n[r] + i, i = (c >> 28) + (u >> 14) + s * l, n[r++] = 268435455 & c
             }
             return i
         }
 
         function u(e) {
-            return lt.charAt(e)
+            return ct.charAt(e)
         }
 
         function f(e, t) {
-            var n = ct[e.charCodeAt(t)];
+            var n = lt[e.charCodeAt(t)];
             return null == n ? -1 : n
         }
 
@@ -5467,14 +5694,14 @@ function FastClick(e, t) {
             return this.t <= 0 ? 0 : this.DB * (this.t - 1) + x(this[this.t - 1] ^ this.s & this.DM)
         }
 
-        function _(e, t) {
+        function E(e, t) {
             var n;
             for (n = this.t - 1; n >= 0; --n) t[n + e] = this[n];
             for (n = e - 1; n >= 0; --n) t[n] = 0;
             t.t = this.t + e, t.s = this.s
         }
 
-        function E(e, t) {
+        function _(e, t) {
             for (var n = e; n < this.t; ++n) t[n - e] = this[n];
             t.t = Math.max(this.t - e, 0), t.s = this.s
         }
@@ -5514,7 +5741,7 @@ function FastClick(e, t) {
             t.s = 0 > r ? -1 : 0, -1 > r ? t[n++] = this.DV + r : r > 0 && (t[n++] = r), t.t = n, t.clamp()
         }
 
-        function N(e, t) {
+        function A(e, t) {
             var n = this.abs(),
                 r = e.abs(),
                 i = n.t;
@@ -5523,7 +5750,7 @@ function FastClick(e, t) {
             t.s = 0, t.clamp(), this.s != e.s && o.ZERO.subTo(t, t)
         }
 
-        function A(e) {
+        function N(e) {
             for (var t = this.abs(), n = e.t = 2 * t.t; --n >= 0;) e[n] = 0;
             for (n = 0; n < t.t - 1; ++n) {
                 var r = t.am(n, t[n], e, 2 * n, 0, 1);
@@ -5539,8 +5766,8 @@ function FastClick(e, t) {
                 if (i.t < r.t) return null != t && t.fromInt(0), void(null != n && this.copyTo(n));
                 null == n && (n = a());
                 var s = a(),
-                    l = this.s,
-                    c = e.s,
+                    c = this.s,
+                    l = e.s,
                     u = this.DB - x(r[r.t - 1]);
                 u > 0 ? (r.lShiftTo(u, s), i.lShiftTo(u, n)) : (r.copyTo(s), i.copyTo(n));
                 var f = s.t,
@@ -5559,7 +5786,7 @@ function FastClick(e, t) {
                         if ((n[g] += s.am(0, w, n, y, 0, f)) < w)
                             for (s.dlShiftTo(y, b), n.subTo(b, n); n[g] < --w;) n.subTo(b, n)
                     }
-                    null != t && (n.drShiftTo(f, t), l != c && o.ZERO.subTo(t, t)), n.t = f, n.clamp(), u > 0 && n.rShiftTo(u, n), 0 > l && o.ZERO.subTo(n, n)
+                    null != t && (n.drShiftTo(f, t), c != l && o.ZERO.subTo(t, t)), n.t = f, n.clamp(), u > 0 && n.rShiftTo(u, n), 0 > c && o.ZERO.subTo(n, n)
                 }
             }
         }
@@ -5569,23 +5796,23 @@ function FastClick(e, t) {
             return this.abs().divRemTo(e, null, t), this.s < 0 && t.compareTo(o.ZERO) > 0 && e.subTo(t, t), t
         }
 
-        function $(e) {
+        function L(e) {
             this.m = e
         }
 
-        function L(e) {
+        function P(e) {
             return e.s < 0 || e.compareTo(this.m) >= 0 ? e.mod(this.m) : e
         }
 
-        function P(e) {
+        function O(e) {
             return e
         }
 
-        function I(e) {
+        function $(e) {
             e.divRemTo(this.m, null, e)
         }
 
-        function O(e, t, n) {
+        function I(e, t, n) {
             e.multiplyTo(t, n), this.reduce(n)
         }
 
@@ -5615,7 +5842,7 @@ function FastClick(e, t) {
             return e.copyTo(t), this.reduce(t), t
         }
 
-        function z(e) {
+        function q(e) {
             for (; e.t <= this.mt2;) e[e.t++] = 0;
             for (var t = 0; t < this.m.t; ++t) {
                 var n = 32767 & e[t],
@@ -5625,7 +5852,7 @@ function FastClick(e, t) {
             e.clamp(), e.drShiftTo(this.m.t, e), e.compareTo(this.m) >= 0 && e.subTo(this.m, e)
         }
 
-        function q(e, t) {
+        function z(e, t) {
             e.squareTo(t), this.reduce(t)
         }
 
@@ -5646,15 +5873,15 @@ function FastClick(e, t) {
             for (i.copyTo(n); --s >= 0;)
                 if (t.sqrTo(n, r), (e & 1 << s) > 0) t.mulTo(r, i, n);
                 else {
-                    var l = n;
-                    n = r, r = l
+                    var c = n;
+                    n = r, r = c
                 }
             return t.revert(n)
         }
 
         function X(e, t) {
             var n;
-            return n = 256 > e || t.isEven() ? new $(t) : new R(t), this.exp(e, n)
+            return n = 256 > e || t.isEven() ? new L(t) : new R(t), this.exp(e, n)
         }
 
         function Y(e, t) {
@@ -5668,7 +5895,7 @@ function FastClick(e, t) {
                 128 > i ? n[--t] = i : i > 127 && 2048 > i ? (n[--t] = 63 & i | 128, n[--t] = i >> 6 | 192) : (n[--t] = 63 & i | 128, n[--t] = i >> 6 & 63 | 128, n[--t] = i >> 12 | 224)
             }
             n[--t] = 0;
-            for (var a = 0, s = 0, l = 0; t > 2;) 0 == l && (s = ut.random.randomWords(1, 0)[0]), a = s >> l & 255, l = (l + 8) % 32, 0 != a && (n[--t] = a);
+            for (var a = 0, s = 0, c = 0; t > 2;) 0 == c && (s = ut.random.randomWords(1, 0)[0]), a = s >> c & 255, c = (c + 8) % 32, 0 != a && (n[--t] = a);
             return n[--t] = 2, n[--t] = 0, new o(n)
         }
 
@@ -5743,7 +5970,7 @@ function FastClick(e, t) {
                 var o = n;
                 i += " ";
                 for (var a = t - 1; a > e; --a) {
-                    for (var s = this.get(a), l = o; 8 > l; ++l) i += s >> l & 1 ? "1" : "0";
+                    for (var s = this.get(a), c = o; 8 > c; ++c) i += s >> c & 1 ? "1" : "0";
                     o = 0
                 }
             }
@@ -5906,7 +6133,7 @@ function FastClick(e, t) {
             try {
                 var s = t.decodeLength(o);
                 return o.pos - i.pos + s == r
-            } catch (l) {
+            } catch (c) {
                 return !1
             }
         }, t.decode = function(n) {
@@ -5917,17 +6144,17 @@ function FastClick(e, t) {
                 a = n.pos - r.pos,
                 s = null;
             if (t.hasContent(i, o, n)) {
-                var l = n.pos;
+                var c = n.pos;
                 if (3 == i && n.get(), s = [], o >= 0) {
-                    for (var c = l + o; n.pos < c;) s[s.length] = t.decode(n);
-                    if (n.pos != c) throw "Content size is not correct for container starting at offset " + l
+                    for (var l = c + o; n.pos < l;) s[s.length] = t.decode(n);
+                    if (n.pos != l) throw "Content size is not correct for container starting at offset " + c
                 } else try {
                     for (;;) {
                         var u = t.decode(n);
                         if (0 == u.tag) break;
                         s[s.length] = u
                     }
-                    o = l - n.pos
+                    o = c - n.pos
                 } catch (f) {
                     throw "Exception while decoding undefined length content: " + f
                 }
@@ -5938,15 +6165,15 @@ function FastClick(e, t) {
             nt = "=",
             rt = 0xdeadbeefcafe,
             it = 15715070 == (16777215 & rt);
-        it && "Microsoft Internet Explorer" == navigator.appName ? (o.prototype.am = l, et = 30) : it && "Netscape" != navigator.appName ? (o.prototype.am = s, et = 26) : (o.prototype.am = c, et = 28), o.prototype.DB = et, o.prototype.DM = (1 << et) - 1, o.prototype.DV = 1 << et;
+        it && "Microsoft Internet Explorer" == navigator.appName ? (o.prototype.am = c, et = 30) : it && "Netscape" != navigator.appName ? (o.prototype.am = s, et = 26) : (o.prototype.am = l, et = 28), o.prototype.DB = et, o.prototype.DM = (1 << et) - 1, o.prototype.DV = 1 << et;
         var ot = 52;
         o.prototype.FV = Math.pow(2, ot), o.prototype.F1 = ot - et, o.prototype.F2 = 2 * et - ot;
-        var at, st, lt = "0123456789abcdefghijklmnopqrstuvwxyz",
-            ct = new Array;
-        for (at = "0".charCodeAt(0), st = 0; 9 >= st; ++st) ct[at++] = st;
-        for (at = "a".charCodeAt(0), st = 10; 36 > st; ++st) ct[at++] = st;
-        for (at = "A".charCodeAt(0), st = 10; 36 > st; ++st) ct[at++] = st;
-        $.prototype.convert = L, $.prototype.revert = P, $.prototype.reduce = I, $.prototype.mulTo = O, $.prototype.sqrTo = M, R.prototype.convert = U, R.prototype.revert = H, R.prototype.reduce = z, R.prototype.mulTo = B, R.prototype.sqrTo = q, o.prototype.copyTo = d, o.prototype.fromInt = h, o.prototype.fromString = m, o.prototype.clamp = v, o.prototype.dlShiftTo = _, o.prototype.drShiftTo = E, o.prototype.lShiftTo = C, o.prototype.rShiftTo = k, o.prototype.subTo = S, o.prototype.multiplyTo = N, o.prototype.squareTo = A, o.prototype.divRemTo = D, o.prototype.invDigit = F, o.prototype.isEven = W, o.prototype.exp = V, o.prototype.toString = g, o.prototype.negate = y, o.prototype.abs = b, o.prototype.compareTo = w, o.prototype.bitLength = T, o.prototype.mod = j, o.prototype.modPowInt = X, o.ZERO = p(0), o.ONE = p(1), K.prototype.doPublic = Q, K.prototype.setPublic = J, K.prototype.encrypt = Z;
+        var at, st, ct = "0123456789abcdefghijklmnopqrstuvwxyz",
+            lt = new Array;
+        for (at = "0".charCodeAt(0), st = 0; 9 >= st; ++st) lt[at++] = st;
+        for (at = "a".charCodeAt(0), st = 10; 36 > st; ++st) lt[at++] = st;
+        for (at = "A".charCodeAt(0), st = 10; 36 > st; ++st) lt[at++] = st;
+        L.prototype.convert = P, L.prototype.revert = O, L.prototype.reduce = $, L.prototype.mulTo = I, L.prototype.sqrTo = M, R.prototype.convert = U, R.prototype.revert = H, R.prototype.reduce = q, R.prototype.mulTo = B, R.prototype.sqrTo = z, o.prototype.copyTo = d, o.prototype.fromInt = h, o.prototype.fromString = m, o.prototype.clamp = v, o.prototype.dlShiftTo = E, o.prototype.drShiftTo = _, o.prototype.lShiftTo = C, o.prototype.rShiftTo = k, o.prototype.subTo = S, o.prototype.multiplyTo = A, o.prototype.squareTo = N, o.prototype.divRemTo = D, o.prototype.invDigit = F, o.prototype.isEven = W, o.prototype.exp = V, o.prototype.toString = g, o.prototype.negate = y, o.prototype.abs = b, o.prototype.compareTo = w, o.prototype.bitLength = T, o.prototype.mod = j, o.prototype.modPowInt = X, o.ZERO = p(0), o.ONE = p(1), K.prototype.doPublic = Q, K.prototype.setPublic = J, K.prototype.encrypt = Z;
         var ut = {
             cipher: {},
             hash: {},
@@ -5981,10 +6208,10 @@ function FastClick(e, t) {
                 this._tables[0][0][0] || this._precompute();
                 var t, n, r, i, o, a = this._tables[0][4],
                     s = this._tables[1],
-                    l = e.length,
-                    c = 1;
-                if (4 !== l && 6 !== l && 8 !== l) throw new ut.exception.invalid("invalid aes key size");
-                for (this._key = [i = e.slice(0), o = []], t = l; 4 * l + 28 > t; t++) r = i[t - 1], (t % l === 0 || 8 === l && t % l === 4) && (r = a[r >>> 24] << 24 ^ a[r >> 16 & 255] << 16 ^ a[r >> 8 & 255] << 8 ^ a[255 & r], t % l === 0 && (r = r << 8 ^ r >>> 24 ^ c << 24, c = c << 1 ^ 283 * (c >> 7))), i[t] = i[t - l] ^ r;
+                    c = e.length,
+                    l = 1;
+                if (4 !== c && 6 !== c && 8 !== c) throw new ut.exception.invalid("invalid aes key size");
+                for (this._key = [i = e.slice(0), o = []], t = c; 4 * c + 28 > t; t++) r = i[t - 1], (t % c === 0 || 8 === c && t % c === 4) && (r = a[r >>> 24] << 24 ^ a[r >> 16 & 255] << 16 ^ a[r >> 8 & 255] << 8 ^ a[255 & r], t % c === 0 && (r = r << 8 ^ r >>> 24 ^ l << 24, l = l << 1 ^ 283 * (l >> 7))), i[t] = i[t - c] ^ r;
                 for (n = 0; t; n++, t--) r = i[3 & n ? t : t - 4], o[n] = 4 >= t || 4 > n ? r : s[0][a[r >>> 24]] ^ s[1][a[r >> 16 & 255]] ^ s[2][a[r >> 8 & 255]] ^ s[3][a[255 & r]]
             }, ut.cipher.aes.prototype = {
                 encrypt: function(e) {
@@ -6010,23 +6237,23 @@ function FastClick(e, t) {
                     ]
                 ],
                 _precompute: function() {
-                    var e, t, n, r, i, o, a, s, l, c = this._tables[0],
+                    var e, t, n, r, i, o, a, s, c, l = this._tables[0],
                         u = this._tables[1],
-                        f = c[4],
+                        f = l[4],
                         d = u[4],
                         h = [],
                         p = [];
                     for (e = 0; 256 > e; e++) p[(h[e] = e << 1 ^ 283 * (e >> 7)) ^ e] = e;
                     for (t = n = 0; !f[t]; t ^= r || 1, n = p[n] || 1)
-                        for (a = n ^ n << 1 ^ n << 2 ^ n << 3 ^ n << 4, a = a >> 8 ^ 255 & a ^ 99, f[t] = a, d[a] = t, o = h[i = h[r = h[t]]], l = 16843009 * o ^ 65537 * i ^ 257 * r ^ 16843008 * t, s = 257 * h[a] ^ 16843008 * a, e = 0; 4 > e; e++) c[e][t] = s = s << 24 ^ s >>> 8, u[e][a] = l = l << 24 ^ l >>> 8;
-                    for (e = 0; 5 > e; e++) c[e] = c[e].slice(0), u[e] = u[e].slice(0)
+                        for (a = n ^ n << 1 ^ n << 2 ^ n << 3 ^ n << 4, a = a >> 8 ^ 255 & a ^ 99, f[t] = a, d[a] = t, o = h[i = h[r = h[t]]], c = 16843009 * o ^ 65537 * i ^ 257 * r ^ 16843008 * t, s = 257 * h[a] ^ 16843008 * a, e = 0; 4 > e; e++) l[e][t] = s = s << 24 ^ s >>> 8, u[e][a] = c = c << 24 ^ c >>> 8;
+                    for (e = 0; 5 > e; e++) l[e] = l[e].slice(0), u[e] = u[e].slice(0)
                 },
                 _crypt: function(e, t) {
                     if (4 !== e.length) throw new ut.exception.invalid("invalid aes block size");
                     var n, r, i, o, a = this._key[t],
                         s = e[0] ^ a[0],
-                        l = e[t ? 3 : 1] ^ a[1],
-                        c = e[2] ^ a[2],
+                        c = e[t ? 3 : 1] ^ a[1],
+                        l = e[2] ^ a[2],
                         u = e[t ? 1 : 3] ^ a[3],
                         f = a.length / 4 - 2,
                         d = 4,
@@ -6037,8 +6264,8 @@ function FastClick(e, t) {
                         g = p[2],
                         y = p[3],
                         b = p[4];
-                    for (o = 0; f > o; o++) n = m[s >>> 24] ^ v[l >> 16 & 255] ^ g[c >> 8 & 255] ^ y[255 & u] ^ a[d], r = m[l >>> 24] ^ v[c >> 16 & 255] ^ g[u >> 8 & 255] ^ y[255 & s] ^ a[d + 1], i = m[c >>> 24] ^ v[u >> 16 & 255] ^ g[s >> 8 & 255] ^ y[255 & l] ^ a[d + 2], u = m[u >>> 24] ^ v[s >> 16 & 255] ^ g[l >> 8 & 255] ^ y[255 & c] ^ a[d + 3], d += 4, s = n, l = r, c = i;
-                    for (o = 0; 4 > o; o++) h[t ? 3 & -o : o] = b[s >>> 24] << 24 ^ b[l >> 16 & 255] << 16 ^ b[c >> 8 & 255] << 8 ^ b[255 & u] ^ a[d++], n = s, s = l, l = c, c = u, u = n;
+                    for (o = 0; f > o; o++) n = m[s >>> 24] ^ v[c >> 16 & 255] ^ g[l >> 8 & 255] ^ y[255 & u] ^ a[d], r = m[c >>> 24] ^ v[l >> 16 & 255] ^ g[u >> 8 & 255] ^ y[255 & s] ^ a[d + 1], i = m[l >>> 24] ^ v[u >> 16 & 255] ^ g[s >> 8 & 255] ^ y[255 & c] ^ a[d + 2], u = m[u >>> 24] ^ v[s >> 16 & 255] ^ g[c >> 8 & 255] ^ y[255 & l] ^ a[d + 3], d += 4, s = n, c = r, l = i;
+                    for (o = 0; 4 > o; o++) h[t ? 3 & -o : o] = b[s >>> 24] << 24 ^ b[c >> 16 & 255] << 16 ^ b[l >> 8 & 255] << 8 ^ b[255 & u] ^ a[d++], n = s, s = c, c = l, l = u, u = n;
                     return h
                 }
             }, ut.bitArray = {
@@ -6119,8 +6346,8 @@ function FastClick(e, t) {
                         o = 0,
                         a = ut.codec.base64._chars,
                         s = 0,
-                        l = ut.bitArray.bitLength(e);
-                    for (n && (a = a.substr(0, 62) + "-_"), r = 0; 6 * i.length < l;) i += a.charAt((s ^ e[r] >>> o) >>> 26), 6 > o ? (s = e[r] << 6 - o, o += 26, r++) : (s <<= 6, o -= 6);
+                        c = ut.bitArray.bitLength(e);
+                    for (n && (a = a.substr(0, 62) + "-_"), r = 0; 6 * i.length < c;) i += a.charAt((s ^ e[r] >>> o) >>> 26), 6 > o ? (s = e[r] << 6 - o, o += 26, r++) : (s <<= 6, o -= 6);
                     for (; 3 & i.length && !t;) i += "=";
                     return i
                 },
@@ -6152,23 +6379,23 @@ function FastClick(e, t) {
                         var i, o = ut.bitArray,
                             a = o._xor4,
                             s = o.bitLength(t),
-                            l = 0,
-                            c = [];
+                            c = 0,
+                            l = [];
                         if (7 & s) throw new ut.exception.invalid("pkcs#5 padding only works for multiples of a byte");
-                        for (i = 0; s >= l + 128; i += 4, l += 128) n = e.encrypt(a(n, t.slice(i, i + 4))), c.splice(i, 0, n[0], n[1], n[2], n[3]);
-                        return s = 16843009 * (16 - (s >> 3 & 15)), n = e.encrypt(a(n, o.concat(t, [s, s, s, s]).slice(i, i + 4))), c.splice(i, 0, n[0], n[1], n[2], n[3]), c
+                        for (i = 0; s >= c + 128; i += 4, c += 128) n = e.encrypt(a(n, t.slice(i, i + 4))), l.splice(i, 0, n[0], n[1], n[2], n[3]);
+                        return s = 16843009 * (16 - (s >> 3 & 15)), n = e.encrypt(a(n, o.concat(t, [s, s, s, s]).slice(i, i + 4))), l.splice(i, 0, n[0], n[1], n[2], n[3]), l
                     },
                     decrypt: function(e, t, n, r) {
                         if (r && r.length) throw new ut.exception.invalid("cbc can't authenticate data");
                         if (128 !== ut.bitArray.bitLength(n)) throw new ut.exception.invalid("cbc iv must be 128 bits");
                         if (127 & ut.bitArray.bitLength(t) || !t.length) throw new ut.exception.corrupt("cbc ciphertext must be a positive multiple of the block size");
                         var i, o, a, s = ut.bitArray,
-                            l = s._xor4,
-                            c = [];
-                        for (r = r || [], i = 0; i < t.length; i += 4) o = t.slice(i, i + 4), a = l(n, e.decrypt(o)), c.splice(i, 0, a[0], a[1], a[2], a[3]), n = o;
-                        if (o = 255 & c[i - 1], 0 == o || o > 16) throw new ut.exception.corrupt("pkcs#5 padding corrupt");
-                        if (a = 16843009 * o, !s.equal(s.bitSlice([a, a, a, a], 0, 8 * o), s.bitSlice(c, 32 * c.length - 8 * o, 32 * c.length))) throw new ut.exception.corrupt("pkcs#5 padding corrupt");
-                        return s.bitSlice(c, 0, 32 * c.length - 8 * o)
+                            c = s._xor4,
+                            l = [];
+                        for (r = r || [], i = 0; i < t.length; i += 4) o = t.slice(i, i + 4), a = c(n, e.decrypt(o)), l.splice(i, 0, a[0], a[1], a[2], a[3]), n = o;
+                        if (o = 255 & l[i - 1], 0 == o || o > 16) throw new ut.exception.corrupt("pkcs#5 padding corrupt");
+                        if (a = 16843009 * o, !s.equal(s.bitSlice([a, a, a, a], 0, 8 * o), s.bitSlice(l, 32 * l.length - 8 * o, 32 * l.length))) throw new ut.exception.corrupt("pkcs#5 padding corrupt");
+                        return s.bitSlice(l, 0, 32 * l.length - 8 * o)
                     }
                 }
             }, ut.misc.hmac = function(e, t) {
@@ -6225,16 +6452,16 @@ function FastClick(e, t) {
                     var t, n, r, i, o = e.slice(0),
                         a = this._h,
                         s = this._key,
-                        l = a[0],
-                        c = a[1],
+                        c = a[0],
+                        l = a[1],
                         u = a[2],
                         f = a[3],
                         d = a[4],
                         h = a[5],
                         p = a[6],
                         m = a[7];
-                    for (t = 0; 64 > t; t++) 16 > t ? n = o[t] : (r = o[t + 1 & 15], i = o[t + 14 & 15], n = o[15 & t] = (r >>> 7 ^ r >>> 18 ^ r >>> 3 ^ r << 25 ^ r << 14) + (i >>> 17 ^ i >>> 19 ^ i >>> 10 ^ i << 15 ^ i << 13) + o[15 & t] + o[t + 9 & 15] | 0), n = n + m + (d >>> 6 ^ d >>> 11 ^ d >>> 25 ^ d << 26 ^ d << 21 ^ d << 7) + (p ^ d & (h ^ p)) + s[t], m = p, p = h, h = d, d = f + n | 0, f = u, u = c, c = l, l = n + (c & u ^ f & (c ^ u)) + (c >>> 2 ^ c >>> 13 ^ c >>> 22 ^ c << 30 ^ c << 19 ^ c << 10) | 0;
-                    a[0] = a[0] + l | 0, a[1] = a[1] + c | 0, a[2] = a[2] + u | 0, a[3] = a[3] + f | 0, a[4] = a[4] + d | 0, a[5] = a[5] + h | 0, a[6] = a[6] + p | 0, a[7] = a[7] + m | 0
+                    for (t = 0; 64 > t; t++) 16 > t ? n = o[t] : (r = o[t + 1 & 15], i = o[t + 14 & 15], n = o[15 & t] = (r >>> 7 ^ r >>> 18 ^ r >>> 3 ^ r << 25 ^ r << 14) + (i >>> 17 ^ i >>> 19 ^ i >>> 10 ^ i << 15 ^ i << 13) + o[15 & t] + o[t + 9 & 15] | 0), n = n + m + (d >>> 6 ^ d >>> 11 ^ d >>> 25 ^ d << 26 ^ d << 21 ^ d << 7) + (p ^ d & (h ^ p)) + s[t], m = p, p = h, h = d, d = f + n | 0, f = u, u = l, l = c, c = n + (l & u ^ f & (l ^ u)) + (l >>> 2 ^ l >>> 13 ^ l >>> 22 ^ l << 30 ^ l << 19 ^ l << 10) | 0;
+                    a[0] = a[0] + c | 0, a[1] = a[1] + l | 0, a[2] = a[2] + u | 0, a[3] = a[3] + f | 0, a[4] = a[4] + d | 0, a[5] = a[5] + h | 0, a[6] = a[6] + p | 0, a[7] = a[7] + m | 0
                 }
             }, ut.random = {
                 randomWords: function(e, t) {
@@ -6251,8 +6478,8 @@ function FastClick(e, t) {
                     n = n || "user";
                     var r, i, o, a = (new Date).valueOf(),
                         s = this._robins[n],
-                        l = this.isReady(),
-                        c = 0;
+                        c = this.isReady(),
+                        l = 0;
                     switch (r = this._collectorIds[n], void 0 === r && (r = this._collectorIds[n] = this._collectorIdNext++), void 0 === s && (s = this._robins[n] = 0), this._robins[n] = (this._robins[n] + 1) % this._pools.length, typeof e) {
                         case "number":
                             void 0 === t && (t = 1), this._pools[s].update([r, this._eventId++, 1, t, a, 1, 0 | e]);
@@ -6263,8 +6490,8 @@ function FastClick(e, t) {
                                 for (o = [], i = 0; i < e.length; i++) o.push(e[i]);
                                 e = o
                             } else
-                                for ("[object Array]" !== u && (c = 1), i = 0; i < e.length && !c; i++) "number" != typeof e[i] && (c = 1);
-                            if (!c) {
+                                for ("[object Array]" !== u && (l = 1), i = 0; i < e.length && !l; i++) "number" != typeof e[i] && (l = 1);
+                            if (!l) {
                                 if (void 0 === t)
                                     for (t = 0, i = 0; i < e.length; i++)
                                         for (o = e[i]; o > 0;) t++, o >>>= 1;
@@ -6275,10 +6502,10 @@ function FastClick(e, t) {
                             void 0 === t && (t = e.length), this._pools[s].update([r, this._eventId++, 3, t, a, e.length]), this._pools[s].update(e);
                             break;
                         default:
-                            c = 1
+                            l = 1
                     }
-                    if (c) throw new ut.exception.bug("random: addEntropy only supports number, array of numbers or string");
-                    this._poolEntropy[s] += t, this._poolStrength += t, l === this._NOT_READY && (this.isReady() !== this._NOT_READY && this._fireEvent("seeded", Math.max(this._strength, this._poolStrength)), this._fireEvent("progress", this.getProgress()))
+                    if (l) throw new ut.exception.bug("random: addEntropy only supports number, array of numbers or string");
+                    this._poolEntropy[s] += t, this._poolStrength += t, c === this._NOT_READY && (this.isReady() !== this._NOT_READY && this._fireEvent("seeded", Math.max(this._strength, this._poolStrength)), this._fireEvent("progress", this.getProgress()))
                 },
                 isReady: function(e) {
                     var t = this._PARANOIA_LEVELS[void 0 !== e ? e : this._defaultParanoia];
@@ -6412,27 +6639,27 @@ function FastClick(e, t) {
                 s = function(e) {
                     return window.jQuery && e instanceof jQuery ? e[0] : e.nodeType && 1 === e.nodeType ? e : document.getElementById(e)
                 },
-                l = function(e) {
+                c = function(e) {
                     var t, n, r, i, o = [];
                     if ("INTEGER" === e.typeName() && (t = e.posContent(), n = e.posEnd(), r = e.stream.hexDump(t, n).replace(/[ \n]/g, ""), o.push(r)), null !== e.sub)
-                        for (i = 0; i < e.sub.length; i++) o = o.concat(l(e.sub[i]));
+                        for (i = 0; i < e.sub.length; i++) o = o.concat(c(e.sub[i]));
                     return o
                 },
-                c = function(e) {
+                l = function(e) {
                     var t, n, r = [],
                         i = e.children;
-                    for (n = 0; n < i.length; n++) t = i[n], 1 === t.nodeType && t.attributes["data-encrypted-name"] ? r.push(t) : t.children && t.children.length > 0 && (r = r.concat(c(t)));
+                    for (n = 0; n < i.length; n++) t = i[n], 1 === t.nodeType && t.attributes["data-encrypted-name"] ? r.push(t) : t.children && t.children.length > 0 && (r = r.concat(l(t)));
                     return r
                 },
                 u = function() {
-                    var n, r, o, a, s, c;
+                    var n, r, o, a, s, l;
                     try {
                         s = i(e), n = t.decode(s)
                     } catch (u) {
                         throw "Invalid encryption key. Please use the key labeled 'Client-Side Encryption Key'"
                     }
-                    if (o = l(n), 2 !== o.length) throw "Invalid encryption key. Please use the key labeled 'Client-Side Encryption Key'";
-                    return a = o[0], r = o[1], c = new K, c.setPublic(a, r), c
+                    if (o = c(n), 2 !== o.length) throw "Invalid encryption key. Please use the key labeled 'Client-Side Encryption Key'";
+                    return a = o[0], r = o[1], l = new K, l.setPublic(a, r), l
                 },
                 f = function() {
                     return {
@@ -6450,25 +6677,25 @@ function FastClick(e, t) {
                     o = f(),
                     a = i.encrypt(e),
                     s = o.sign(ut.codec.base64.toBits(a)),
-                    l = ut.bitArray.concat(i.key, o.key),
-                    c = ut.codec.base64.fromBits(l),
-                    d = t.encrypt(c),
+                    c = ut.bitArray.concat(i.key, o.key),
+                    l = ut.codec.base64.fromBits(c),
+                    d = t.encrypt(l),
                     h = "$bt4|javascript_" + r.version.replace(/\./g, "_") + "$",
                     p = null;
                 return d && (p = n(d)), h + p + "$" + a + "$" + s
             }, r.encryptForm = function(e) {
-                var t, n, i, l, u, f;
-                for (e = s(e), f = c(e); o.length > 0;) {
+                var t, n, i, c, u, f;
+                for (e = s(e), f = l(e); o.length > 0;) {
                     try {
                         e.removeChild(o[0])
                     } catch (d) {}
                     o.splice(0, 1)
                 }
-                for (u = 0; u < f.length; u++) t = f[u], i = t.getAttribute("data-encrypted-name"), n = r.encrypt(t.value), t.removeAttribute("name"), l = a("input", {
+                for (u = 0; u < f.length; u++) t = f[u], i = t.getAttribute("data-encrypted-name"), n = r.encrypt(t.value), t.removeAttribute("name"), c = a("input", {
                     value: n,
                     type: "hidden",
                     name: i
-                }), o.push(l), e.appendChild(l)
+                }), o.push(c), e.appendChild(c)
             }, r.onSubmitEncryptForm = function(e, t) {
                 var n;
                 e = s(e), n = function(n) {
@@ -6724,24 +6951,24 @@ function FastClick(e, t) {
                 return new e.braintree.api.CreditCard(t.paymentMethods[0])
             }, o)
         }, n.prototype.sendAnalyticsEvents = function(n, i) {
-            var o, a, s, l = this,
-                c = [];
+            var o, a, s, c = this,
+                l = [];
             if (n = e.braintree.api.util.isArray(n) ? n : [n], !this.analyticsUrl) return void(i && i.apply(null, [null, {}]));
-            for (var u in n) n.hasOwnProperty(u) && c.push({
+            for (var u in n) n.hasOwnProperty(u) && l.push({
                 kind: n[u]
             });
             o = this.analyticsUrl, a = r(this.attrs, {
-                analytics: c
+                analytics: l
             }), s = this.driver.post(o, a, function(e, n) {
-                if (l.timeoutWatchers[n]) {
-                    clearTimeout(l.timeoutWatchers[n]);
+                if (c.timeoutWatchers[n]) {
+                    clearTimeout(c.timeoutWatchers[n]);
                     var r = t(e, function(e) {
                         return e
                     });
                     i && i.apply(null, r)
                 }
             }), this.timeoutWatchers[s] = setTimeout(function() {
-                l.timeoutWatchers[s] = null, i.apply(null, [{
+                c.timeoutWatchers[s] = null, i.apply(null, [{
                     errors: "Unknown error"
                 }, null])
             }, this.requestTimeout)
@@ -6797,13 +7024,13 @@ function FastClick(e, t) {
         function r(e, r, i, a) {
             var s = -1 === (e || "").indexOf("?") ? "?" : "&";
             a = a || u.callbackName || "callback";
-            var f = a + "_json" + ++l;
-            return s += n(o(r)), c[f] = function(e) {
+            var f = a + "_json" + ++c;
+            return s += n(o(r)), l[f] = function(e) {
                 i(e, f);
                 try {
-                    delete c[f]
+                    delete l[f]
                 } catch (t) {}
-                c[f] = null
+                l[f] = null
             }, t(e + s + "&" + a + "=" + f), f
         }
 
@@ -6816,8 +7043,8 @@ function FastClick(e, t) {
         }
         var a = e.braintree || {};
         a.api = a.api || {};
-        var s, l = 0,
-            c = this,
+        var s, c = 0,
+            l = this,
             u = {};
         a.api.JSONP = {
             get: r,
@@ -6838,11 +7065,11 @@ function FastClick(e, t) {
                 var o = n.indexOf(e.charAt(i++)),
                     a = n.indexOf(e.charAt(i++)),
                     s = n.indexOf(e.charAt(i++)),
-                    l = n.indexOf(e.charAt(i++)),
-                    c = (63 & o) << 2 | a >> 4 & 3,
+                    c = n.indexOf(e.charAt(i++)),
+                    l = (63 & o) << 2 | a >> 4 & 3,
                     u = (15 & a) << 4 | s >> 2 & 15,
-                    f = (3 & s) << 6 | 63 & l;
-                r += String.fromCharCode(c) + (u ? String.fromCharCode(u) : "") + (f ? String.fromCharCode(f) : "")
+                    f = (3 & s) << 6 | 63 & c;
+                r += String.fromCharCode(l) + (u ? String.fromCharCode(u) : "") + (f ? String.fromCharCode(f) : "")
             } while (i < e.length);
             return r
         }
@@ -7064,8 +7291,8 @@ function FastClick(e, t) {
             }, braintree.paypal.util.btoa = "function" == typeof window.btoa ? function(e) {
                 return window.btoa(e)
             } : function(e) {
-                for (var t, n, r, i, o, a, s, l = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", c = "", u = 0; u < e.length;) t = e.charCodeAt(u++), n = e.charCodeAt(u++), r = e.charCodeAt(u++), i = t >> 2, o = (3 & t) << 4 | n >> 4, a = (15 & n) << 2 | r >> 6, s = 63 & r, isNaN(n) ? a = s = 64 : isNaN(r) && (s = 64), c = c + l.charAt(i) + l.charAt(o) + l.charAt(a) + l.charAt(s);
-                return c
+                for (var t, n, r, i, o, a, s, c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", l = "", u = 0; u < e.length;) t = e.charCodeAt(u++), n = e.charCodeAt(u++), r = e.charCodeAt(u++), i = t >> 2, o = (3 & t) << 4 | n >> 4, a = (15 & n) << 2 | r >> 6, s = 63 & r, isNaN(n) ? a = s = 64 : isNaN(r) && (s = 64), l = l + c.charAt(i) + c.charAt(o) + c.charAt(a) + c.charAt(s);
+                return l
             }, braintree.paypal.util.generateUid = function() {
                 for (var e = "", t = 0; 32 > t; t++) {
                     var n = Math.floor(16 * Math.random());
@@ -7608,18 +7835,18 @@ FastClick.prototype.needsClick = function(e) {
         return FastClick
     }) : "undefined" != typeof module && module.exports ? (module.exports = FastClick.attach, module.exports.FastClick = FastClick) : window.FastClick = FastClick,
     function() {
-        var e, t, n, r, i, o, a, s, l, c, u, f, d, h, p = [].indexOf || function(e) {
+        var e, t, n, r, i, o, a, s, c, l, u, f, d, h, p = [].indexOf || function(e) {
             for (var t = 0, n = this.length; n > t; t++)
                 if (t in this && this[t] === e) return t;
             return -1
         };
-        l = "[ ]", t = "[x]", s = function(e) {
+        c = "[ ]", t = "[x]", s = function(e) {
             return e.replace(/([\[\]])/g, "\\$1").replace(/\s/, "\\s").replace("x", "[xX]")
-        }, c = RegExp("" + s(l)), n = RegExp("" + s(t)), u = RegExp("^(?:\\s*(?:>\\s*)*(?:[-+*]|(?:\\d+\\.)))\\s*(" + s(t) + "|" + s(l) + ")\\s+(?!\\(.*?\\))(?=(?:\\[.*?\\]\\s*(?:\\[.*?\\]|\\(.*?\\))\\s*)*(?:[^\\[]|$))"), e = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/gm, f = RegExp("^(" + s(t) + "|" + s(l) + ").+$", "g"), h = function(r, i, o) {
+        }, l = RegExp("" + s(c)), n = RegExp("" + s(t)), u = RegExp("^(?:\\s*(?:>\\s*)*(?:[-+*]|(?:\\d+\\.)))\\s*(" + s(t) + "|" + s(c) + ")\\s+(?!\\(.*?\\))(?=(?:\\[.*?\\]\\s*(?:\\[.*?\\]|\\(.*?\\))\\s*)*(?:[^\\[]|$))"), e = /^`{3}(?:\s*\w+)?[\S\s].*[\S\s]^`{3}$/gm, f = RegExp("^(" + s(t) + "|" + s(c) + ").+$", "g"), h = function(r, i, o) {
             var a, s, d, h;
             return a = r.replace(/\r/g, "").replace(e, "").replace(f, "").split("\n"), s = 0, h = function() {
                 var e, f, h, m;
-                for (h = r.split("\n"), m = [], e = 0, f = h.length; f > e; e++) d = h[e], p.call(a, d) >= 0 && d.match(u) && (s += 1, s === i && (d = o ? d.replace(c, t) : d.replace(n, l))), m.push(d);
+                for (h = r.split("\n"), m = [], e = 0, f = h.length; f > e; e++) d = h[e], p.call(a, d) >= 0 && d.match(u) && (s += 1, s === i && (d = o ? d.replace(l, t) : d.replace(n, c))), m.push(d);
                 return m
             }(), h.join("\n")
         }, d = function(e) {
@@ -7661,8 +7888,8 @@ FastClick.prototype.needsClick = function(e) {
             o = i.document,
             a = i.navigator,
             s = i.setTimeout,
-            l = i.encodeURIComponent,
-            c = i.ActiveXObject,
+            c = i.encodeURIComponent,
+            l = i.ActiveXObject,
             u = i.Error,
             f = i.Number.parseInt || i.parseInt,
             d = i.Number.parseFloat || i.parseFloat,
@@ -7689,24 +7916,24 @@ FastClick.prototype.needsClick = function(e) {
             },
             T = function() {
                 var e, n, r, i, o, a, s = x(arguments),
-                    l = s[0] || {};
+                    c = s[0] || {};
                 for (e = 1, n = s.length; n > e; e++)
                     if (null != (r = s[e]))
-                        for (i in r) y.call(r, i) && (o = l[i], a = r[i], l !== a && a !== t && (l[i] = a));
-                return l
+                        for (i in r) y.call(r, i) && (o = c[i], a = r[i], c !== a && a !== t && (c[i] = a));
+                return c
             },
-            _ = function(e) {
+            E = function(e) {
                 var t, n, r, i;
                 if ("object" != typeof e || null == e) t = e;
                 else if ("number" == typeof e.length)
-                    for (t = [], n = 0, r = e.length; r > n; n++) y.call(e, n) && (t[n] = _(e[n]));
+                    for (t = [], n = 0, r = e.length; r > n; n++) y.call(e, n) && (t[n] = E(e[n]));
                 else {
                     t = {};
-                    for (i in e) y.call(e, i) && (t[i] = _(e[i]))
+                    for (i in e) y.call(e, i) && (t[i] = E(e[i]))
                 }
                 return t
             },
-            E = function(e, t) {
+            _ = function(e, t) {
                 for (var n = {}, r = 0, i = t.length; i > r; r++) t[r] in e && (n[t[r]] = e[t[r]]);
                 return n
             },
@@ -7728,11 +7955,11 @@ FastClick.prototype.needsClick = function(e) {
                     } while (e);
                 return !1
             },
-            N = function(e) {
+            A = function(e) {
                 var t;
                 return "string" == typeof e && e && (t = e.split("#")[0].split("?")[0], t = e.slice(0, e.lastIndexOf("/") + 1)), t
             },
-            A = function(e) {
+            N = function(e) {
                 var t, n;
                 return "string" == typeof e && e && (n = e.match(/^(?:|[^:@]*@|.+\)@(?=http[s]?|file)|.+?\s+(?: at |@)(?:[^:\(]+ )*[\(]?)((?:http[s]?|file):\/\/[\/]?.+?\/[^:\)]*?)(?::\d+)(?::\d+)?/), n && n[1] ? t = n[1] : (n = e.match(/\)@((?:http[s]?|file):\/\/[\/]?.+?\/[^:\)]*?)(?::\d+)(?::\d+)?/), n && n[1] && (t = n[1]))), t
             },
@@ -7743,7 +7970,7 @@ FastClick.prototype.needsClick = function(e) {
                 } catch (n) {
                     t = n
                 }
-                return t && (e = t.sourceURL || t.fileName || A(t.stack)), e
+                return t && (e = t.sourceURL || t.fileName || N(t.stack)), e
             },
             j = function() {
                 var e, n, r;
@@ -7754,14 +7981,14 @@ FastClick.prototype.needsClick = function(e) {
                         if ("interactive" === n[r].readyState && (e = n[r].src)) return e;
                 return "loading" === o.readyState && (e = n[n.length - 1].src) ? e : (e = D()) ? e : t
             },
-            $ = function() {
+            L = function() {
                 var e, n, r, i = o.getElementsByTagName("script");
                 for (e = i.length; e--;) {
                     if (!(r = i[e].src)) {
                         n = null;
                         break
                     }
-                    if (r = N(r), null == n) n = r;
+                    if (r = A(r), null == n) n = r;
                     else if (n !== r) {
                         n = null;
                         break
@@ -7769,11 +7996,11 @@ FastClick.prototype.needsClick = function(e) {
                 }
                 return n || t
             },
-            L = function() {
-                var e = N(j()) || $() || "";
+            P = function() {
+                var e = A(j()) || L() || "";
                 return e + "ZeroClipboard.swf"
             },
-            P = {
+            O = {
                 bridge: null,
                 version: "0.0.0",
                 pluginType: "unknown",
@@ -7784,8 +8011,8 @@ FastClick.prototype.needsClick = function(e) {
                 overdue: null,
                 ready: null
             },
-            I = "11.0.0",
-            O = {},
+            $ = "11.0.0",
+            I = {},
             M = {},
             F = null,
             R = {
@@ -7799,7 +8026,7 @@ FastClick.prototype.needsClick = function(e) {
                 }
             },
             U = {
-                swfPath: L(),
+                swfPath: P(),
                 trustedDomains: e.location.host ? [e.location.host] : [],
                 cacheBust: !0,
                 forceEnhancedClipboard: !1,
@@ -7820,27 +8047,27 @@ FastClick.prototype.needsClick = function(e) {
                     for (var t in e)
                         if (y.call(e, t))
                             if (/^(?:forceHandCursor|title|zIndex|bubbleEvents)$/.test(t)) U[t] = e[t];
-                            else if (null == P.bridge)
+                            else if (null == O.bridge)
                     if ("containerId" === t || "swfObjectId" === t) {
                         if (!nt(e[t])) throw new Error("The specified `" + t + "` value is not valid as an HTML4 Element ID");
                         U[t] = e[t]
                     } else U[t] = e[t]; {
-                        if ("string" != typeof e || !e) return _(U);
+                        if ("string" != typeof e || !e) return E(U);
                         if (y.call(U, e)) return U[e]
                     }
             },
-            z = function() {
+            q = function() {
                 return {
-                    browser: E(a, ["userAgent", "platform", "appName"]),
-                    flash: C(P, ["bridge"]),
+                    browser: _(a, ["userAgent", "platform", "appName"]),
+                    flash: C(O, ["bridge"]),
                     zeroclipboard: {
                         version: jt.version,
                         config: jt.config()
                     }
                 }
             },
-            q = function() {
-                return !!(P.disabled || P.outdated || P.unavailable || P.deactivated)
+            z = function() {
+                return !!(O.disabled || O.outdated || O.unavailable || O.deactivated)
             },
             B = function(e, t) {
                 var n, r, i, o = {};
@@ -7848,13 +8075,13 @@ FastClick.prototype.needsClick = function(e) {
                 else if ("object" == typeof e && e && "undefined" == typeof t)
                     for (n in e) y.call(e, n) && "string" == typeof n && n && "function" == typeof e[n] && jt.on(n, e[n]);
                 if (i && i.length) {
-                    for (n = 0, r = i.length; r > n; n++) e = i[n].replace(/^on/, ""), o[e] = !0, O[e] || (O[e] = []), O[e].push(t);
-                    if (o.ready && P.ready && jt.emit({
+                    for (n = 0, r = i.length; r > n; n++) e = i[n].replace(/^on/, ""), o[e] = !0, I[e] || (I[e] = []), I[e].push(t);
+                    if (o.ready && O.ready && jt.emit({
                             type: "ready"
                         }), o.error) {
                         var a = ["disabled", "outdated", "unavailable", "deactivated", "overdue"];
                         for (n = 0, r = a.length; r > n; n++)
-                            if (P[a[n]] === !0) {
+                            if (O[a[n]] === !0) {
                                 jt.emit({
                                     type: "error",
                                     name: "flash-" + a[n]
@@ -7867,13 +8094,13 @@ FastClick.prototype.needsClick = function(e) {
             },
             W = function(e, t) {
                 var n, r, i, o, a;
-                if (0 === arguments.length) o = v(O);
+                if (0 === arguments.length) o = v(I);
                 else if ("string" == typeof e && e) o = e.split(/\s+/);
                 else if ("object" == typeof e && e && "undefined" == typeof t)
                     for (n in e) y.call(e, n) && "string" == typeof n && n && "function" == typeof e[n] && jt.off(n, e[n]);
                 if (o && o.length)
                     for (n = 0, r = o.length; r > n; n++)
-                        if (e = o[n].toLowerCase().replace(/^on/, ""), a = O[e], a && a.length)
+                        if (e = o[n].toLowerCase().replace(/^on/, ""), a = I[e], a && a.length)
                             if (t)
                                 for (i = a.indexOf(t); - 1 !== i;) a.splice(i, 1), i = a.indexOf(t, i);
                             else a.length = 0;
@@ -7881,24 +8108,24 @@ FastClick.prototype.needsClick = function(e) {
             },
             V = function(e) {
                 var t;
-                return t = "string" == typeof e && e ? _(O[e]) || null : _(O)
+                return t = "string" == typeof e && e ? E(I[e]) || null : E(I)
             },
             X = function(e) {
                 var t, n, r;
-                return e = rt(e), e && !ct(e) ? "ready" === e.type && P.overdue === !0 ? jt.emit({
+                return e = rt(e), e && !lt(e) ? "ready" === e.type && O.overdue === !0 ? jt.emit({
                     type: "error",
                     name: "flash-overdue"
-                }) : (t = T({}, e), lt.call(this, t), "copy" === e.type && (r = mt(M), n = r.data, F = r.formatMap), n) : void 0
+                }) : (t = T({}, e), ct.call(this, t), "copy" === e.type && (r = mt(M), n = r.data, F = r.formatMap), n) : void 0
             },
             Y = function() {
-                if ("boolean" != typeof P.ready && (P.ready = !1), !jt.isFlashUnusable() && null === P.bridge) {
+                if ("boolean" != typeof O.ready && (O.ready = !1), !jt.isFlashUnusable() && null === O.bridge) {
                     var e = U.flashLoadTimeout;
                     "number" == typeof e && e >= 0 && s(function() {
-                        "boolean" != typeof P.deactivated && (P.deactivated = !0), P.deactivated === !0 && jt.emit({
+                        "boolean" != typeof O.deactivated && (O.deactivated = !0), O.deactivated === !0 && jt.emit({
                             type: "error",
                             name: "flash-deactivated"
                         })
-                    }, e), P.overdue = !1, ht()
+                    }, e), O.overdue = !1, ht()
                 }
             },
             G = function() {
@@ -7917,23 +8144,23 @@ FastClick.prototype.needsClick = function(e) {
                 "undefined" == typeof e ? (k(M), F = null) : "string" == typeof e && y.call(M, e) && delete M[e]
             },
             Q = function(e) {
-                return "undefined" == typeof e ? _(M) : "string" == typeof e && y.call(M, e) ? M[e] : void 0
+                return "undefined" == typeof e ? E(M) : "string" == typeof e && y.call(M, e) ? M[e] : void 0
             },
             Z = function(e) {
                 if (e && 1 === e.nodeType) {
-                    n && (_t(n, U.activeClass), n !== e && _t(n, U.hoverClass)), n = e, Tt(e, U.hoverClass);
+                    n && (Et(n, U.activeClass), n !== e && Et(n, U.hoverClass)), n = e, Tt(e, U.hoverClass);
                     var t = e.getAttribute("title") || U.title;
                     if ("string" == typeof t && t) {
-                        var r = dt(P.bridge);
+                        var r = dt(O.bridge);
                         r && r.setAttribute("title", t)
                     }
-                    var i = U.forceHandCursor === !0 || "pointer" === Et(e, "cursor");
-                    Nt(i), St()
+                    var i = U.forceHandCursor === !0 || "pointer" === _t(e, "cursor");
+                    At(i), St()
                 }
             },
             et = function() {
-                var e = dt(P.bridge);
-                e && (e.removeAttribute("title"), e.style.left = "0px", e.style.top = "-9999px", e.style.width = "1px", e.style.top = "1px"), n && (_t(n, U.hoverClass), _t(n, U.activeClass), n = null)
+                var e = dt(O.bridge);
+                e && (e.removeAttribute("title"), e.style.left = "0px", e.style.top = "-9999px", e.style.width = "1px", e.style.top = "1px"), n && (Et(n, U.hoverClass), Et(n, U.activeClass), n = null)
             },
             tt = function() {
                 return n || null
@@ -7948,18 +8175,18 @@ FastClick.prototype.needsClick = function(e) {
                         type: t.toLowerCase(),
                         target: e.target || n || null,
                         relatedTarget: e.relatedTarget || null,
-                        currentTarget: P && P.bridge || null,
+                        currentTarget: O && O.bridge || null,
                         timeStamp: e.timeStamp || m() || null
                     });
                     var i = R[e.type];
                     return "error" === e.type && e.name && i && (i = i[e.name]), i && (e.message = i), "ready" === e.type && T(e, {
                         target: null,
-                        version: P.version
+                        version: O.version
                     }), "error" === e.type && (/^flash-(disabled|outdated|unavailable|deactivated|overdue)$/.test(e.name) && T(e, {
                         target: null,
-                        minimumVersion: I
+                        minimumVersion: $
                     }), /^flash-(outdated|unavailable|deactivated|overdue)$/.test(e.name) && T(e, {
-                        version: P.version
+                        version: O.version
                     })), "copy" === e.type && (e.clipboardData = {
                         setData: jt.setData,
                         clearData: jt.clearData
@@ -7976,16 +8203,16 @@ FastClick.prototype.needsClick = function(e) {
                         r = "_mouseover" === e.type && e.relatedTarget ? e.relatedTarget : t,
                         a = "_mouseout" === e.type && e.relatedTarget ? e.relatedTarget : t,
                         s = kt(n),
-                        l = i.screenLeft || i.screenX || 0,
-                        c = i.screenTop || i.screenY || 0,
+                        c = i.screenLeft || i.screenX || 0,
+                        l = i.screenTop || i.screenY || 0,
                         u = o.body.scrollLeft + o.documentElement.scrollLeft,
                         f = o.body.scrollTop + o.documentElement.scrollTop,
                         d = s.left + ("number" == typeof e._stageX ? e._stageX : 0),
                         h = s.top + ("number" == typeof e._stageY ? e._stageY : 0),
                         p = d - u,
                         m = h - f,
-                        v = l + p,
-                        g = c + m,
+                        v = c + p,
+                        g = l + m,
                         y = "number" == typeof e.movementX ? e.movementX : 0,
                         b = "number" == typeof e.movementY ? e.movementY : 0;
                     delete e._stageX, delete e._stageY, T(e, {
@@ -8019,27 +8246,27 @@ FastClick.prototype.needsClick = function(e) {
                     e.apply(t, n)
                 }, 0) : e.apply(t, n)
             },
-            lt = function(e) {
+            ct = function(e) {
                 if ("object" == typeof e && e && e.type) {
                     var t = at(e),
-                        n = O["*"] || [],
-                        r = O[e.type] || [],
+                        n = I["*"] || [],
+                        r = I[e.type] || [],
                         o = n.concat(r);
                     if (o && o.length) {
-                        var a, s, l, c, u, f = this;
-                        for (a = 0, s = o.length; s > a; a++) l = o[a], c = f, "string" == typeof l && "function" == typeof i[l] && (l = i[l]), "object" == typeof l && l && "function" == typeof l.handleEvent && (c = l, l = l.handleEvent), "function" == typeof l && (u = T({}, e), st(l, c, [u], t))
+                        var a, s, c, l, u, f = this;
+                        for (a = 0, s = o.length; s > a; a++) c = o[a], l = f, "string" == typeof c && "function" == typeof i[c] && (c = i[c]), "object" == typeof c && c && "function" == typeof c.handleEvent && (l = c, c = c.handleEvent), "function" == typeof c && (u = T({}, e), st(c, l, [u], t))
                     }
                     return this
                 }
             },
-            ct = function(e) {
+            lt = function(e) {
                 var t = e.target || n || null,
                     i = "swf" === e._source;
                 delete e._source;
                 var o = ["flash-disabled", "flash-outdated", "flash-unavailable", "flash-deactivated", "flash-overdue"];
                 switch (e.type) {
                     case "error":
-                        -1 !== o.indexOf(e.name) && T(P, {
+                        -1 !== o.indexOf(e.name) && T(O, {
                             disabled: "flash-disabled" === e.name,
                             outdated: "flash-outdated" === e.name,
                             unavailable: "flash-unavailable" === e.name,
@@ -8049,8 +8276,8 @@ FastClick.prototype.needsClick = function(e) {
                         });
                         break;
                     case "ready":
-                        var a = P.deactivated === !0;
-                        T(P, {
+                        var a = O.deactivated === !0;
+                        T(O, {
                             disabled: !1,
                             outdated: !1,
                             unavailable: !1,
@@ -8063,8 +8290,8 @@ FastClick.prototype.needsClick = function(e) {
                         r = t;
                         break;
                     case "copy":
-                        var s, l, c = e.relatedTarget;
-                        !M["text/html"] && !M["text/plain"] && c && (l = c.value || c.outerHTML || c.innerHTML) && (s = c.value || c.textContent || c.innerText) ? (e.clipboardData.clearData(), e.clipboardData.setData("text/plain", s), l !== s && e.clipboardData.setData("text/html", l)) : !M["text/plain"] && e.target && (s = e.target.getAttribute("data-clipboard-text")) && (e.clipboardData.clearData(), e.clipboardData.setData("text/plain", s));
+                        var s, c, l = e.relatedTarget;
+                        !M["text/html"] && !M["text/plain"] && l && (c = l.value || l.outerHTML || l.innerHTML) && (s = l.value || l.textContent || l.innerText) ? (e.clipboardData.clearData(), e.clipboardData.setData("text/plain", s), c !== s && e.clipboardData.setData("text/html", c)) : !M["text/plain"] && e.target && (s = e.target.getAttribute("data-clipboard-text")) && (e.clipboardData.clearData(), e.clipboardData.setData("text/plain", s));
                         break;
                     case "aftercopy":
                         jt.clearData(), t && t !== xt() && t.focus && t.focus();
@@ -8093,7 +8320,7 @@ FastClick.prototype.needsClick = function(e) {
                         }));
                         break;
                     case "_mouseup":
-                        _t(t, U.activeClass), U.bubbleEvents === !0 && i && ut(T({}, e, {
+                        Et(t, U.activeClass), U.bubbleEvents === !0 && i && ut(T({}, e, {
                             type: e.type.slice(1)
                         }));
                         break;
@@ -8126,39 +8353,39 @@ FastClick.prototype.needsClick = function(e) {
             },
             ft = function() {
                 var e = o.createElement("div");
-                return e.id = U.containerId, e.className = U.containerClass, e.style.position = "absolute", e.style.left = "0px", e.style.top = "-9999px", e.style.width = "1px", e.style.height = "1px", e.style.zIndex = "" + At(U.zIndex), e
+                return e.id = U.containerId, e.className = U.containerClass, e.style.position = "absolute", e.style.left = "0px", e.style.top = "-9999px", e.style.width = "1px", e.style.height = "1px", e.style.zIndex = "" + Nt(U.zIndex), e
             },
             dt = function(e) {
                 for (var t = e && e.parentNode; t && "OBJECT" === t.nodeName && t.parentNode;) t = t.parentNode;
                 return t || null
             },
             ht = function() {
-                var e, t = P.bridge,
+                var e, t = O.bridge,
                     n = dt(t);
                 if (!t) {
                     var r = wt(i.location.host, U),
                         a = "never" === r ? "none" : "all",
                         s = yt(U),
-                        l = U.swfPath + gt(U.swfPath, U);
+                        c = U.swfPath + gt(U.swfPath, U);
                     n = ft();
-                    var c = o.createElement("div");
-                    n.appendChild(c), o.body.appendChild(n);
+                    var l = o.createElement("div");
+                    n.appendChild(l), o.body.appendChild(n);
                     var u = o.createElement("div"),
-                        f = "activex" === P.pluginType;
-                    u.innerHTML = '<object id="' + U.swfObjectId + '" name="' + U.swfObjectId + '" width="100%" height="100%" ' + (f ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' : 'type="application/x-shockwave-flash" data="' + l + '"') + ">" + (f ? '<param name="movie" value="' + l + '"/>' : "") + '<param name="allowScriptAccess" value="' + r + '"/><param name="allowNetworking" value="' + a + '"/><param name="menu" value="false"/><param name="wmode" value="transparent"/><param name="flashvars" value="' + s + '"/></object>', t = u.firstChild, u = null, w(t).ZeroClipboard = jt, n.replaceChild(t, c)
+                        f = "activex" === O.pluginType;
+                    u.innerHTML = '<object id="' + U.swfObjectId + '" name="' + U.swfObjectId + '" width="100%" height="100%" ' + (f ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' : 'type="application/x-shockwave-flash" data="' + c + '"') + ">" + (f ? '<param name="movie" value="' + c + '"/>' : "") + '<param name="allowScriptAccess" value="' + r + '"/><param name="allowNetworking" value="' + a + '"/><param name="menu" value="false"/><param name="wmode" value="transparent"/><param name="flashvars" value="' + s + '"/></object>', t = u.firstChild, u = null, w(t).ZeroClipboard = jt, n.replaceChild(t, l)
                 }
-                return t || (t = o[U.swfObjectId], t && (e = t.length) && (t = t[e - 1]), !t && n && (t = n.firstChild)), P.bridge = t || null, t
+                return t || (t = o[U.swfObjectId], t && (e = t.length) && (t = t[e - 1]), !t && n && (t = n.firstChild)), O.bridge = t || null, t
             },
             pt = function() {
-                var e = P.bridge;
+                var e = O.bridge;
                 if (e) {
                     var t = dt(e);
-                    t && ("activex" === P.pluginType && "readyState" in e ? (e.style.display = "none", function n() {
+                    t && ("activex" === O.pluginType && "readyState" in e ? (e.style.display = "none", function n() {
                         if (4 === e.readyState) {
                             for (var r in e) "function" == typeof e[r] && (e[r] = null);
                             e.parentNode && e.parentNode.removeChild(e), t.parentNode && t.parentNode.removeChild(t)
                         } else s(n, 10)
-                    }()) : (e.parentNode && e.parentNode.removeChild(e), t.parentNode && t.parentNode.removeChild(t))), P.ready = null, P.bridge = null, P.deactivated = null
+                    }()) : (e.parentNode && e.parentNode.removeChild(e), t.parentNode && t.parentNode.removeChild(t))), O.ready = null, O.bridge = null, O.deactivated = null
                 }
             },
             mt = function(e) {
@@ -8225,7 +8452,7 @@ FastClick.prototype.needsClick = function(e) {
                             }
                             s.push.apply(s, [r, "//" + r, i.location.protocol + "//" + r])
                         }
-                return s.length && (a += "trustedOrigins=" + l(s.join(","))), e.forceEnhancedClipboard === !0 && (a += (a ? "&" : "") + "forceEnhancedClipboard=true"), "string" == typeof e.swfObjectId && e.swfObjectId && (a += (a ? "&" : "") + "swfObjectId=" + l(e.swfObjectId)), a
+                return s.length && (a += "trustedOrigins=" + c(s.join(","))), e.forceEnhancedClipboard === !0 && (a += (a ? "&" : "") + "forceEnhancedClipboard=true"), "string" == typeof e.swfObjectId && e.swfObjectId && (a += (a ? "&" : "") + "swfObjectId=" + c(e.swfObjectId)), a
             },
             bt = function(e) {
                 if (null == e || "" === e) return null;
@@ -8280,7 +8507,7 @@ FastClick.prototype.needsClick = function(e) {
                 }
                 return e
             },
-            _t = function(e, t) {
+            Et = function(e, t) {
                 if (!e || 1 !== e.nodeType) return e;
                 if (e.classList) return e.classList.contains(t) && e.classList.remove(t), e;
                 if ("string" == typeof t && t) {
@@ -8292,7 +8519,7 @@ FastClick.prototype.needsClick = function(e) {
                 }
                 return e
             },
-            Et = function(e, t) {
+            _t = function(e, t) {
                 var n = i.getComputedStyle(e, null).getPropertyValue(t);
                 return "cursor" !== t || n && "auto" !== n || "A" !== e.nodeName ? n : "pointer"
             },
@@ -8310,32 +8537,32 @@ FastClick.prototype.needsClick = function(e) {
                 if (e.getBoundingClientRect) {
                     var n, r, a, s = e.getBoundingClientRect();
                     "pageXOffset" in i && "pageYOffset" in i ? (n = i.pageXOffset, r = i.pageYOffset) : (a = Ct(), n = p(o.documentElement.scrollLeft / a), r = p(o.documentElement.scrollTop / a));
-                    var l = o.documentElement.clientLeft || 0,
-                        c = o.documentElement.clientTop || 0;
-                    t.left = s.left + n - l, t.top = s.top + r - c, t.width = "width" in s ? s.width : s.right - s.left, t.height = "height" in s ? s.height : s.bottom - s.top
+                    var c = o.documentElement.clientLeft || 0,
+                        l = o.documentElement.clientTop || 0;
+                    t.left = s.left + n - c, t.top = s.top + r - l, t.width = "width" in s ? s.width : s.right - s.left, t.height = "height" in s ? s.height : s.bottom - s.top
                 }
                 return t
             },
             St = function() {
                 var e;
-                if (n && (e = dt(P.bridge))) {
+                if (n && (e = dt(O.bridge))) {
                     var t = kt(n);
                     T(e.style, {
                         width: t.width + "px",
                         height: t.height + "px",
                         top: t.top + "px",
                         left: t.left + "px",
-                        zIndex: "" + At(U.zIndex)
+                        zIndex: "" + Nt(U.zIndex)
                     })
                 }
             },
-            Nt = function(e) {
-                P.ready === !0 && (P.bridge && "function" == typeof P.bridge.setHandCursor ? P.bridge.setHandCursor(e) : P.ready = !1)
-            },
             At = function(e) {
+                O.ready === !0 && (O.bridge && "function" == typeof O.bridge.setHandCursor ? O.bridge.setHandCursor(e) : O.ready = !1)
+            },
+            Nt = function(e) {
                 if (/^(?:auto|inherit)$/.test(e)) return e;
                 var t;
-                return "number" != typeof e || h(e) ? "string" == typeof e && (t = At(f(e, 10))) : t = e, "number" == typeof t ? t : "auto"
+                return "number" != typeof e || h(e) ? "string" == typeof e && (t = Nt(f(e, 10))) : t = e, "number" == typeof t ? t : "auto"
             },
             Dt = function(e) {
                 function t(e) {
@@ -8348,33 +8575,33 @@ FastClick.prototype.needsClick = function(e) {
                 }
 
                 function r(e) {
-                    e && (l = !0, e.version && (f = t(e.version)), !f && e.description && (f = t(e.description)), e.filename && (u = n(e.filename)))
+                    e && (c = !0, e.version && (f = t(e.version)), !f && e.description && (f = t(e.description)), e.filename && (u = n(e.filename)))
                 }
-                var i, o, s, l = !1,
-                    c = !1,
+                var i, o, s, c = !1,
+                    l = !1,
                     u = !1,
                     f = "";
-                if (a.plugins && a.plugins.length) i = a.plugins["Shockwave Flash"], r(i), a.plugins["Shockwave Flash 2.0"] && (l = !0, f = "2.0.0.11");
+                if (a.plugins && a.plugins.length) i = a.plugins["Shockwave Flash"], r(i), a.plugins["Shockwave Flash 2.0"] && (c = !0, f = "2.0.0.11");
                 else if (a.mimeTypes && a.mimeTypes.length) s = a.mimeTypes["application/x-shockwave-flash"], i = s && s.enabledPlugin, r(i);
                 else if ("undefined" != typeof e) {
-                    c = !0;
+                    l = !0;
                     try {
-                        o = new e("ShockwaveFlash.ShockwaveFlash.7"), l = !0, f = t(o.GetVariable("$version"))
+                        o = new e("ShockwaveFlash.ShockwaveFlash.7"), c = !0, f = t(o.GetVariable("$version"))
                     } catch (h) {
                         try {
-                            o = new e("ShockwaveFlash.ShockwaveFlash.6"), l = !0, f = "6.0.21"
+                            o = new e("ShockwaveFlash.ShockwaveFlash.6"), c = !0, f = "6.0.21"
                         } catch (p) {
                             try {
-                                o = new e("ShockwaveFlash.ShockwaveFlash"), l = !0, f = t(o.GetVariable("$version"))
+                                o = new e("ShockwaveFlash.ShockwaveFlash"), c = !0, f = t(o.GetVariable("$version"))
                             } catch (m) {
-                                c = !1
+                                l = !1
                             }
                         }
                     }
                 }
-                P.disabled = l !== !0, P.outdated = f && d(f) < d(I), P.version = f || "0.0.0", P.pluginType = u ? "pepper" : c ? "activex" : l ? "netscape" : "unknown"
+                O.disabled = c !== !0, O.outdated = f && d(f) < d($), O.version = f || "0.0.0", O.pluginType = u ? "pepper" : l ? "activex" : c ? "netscape" : "unknown"
             };
-        Dt(c);
+        Dt(l);
         var jt = function() {
             return this instanceof jt ? void("function" == typeof jt._createClient && jt._createClient.apply(this, x(arguments))) : new jt
         };
@@ -8386,9 +8613,9 @@ FastClick.prototype.needsClick = function(e) {
         }), jt.config = function() {
             return H.apply(this, x(arguments))
         }, jt.state = function() {
-            return z.apply(this, x(arguments))
-        }, jt.isFlashUnusable = function() {
             return q.apply(this, x(arguments))
+        }, jt.isFlashUnusable = function() {
+            return z.apply(this, x(arguments))
         }, jt.on = function() {
             return B.apply(this, x(arguments))
         }, jt.off = function() {
@@ -8414,17 +8641,17 @@ FastClick.prototype.needsClick = function(e) {
         }, jt.activeElement = function() {
             return tt.apply(this, x(arguments))
         };
-        var $t = 0,
-            Lt = {},
-            Pt = 0,
-            It = {},
-            Ot = {};
+        var Lt = 0,
+            Pt = {},
+            Ot = 0,
+            $t = {},
+            It = {};
         T(U, {
             autoActivate: !0
         });
         var Mt = function(e) {
                 var t = this;
-                t.id = "" + $t++, Lt[t.id] = {
+                t.id = "" + Lt++, Pt[t.id] = {
                     instance: t,
                     elements: [],
                     handlers: {}
@@ -8436,19 +8663,19 @@ FastClick.prototype.needsClick = function(e) {
             },
             Ft = function(e, t) {
                 var n, r, i, o = {},
-                    a = Lt[this.id] && Lt[this.id].handlers;
+                    a = Pt[this.id] && Pt[this.id].handlers;
                 if ("string" == typeof e && e) i = e.toLowerCase().split(/\s+/);
                 else if ("object" == typeof e && e && "undefined" == typeof t)
                     for (n in e) y.call(e, n) && "string" == typeof n && n && "function" == typeof e[n] && this.on(n, e[n]);
                 if (i && i.length) {
                     for (n = 0, r = i.length; r > n; n++) e = i[n].replace(/^on/, ""), o[e] = !0, a[e] || (a[e] = []), a[e].push(t);
-                    if (o.ready && P.ready && this.emit({
+                    if (o.ready && O.ready && this.emit({
                             type: "ready",
                             client: this
                         }), o.error) {
                         var s = ["disabled", "outdated", "unavailable", "deactivated", "overdue"];
                         for (n = 0, r = s.length; r > n; n++)
-                            if (P[s[n]]) {
+                            if (O[s[n]]) {
                                 this.emit({
                                     type: "error",
                                     name: "flash-" + s[n],
@@ -8461,7 +8688,7 @@ FastClick.prototype.needsClick = function(e) {
                 return this
             },
             Rt = function(e, t) {
-                var n, r, i, o, a, s = Lt[this.id] && Lt[this.id].handlers;
+                var n, r, i, o, a, s = Pt[this.id] && Pt[this.id].handlers;
                 if (0 === arguments.length) o = v(s);
                 else if ("string" == typeof e && e) o = e.split(/\s+/);
                 else if ("object" == typeof e && e && "undefined" == typeof t)
@@ -8476,8 +8703,8 @@ FastClick.prototype.needsClick = function(e) {
             },
             Ut = function(e) {
                 var t = null,
-                    n = Lt[this.id] && Lt[this.id].handlers;
-                return n && (t = "string" == typeof e && e ? n[e] ? n[e].slice(0) : [] : _(n)), t
+                    n = Pt[this.id] && Pt[this.id].handlers;
+                return n && (t = "string" == typeof e && e ? n[e] ? n[e].slice(0) : [] : E(n)), t
             },
             Ht = function(e) {
                 if (Vt.call(this, e)) {
@@ -8489,24 +8716,24 @@ FastClick.prototype.needsClick = function(e) {
                 }
                 return this
             },
-            zt = function(e) {
+            qt = function(e) {
                 e = Yt(e);
                 for (var t = 0; t < e.length; t++)
                     if (y.call(e, t) && e[t] && 1 === e[t].nodeType) {
-                        e[t].zcClippingId ? -1 === It[e[t].zcClippingId].indexOf(this.id) && It[e[t].zcClippingId].push(this.id) : (e[t].zcClippingId = "zcClippingId_" + Pt++, It[e[t].zcClippingId] = [this.id], U.autoActivate === !0 && Gt(e[t]));
-                        var n = Lt[this.id] && Lt[this.id].elements; - 1 === n.indexOf(e[t]) && n.push(e[t])
+                        e[t].zcClippingId ? -1 === $t[e[t].zcClippingId].indexOf(this.id) && $t[e[t].zcClippingId].push(this.id) : (e[t].zcClippingId = "zcClippingId_" + Ot++, $t[e[t].zcClippingId] = [this.id], U.autoActivate === !0 && Gt(e[t]));
+                        var n = Pt[this.id] && Pt[this.id].elements; - 1 === n.indexOf(e[t]) && n.push(e[t])
                     }
                 return this
             },
-            qt = function(e) {
-                var t = Lt[this.id];
+            zt = function(e) {
+                var t = Pt[this.id];
                 if (!t) return this;
                 var n, r = t.elements;
                 e = "undefined" == typeof e ? r.slice(0) : Yt(e);
                 for (var i = e.length; i--;)
                     if (y.call(e, i) && e[i] && 1 === e[i].nodeType) {
                         for (n = 0; - 1 !== (n = r.indexOf(e[i], n));) r.splice(n, 1);
-                        var o = It[e[i].zcClippingId];
+                        var o = $t[e[i].zcClippingId];
                         if (o) {
                             for (n = 0; - 1 !== (n = o.indexOf(this.id, n));) o.splice(n, 1);
                             0 === o.length && (U.autoActivate === !0 && Kt(e[i]), delete e[i].zcClippingId)
@@ -8515,16 +8742,16 @@ FastClick.prototype.needsClick = function(e) {
                 return this
             },
             Bt = function() {
-                var e = Lt[this.id];
+                var e = Pt[this.id];
                 return e && e.elements ? e.elements.slice(0) : []
             },
             Wt = function() {
-                this.unclip(), this.off(), delete Lt[this.id]
+                this.unclip(), this.off(), delete Pt[this.id]
             },
             Vt = function(e) {
                 if (!e || !e.type) return !1;
                 if (e.client && e.client !== this) return !1;
-                var t = Lt[this.id] && Lt[this.id].elements,
+                var t = Pt[this.id] && Pt[this.id].elements,
                     n = !!t && t.length > 0,
                     r = !e.target || n && -1 !== t.indexOf(e.target),
                     i = e.relatedTarget && n && -1 !== t.indexOf(e.relatedTarget),
@@ -8534,12 +8761,12 @@ FastClick.prototype.needsClick = function(e) {
             Xt = function(e) {
                 if ("object" == typeof e && e && e.type) {
                     var t = at(e),
-                        n = Lt[this.id] && Lt[this.id].handlers["*"] || [],
-                        r = Lt[this.id] && Lt[this.id].handlers[e.type] || [],
+                        n = Pt[this.id] && Pt[this.id].handlers["*"] || [],
+                        r = Pt[this.id] && Pt[this.id].handlers[e.type] || [],
                         o = n.concat(r);
                     if (o && o.length) {
-                        var a, s, l, c, u, f = this;
-                        for (a = 0, s = o.length; s > a; a++) l = o[a], c = f, "string" == typeof l && "function" == typeof i[l] && (l = i[l]), "object" == typeof l && l && "function" == typeof l.handleEvent && (c = l, l = l.handleEvent), "function" == typeof l && (u = T({}, e), st(l, c, [u], t))
+                        var a, s, c, l, u, f = this;
+                        for (a = 0, s = o.length; s > a; a++) c = o[a], l = f, "string" == typeof c && "function" == typeof i[c] && (c = i[c]), "object" == typeof c && c && "function" == typeof c.handleEvent && (l = c, c = c.handleEvent), "function" == typeof c && (u = T({}, e), st(c, l, [u], t))
                     }
                     return this
                 }
@@ -8555,7 +8782,7 @@ FastClick.prototype.needsClick = function(e) {
                         n = function(n) {
                             (n || (n = i.event)) && (t(n), jt.focus(e))
                         };
-                    e.addEventListener("mouseover", n, !1), e.addEventListener("mouseout", t, !1), e.addEventListener("mouseenter", t, !1), e.addEventListener("mouseleave", t, !1), e.addEventListener("mousemove", t, !1), Ot[e.zcClippingId] = {
+                    e.addEventListener("mouseover", n, !1), e.addEventListener("mouseout", t, !1), e.addEventListener("mouseenter", t, !1), e.addEventListener("mouseleave", t, !1), e.addEventListener("mousemove", t, !1), It[e.zcClippingId] = {
                         mouseover: n,
                         mouseout: t,
                         mouseenter: t,
@@ -8566,10 +8793,10 @@ FastClick.prototype.needsClick = function(e) {
             },
             Kt = function(e) {
                 if (e && 1 === e.nodeType) {
-                    var t = Ot[e.zcClippingId];
+                    var t = It[e.zcClippingId];
                     if ("object" == typeof t && t) {
                         for (var n, r, i = ["move", "leave", "enter", "out", "over"], o = 0, a = i.length; a > o; o++) n = "mouse" + i[o], r = t[n], "function" == typeof r && e.removeEventListener(n, r, !1);
-                        delete Ot[e.zcClippingId]
+                        delete It[e.zcClippingId]
                     }
                 }
             };
@@ -8584,9 +8811,9 @@ FastClick.prototype.needsClick = function(e) {
         }, jt.prototype.emit = function() {
             return Ht.apply(this, x(arguments))
         }, jt.prototype.clip = function() {
-            return zt.apply(this, x(arguments))
-        }, jt.prototype.unclip = function() {
             return qt.apply(this, x(arguments))
+        }, jt.prototype.unclip = function() {
+            return zt.apply(this, x(arguments))
         }, jt.prototype.elements = function() {
             return Bt.apply(this, x(arguments))
         }, jt.prototype.destroy = function() {
@@ -8721,18 +8948,18 @@ FastClick.prototype.needsClick = function(e) {
             })
         }
 
-        function l() {
+        function c() {
             return 0 == e.facebox.settings.overlay || null === e.facebox.settings.opacity
         }
 
-        function c() {
-            return l() ? void 0 : (0 == e(".facebox-overlay").length && e("body").append('<div class="facebox-overlay facebox-overlay-hide"></div>'), e(".facebox-overlay").hide().addClass("facebox-overlay-active").css("opacity", e.facebox.settings.opacity).click(function() {
+        function l() {
+            return c() ? void 0 : (0 == e(".facebox-overlay").length && e("body").append('<div class="facebox-overlay facebox-overlay-hide"></div>'), e(".facebox-overlay").hide().addClass("facebox-overlay-active").css("opacity", e.facebox.settings.opacity).click(function() {
                 e(document).trigger("close.facebox")
             }).fadeIn(200), !1)
         }
 
         function u() {
-            return l() ? void 0 : (e(".facebox-overlay").fadeOut(200, function() {
+            return c() ? void 0 : (e(".facebox-overlay").fadeOut(200, function() {
                 e(".facebox-overlay").removeClass("facebox-overlay-active"), e(".facebox-overlay").addClass("facebox-overlay-hide"), e(".facebox-overlay").remove()
             }), !1)
         }
@@ -8750,7 +8977,7 @@ FastClick.prototype.needsClick = function(e) {
                 faceboxHtml: '    <div class="facebox" id="facebox" style="display:none;">       <div class="facebox-popup">         <div class="facebox-content">         </div>         <button type="button" class="facebox-close js-facebox-close" aria-label="Close modal">           <span class="octicon octicon-remove-close"></span>         </button>       </div>     </div>'
             },
             loading: function() {
-                return t(), 1 == e(".facebox-loading").length ? !0 : (c(), e(".facebox-content").empty().append('<div class="facebox-loading"></div>'), e(".facebox").show().css({
+                return t(), 1 == e(".facebox-loading").length ? !0 : (l(), e(".facebox-content").empty().append('<div class="facebox-loading"></div>'), e(".facebox").show().css({
                     top: n()[1] + r() / 10,
                     left: e(window).width() / 2 - e(".facebox-popup").outerWidth() / 2
                 }), e(document).bind("keydown.facebox", function(t) {
@@ -8779,39 +9006,122 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         "use strict";
 
-        function e(t, n) {
-            var r = t.getAttribute("src");
-            if (r) {
-                var i = new XMLHttpRequest;
-                return i.onload = function() {
-                    switch (i.status) {
-                        case 200:
-                            t.insertAdjacentHTML("afterend", i.responseText), t.parentNode.removeChild(t);
-                            break;
-                        case 202:
-                        case 404:
-                            var r = e.bind(this, t, 1.5 * n);
-                            t._pollId = window.setTimeout(r, n);
-                            break;
-                        default:
-                            t.classList.add("is-error")
-                    }
-                }, i.onerror = function() {
-                    t.classList.add("is-error")
-                }, i.open("GET", r), i.send(null), i
-            }
+        function e(e, t) {
+            setTimeout(function() {
+                var n = t.ownerDocument.createEvent("Event");
+                n.initEvent(e, !0, !0), t.dispatchEvent(n)
+            }, 0)
         }
-        var t = Object.create(window.HTMLElement.prototype);
-        t.createdCallback = function() {
-            this._xhr = null, this._pollId = null
-        }, t.attachedCallback = function() {
-            this._xhr = e(this, 1e3)
-        }, t.detachedCallback = function() {
-            this._xhr && (this._xhr.abort(), this._xhr = null), this._pollId && (window.clearTimeout(this._pollId), this._pollId = null)
-        }, window.DeferredContentElement = document.registerElement("deferred-content", {
-            prototype: t
+
+        function t(e, t) {
+            return t.then(function(t) {
+                e.insertAdjacentHTML("afterend", t), e.parentNode.removeChild(e)
+            }, function() {
+                e.classList.add("is-error")
+            })
+        }
+
+        function n(e) {
+            var t = e.src,
+                n = r.get(e);
+            return n && n.src === t ? n.data : (n = e.load(t), r.set(e, {
+                src: t,
+                data: n
+            }), n)
+        }
+        var r = new WeakMap,
+            i = Object.create(window.HTMLElement.prototype);
+        Object.defineProperty(i, "src", {
+            get: function() {
+                var e = this.getAttribute("src");
+                if (e) {
+                    var t = this.ownerDocument.createElement("a");
+                    return t.href = e, t.href
+                }
+                return ""
+            },
+            set: function(e) {
+                this.setAttribute("src", e)
+            }
+        }), Object.defineProperty(i, "data", {
+            get: function() {
+                return n(this)
+            }
+        }), i.attributeChangedCallback = function(e) {
+            "src" === e && n(this)
+        }, i.createdCallback = function() {
+            n(this)
+        }, i.attachedCallback = function() {
+            t(this, n(this))
+        }, i.load = function(t) {
+            var n = this;
+            return t ? (e("loadstart", n), n.fetch(t).then(function(t) {
+                return e("load", n), e("loadend", n), t
+            }, function(t) {
+                throw e("error", n), e("loadend", n), t
+            })) : Promise.reject(new Error("missing src"))
+        }, i.fetch = function(e) {
+            return new Promise(function(t, n) {
+                var r = new XMLHttpRequest;
+                r.onload = function() {
+                    if (200 === r.status) {
+                        var e = r.getResponseHeader("Content-Type");
+                        e && e.match(/^text\/html/) ? t(r.responseText) : n(new Error("Failed to load resource: expected text/html but was " + e))
+                    } else n(new Error("Failed to load resource: the server responded with a status of " + r.status))
+                }, r.onerror = n, r.open("GET", e), r.setRequestHeader("Accept", "text/html"), r.send()
+            })
+        }, window.IncludeFragmentElement = document.registerElement("include-fragment", {
+            prototype: i
         })
     }(),
+    function() {
+        var e, t, n;
+        e = null != (n = IncludeFragmentElement.prototype) ? n : Object.getPrototypeOf(new IncludeFragmentElement), t = Object.create(e), t.fetch = function(e) {
+            return new Promise(function(t, n) {
+                var r;
+                return (r = function(i) {
+                    var o;
+                    return o = new XMLHttpRequest, o.onload = function() {
+                        switch (o.status) {
+                            case 200:
+                                return t(o.responseText);
+                            case 202:
+                                return window.setTimeout(function() {
+                                    return r(1.5 * i)
+                                }, i);
+                            default:
+                                return n()
+                        }
+                    }, o.onerror = n, o.open("GET", e), o.send()
+                })(1e3)
+            })
+        }, window.PollIncludeFragmentElement = document.registerElement("poll-include-fragment", {
+            prototype: t
+        })
+    }.call(this),
+    function() {
+        var e, t;
+        t = function() {}, window.SlidingPromiseQueue = e = function() {
+            function e() {
+                this.previousReceiver = new Object
+            }
+            return e.prototype.push = function(e) {
+                return this.previousReceiver.resolve = this.previousReceiver.reject = t, new Promise(function(t) {
+                    return function(n, r) {
+                        var i, o, a;
+                        return t.previousReceiver = a = {
+                            resolve: n,
+                            reject: r
+                        }, i = function() {
+                            return a.resolve.apply(this, arguments)
+                        }, o = function() {
+                            return a.reject.apply(this, arguments)
+                        }, e.then(i, o)
+                    }
+                }(this))
+            }, e
+        }()
+    }.call(this),
     function() {
         "use strict";
 
@@ -8824,7 +9134,7 @@ FastClick.prototype.needsClick = function(e) {
                 o = n.getDate(),
                 a = n.getMonth(),
                 s = n.getFullYear(),
-                l = n.getHours(),
+                c = n.getHours(),
                 f = n.getMinutes(),
                 d = n.getSeconds();
             return r.replace(/%([%aAbBcdeHIlmMpPSwyYZz])/g, function(r) {
@@ -8833,9 +9143,9 @@ FastClick.prototype.needsClick = function(e) {
                     case "%":
                         return "%";
                     case "a":
-                        return c[i].slice(0, 3);
+                        return l[i].slice(0, 3);
                     case "A":
-                        return c[i];
+                        return l[i];
                     case "b":
                         return u[a].slice(0, 3);
                     case "B":
@@ -8847,19 +9157,19 @@ FastClick.prototype.needsClick = function(e) {
                     case "e":
                         return o;
                     case "H":
-                        return e(l);
+                        return e(c);
                     case "I":
                         return e(t(n, "%l"));
                     case "l":
-                        return 0 === l || 12 === l ? 12 : (l + 12) % 12;
+                        return 0 === c || 12 === c ? 12 : (c + 12) % 12;
                     case "m":
                         return e(a + 1);
                     case "M":
                         return e(f);
                     case "p":
-                        return l > 11 ? "PM" : "AM";
+                        return c > 11 ? "PM" : "AM";
                     case "P":
-                        return l > 11 ? "pm" : "am";
+                        return c > 11 ? "pm" : "am";
                     case "S":
                         return e(d);
                     case "w":
@@ -8942,7 +9252,7 @@ FastClick.prototype.needsClick = function(e) {
             return i = i.replace(/(\s,)|(,\s$)/, ""), t(e._date, i).replace(/\s+/, " ").trim()
         }
 
-        function l(e) {
+        function c(e) {
             var n = {
                 hour: e.getAttribute("hour"),
                 minute: e.getAttribute("minute"),
@@ -8958,7 +9268,7 @@ FastClick.prototype.needsClick = function(e) {
                 return t(e._date, o)
             }
         }
-        var c = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        var l = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             u = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         n.prototype.toString = function() {
             var e = this.timeElapsed();
@@ -9057,7 +9367,7 @@ FastClick.prototype.needsClick = function(e) {
         }, y.getFormattedDate = function() {
             if (this._date) {
                 var e = s(this) || "",
-                    t = l(this) || "";
+                    t = c(this) || "";
                 return (e + " " + t).trim()
             }
         }, window.RelativeTimeElement = document.registerElement("relative-time", {
@@ -9072,34 +9382,28 @@ FastClick.prototype.needsClick = function(e) {
         })
     }(),
     function() {
-        var e;
-        e = function() {
-            function e(e) {
-                e && (this.store = e, this.length = e.length)
-            }
-            return e.prototype.getItem = function(e) {
-                return this.store ? this.store.getItem(e) : null
-            }, e.prototype.removeItem = function(e) {
-                return this.store ? (this.store[e] && (this.length -= 1), this.store.removeItem(e)) : void 0
-            }, e.prototype.setItem = function(e, t) {
-                var n;
-                if (this.store) try {
-                    n = null != this.store.getItem(e), this.store.setItem(e, t), n || (this.length += 1)
-                } catch (r) {}
-            }, e.prototype.key = function(e) {
-                return this.store ? this.store.key(e) : void 0
-            }, e
-        }(), window.TryStorage = e
-    }.call(this),
-    function() {
         $(document).on("change", "form[data-autosubmit]", function() {
             return $(this).submit()
         })
     }.call(this),
     function() {
-        $.fn.replaceContent = function(e) {
-            var t;
-            return "string" == typeof e && (e = $.parseHTML($.trim(e))), t = $(e), this.replaceWith(t), t
+        var e, t, n;
+        t = "ontransitionend" in window, $.fn.performTransition = function(r) {
+            var i, o, a, s, c, l, u, f;
+            if (!t) return void r.apply(this);
+            for (a = this.find(".js-transitionable"), a = a.add(this.filter(".js-transitionable")), c = 0, u = a.length; u > c; c++) o = a[c], i = $(o), s = e(o), i.one("transitionend", function() {
+                return o.style.display = null, o.style.visibility = null, s ? n(o, function() {
+                    return o.style.height = null
+                }) : void 0
+            }), o.style.display = "block", o.style.visibility = "visible", s && n(o, function() {
+                return o.style.height = "" + i.height() + "px"
+            }), o.offsetHeight;
+            for (r.apply(this), l = 0, f = a.length; f > l; l++) o = a[l], e(o) && (o.style.height = 0 === $(o).height() ? "" + o.scrollHeight + "px" : "0px");
+            return this
+        }, e = function(e) {
+            return "height" === $(e).css("transitionProperty")
+        }, n = function(e, t) {
+            e.style.transition = "none", t(e), e.offsetHeight, e.style.transition = null
         }
     }.call(this),
     function() {
@@ -9109,72 +9413,6 @@ FastClick.prototype.needsClick = function(e) {
                 var t;
                 return t = $.Event(e, i), $.event.trigger(t, [], r, !t.bubbles), n && !t.isDefaultPrevented() && n.call(r, t), t
             }, i.async ? (delete i.async, void setImmediate(o)) : o()
-        }
-    }.call(this),
-    function() {
-        $.ajaxPoll = function(e) {
-            var t, n, r, i, o, a, s, l;
-            return r = $.Deferred(), e = $.extend({
-                cache: !1
-            }, e), n = null != (a = e.interval) ? a : 1e3, delete e.interval, t = null != (s = e.decay) ? s : 1.5, delete e.decay, o = null != (l = e.status) ? l : 202, delete e.status, i = function(n, a) {
-                var s, l, c, u;
-                u = $.ajax(e), c = function(e) {
-                    return r.notifyWith(this, [n]), u.status === o ? setTimeout(function() {
-                        return i(n + 1, a * t)
-                    }, a) : e()
-                }, s = function() {
-                    var e;
-                    return e = arguments, c(function() {
-                        return r.resolveWith(this, e)
-                    })
-                }, l = function() {
-                    var e;
-                    return e = arguments, c(function() {
-                        return r.rejectWith(this, e)
-                    })
-                }, u.then(s, l)
-            }, i(0, n), r.promise()
-        }
-    }.call(this),
-    function() {
-        var e;
-        $.observe(".js-deferred-content", e = function(e) {
-            var t, n, r;
-            return t = $(e), (n = t.attr("data-url")) ? (r = $.ajaxPoll({
-                url: n,
-                context: e,
-                dataType: "html"
-            }), r.then(function(e) {
-                t.fire("deferredcontent:load", function() {
-                    return t = t.replaceContent(e), t.fire("deferredcontent:loaded", {
-                        async: !0
-                    })
-                })
-            }, function() {
-                t.fire("deferredcontent:error", function() {
-                    return t.addClass("error")
-                })
-            })) : void 0
-        })
-    }.call(this),
-    function() {
-        var e, t, n;
-        t = "ontransitionend" in window, $.fn.performTransition = function(r) {
-            var i, o, a, s, l, c, u, f;
-            if (!t) return void r.apply(this);
-            for (a = this.find(".js-transitionable"), a = a.add(this.filter(".js-transitionable")), l = 0, u = a.length; u > l; l++) o = a[l], i = $(o), s = e(o), i.one("transitionend", function() {
-                return o.style.display = null, o.style.visibility = null, s ? n(o, function() {
-                    return o.style.height = null
-                }) : void 0
-            }), o.style.display = "block", o.style.visibility = "visible", s && n(o, function() {
-                return o.style.height = "" + i.height() + "px"
-            }), o.offsetHeight;
-            for (r.apply(this), c = 0, f = a.length; f > c; c++) o = a[c], e(o) && (o.style.height = 0 === $(o).height() ? "" + o.scrollHeight + "px" : "0px");
-            return this
-        }, e = function(e) {
-            return "height" === $(e).css("transitionProperty")
-        }, n = function(e, t) {
-            e.style.transition = "none", t(e), e.offsetHeight, e.style.transition = null
         }
     }.call(this),
     function() {
@@ -9197,16 +9435,16 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         var e, t;
         $.fuzzyScore = function(e, n) {
-            var r;
-            return r = t(e, n), r && !/\//.test(n) && (r += t(e.replace(/^.*\//, ""), n)), r
+            var r, i;
+            return i = t(e, n), i && -1 === n.indexOf("/") && (r = e.substring(e.lastIndexOf("/") + 1), i += t(r, n)), i
         }, $.fuzzySort = function(t, n) {
-            var r, i, o, a, s, l;
+            var r, i, o, a, s, c;
             for (t = function() {
                     var e, r, a;
                     for (a = [], e = 0, r = t.length; r > e; e++) o = t[e], (i = $.fuzzyScore(o, n)) && a.push([o, i]);
                     return a
-                }(), t.sort(e), l = [], a = 0, s = t.length; s > a; a++) r = t[a], l.push(r[0]);
-            return l
+                }(), t.sort(e), c = [], a = 0, s = t.length; s > a; a++) r = t[a], c.push(r[0]);
+            return c
         }, e = function(e, t) {
             var n, r, i, o;
             return r = e[0], o = t[0], n = e[1], i = t[1], n > i ? -1 : i > n ? 1 : o > r ? -1 : r > o ? 1 : 0
@@ -9214,33 +9452,33 @@ FastClick.prototype.needsClick = function(e) {
             var t, n, r;
             return r = e.toLowerCase(), t = "+.*?[]{}()^$|\\".replace(/(.)/g, "\\$1"), n = new RegExp("\\(([" + t + "])\\)", "g"), e = r.replace(/(.)/g, "($1)(.*?)").replace(n, "(\\$1)"), new RegExp("(.*)" + e + "$", "i")
         }, $.fuzzyHighlight = function(e, t, n) {
-            var r, i, o, a, s, l, c, u;
-            if (null == n && (n = null), i = $.trim(e.innerHTML), t) {
+            var r, i, o, a, s, c, l, u;
+            if (null == n && (n = null), i = e.innerHTML.trim(), t) {
                 if (null == n && (n = $.fuzzyRegexp(t)), !(s = i.match(n))) return;
-                for (l = !1, i = [], o = c = 1, u = s.length; u >= 1 ? u > c : c > u; o = u >= 1 ? ++c : --c) a = s[o], a && (o % 2 === 0 ? l || (i.push("<mark>"), l = !0) : l && (i.push("</mark>"), l = !1), i.push("" + a));
+                for (c = !1, i = [], o = l = 1, u = s.length; u >= 1 ? u > l : l > u; o = u >= 1 ? ++l : --l) a = s[o], a && (o % 2 === 0 ? c || (i.push("<mark>"), c = !0) : c && (i.push("</mark>"), c = !1), i.push(a));
                 e.innerHTML = i.join("")
             } else r = i.replace(/<\/?mark>/g, ""), i !== r && (e.innerHTML = r)
         }, t = function(e, t) {
-            var n, r, i, o, a, s, l, c, u, f, d, h, p, m, v;
+            var n, r, i, o, a, s, c, l, u, f, d, h, p, m;
             if (e === t) return 1;
-            for (h = e.length, p = 0, d = 0, s = m = 0, v = t.length; v > m; s = ++m) {
-                if (i = t[s], l = e.indexOf(i.toLowerCase()), c = e.indexOf(i.toUpperCase()), f = Math.min(l, c), u = f > -1 ? f : Math.max(l, c), -1 === u) return 0;
-                o = .1, e[u] === i && (o += .1), 0 === u && (o += .8, 0 === s && (d = 1)), " " === e.charAt(u - 1) && (o += .8), e = e.substring(u + 1, h), p += o
+            for (d = e.length, h = 0, f = 0, a = p = 0, m = t.length; m > p; a = ++p) {
+                if (i = t[a], s = e.indexOf(i.toLowerCase()), c = e.indexOf(i.toUpperCase()), u = Math.min(s, c), l = u > -1 ? u : Math.max(s, c), -1 === l) return 0;
+                h += .1, e[l] === i && (h += .1), 0 === l && (h += .8, 0 === a && (f = 1)), " " === e.charAt(l - 1) && (h += .8), e = e.substring(l + 1, d)
             }
-            return n = t.length, r = p / n, a = (r * (n / h) + r) / 2, d && 1 > a + .1 && (a += .1), a
+            return n = t.length, r = h / n, o = (r * (n / d) + r) / 2, f && 1 > o + .1 && (o += .1), o
         }
     }.call(this),
     function() {
         var e, t, n, r, i;
         r = new WeakMap, $.fn.fuzzyFilterSortList = function(o, a) {
-            var s, l, c, u, f, d, h, p, m, v, g, y, b, w, x, T, _, E, C, k, S, N, A, D, j, L, P;
+            var s, c, l, u, f, d, h, p, m, v, g, y, b, w, x, T, E, _, C, k, S, A, N, D, j, L, P;
             if (null == a && (a = {}), p = this[0]) {
-                for (o = o.toLowerCase(), u = null != (D = a.content) ? D : e, b = null != (j = a.text) ? j : n, y = null != (L = a.score) ? L : $.fuzzyScore, h = a.limit, a.mark === !0 ? m = t : null != (null != (P = a.mark) ? P.call : void 0) && (m = a.mark), (s = r.get(p)) ? c = $(p).children() : (c = s = $(p).children(), r.set(p, s.slice(0))), T = 0, k = c.length; k > T; T++) f = c[T], p.removeChild(f), f.style.display = "";
+                for (o = o.toLowerCase(), u = null != (D = a.content) ? D : e, b = null != (j = a.text) ? j : n, y = null != (L = a.score) ? L : $.fuzzyScore, h = a.limit, a.mark === !0 ? m = t : null != (null != (P = a.mark) ? P.call : void 0) && (m = a.mark), (s = r.get(p)) ? l = $(p).children() : (l = s = $(p).children(), r.set(p, s.slice(0))), T = 0, k = l.length; k > T; T++) f = l[T], p.removeChild(f), f.style.display = "";
                 if (g = document.createDocumentFragment(), w = 0, x = 0, o) {
-                    for (d = s.slice(0), E = 0, N = d.length; N > E; E++) f = d[E], null == f.fuzzyFilterTextCache && (f.fuzzyFilterTextCache = b(u(f))), f.fuzzyFilterScoreCache = y(f.fuzzyFilterTextCache, o);
-                    for (d.sort(i), v = $.fuzzyRegexp(o), C = 0, A = d.length; A > C; C++) f = d[C], (!h || h > w) && f.fuzzyFilterScoreCache > 0 && (x++, m && (l = u(f), m(l), m(l, o, v)), g.appendChild(f)), w++
+                    for (d = s.slice(0), _ = 0, A = d.length; A > _; _++) f = d[_], null == f.fuzzyFilterTextCache && (f.fuzzyFilterTextCache = b(u(f))), f.fuzzyFilterScoreCache = y(f.fuzzyFilterTextCache, o);
+                    for (d.sort(i), v = $.fuzzyRegexp(o), C = 0, N = d.length; N > C; C++) f = d[C], (!h || h > w) && f.fuzzyFilterScoreCache > 0 && (x++, m && (c = u(f), m(c), m(c, o, v)), g.appendChild(f)), w++
                 } else
-                    for (_ = 0, S = s.length; S > _; _++) f = s[_], (!h || h > w) && (x++, m && m(u(f)), g.appendChild(f)), w++;
+                    for (E = 0, S = s.length; S > E; E++) f = s[E], (!h || h > w) && (x++, m && m(u(f)), g.appendChild(f)), w++;
                 return p.appendChild(g), x
             }
         }, i = function(e, t) {
@@ -9255,9 +9493,9 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         var e, t;
         $.fn.prefixFilterList = function(n, r) {
-            var i, o, a, s, l, c, u, f, d, h, p;
+            var i, o, a, s, c, l, u, f, d, h, p;
             if (null == r && (r = {}), s = this[0]) {
-                for (n = n.toLowerCase(), c = null != (h = r.text) ? h : t, o = $(s).children(), a = r.limit, r.mark === !0 ? l = e : null != (null != (p = r.mark) ? p.call : void 0) && (l = r.mark), u = 0, f = 0, d = o.length; d > f; f++) i = o[f], 0 === c(i).indexOf(n) ? a && u >= a ? i.style.display = "none" : (u++, i.style.display = "", l && (l(i), l(i, n))) : i.style.display = "none";
+                for (n = n.toLowerCase(), l = null != (h = r.text) ? h : t, o = $(s).children(), a = r.limit, r.mark === !0 ? c = e : null != (null != (p = r.mark) ? p.call : void 0) && (c = r.mark), u = 0, f = 0, d = o.length; d > f; f++) i = o[f], 0 === l(i).indexOf(n) ? a && u >= a ? i.style.display = "none" : (u++, i.style.display = "", c && (c(i), c(i, n))) : i.style.display = "none";
                 return u
             }
         }, t = function(e) {
@@ -9270,9 +9508,9 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         var e, t;
         $.fn.substringFilterList = function(n, r) {
-            var i, o, a, s, l, c, u, f, d, h, p;
+            var i, o, a, s, c, l, u, f, d, h, p;
             if (null == r && (r = {}), s = this[0]) {
-                for (n = n.toLowerCase(), c = null != (h = r.text) ? h : t, a = r.limit, o = $(s).children(), r.mark === !0 ? l = e : null != (null != (p = r.mark) ? p.call : void 0) && (l = r.mark), u = 0, f = 0, d = o.length; d > f; f++) i = o[f], -1 !== c(i).indexOf(n) ? a && u >= a ? i.style.display = "none" : (u++, i.style.display = "", l && (l(i), l(i, n))) : i.style.display = "none";
+                for (n = n.toLowerCase(), l = null != (h = r.text) ? h : t, a = r.limit, o = $(s).children(), r.mark === !0 ? c = e : null != (null != (p = r.mark) ? p.call : void 0) && (c = r.mark), u = 0, f = 0, d = o.length; d > f; f++) i = o[f], -1 !== l(i).indexOf(n) ? a && u >= a ? i.style.display = "none" : (u++, i.style.display = "", c && (c(i), c(i, n))) : i.style.display = "none";
                 return u
             }
         }, t = function(e) {
@@ -9372,8 +9610,8 @@ FastClick.prototype.needsClick = function(e) {
         }
     }.call(this),
     function() {
-        var e, t, n, r;
-        n = {
+        var e, t, n, r, i;
+        r = {
             8: "backspace",
             9: "tab",
             13: "enter",
@@ -9472,7 +9710,7 @@ FastClick.prototype.needsClick = function(e) {
             220: "\\",
             221: "]",
             222: "'"
-        }, r = {
+        }, i = {
             48: ")",
             49: "!",
             50: "@",
@@ -9521,10 +9759,16 @@ FastClick.prototype.needsClick = function(e) {
             221: "}",
             222: '"'
         }, e = function(e) {
-            var t, i, o;
-            return t = n[e.which], i = "", e.ctrlKey && "ctrl" !== t && (i += "ctrl+"), e.altKey && "alt" !== t && (i += "alt+"), e.metaKey && !e.ctrlKey && "meta" !== t && (i += "meta+"), e.shiftKey ? (o = r[e.which]) ? "" + i + o : "shift" === t ? "" + i + "shift" : t ? "" + i + "shift+" + t : null : t ? "" + i + t : null
+            var t, n, o;
+            return t = r[e.which], n = "", e.ctrlKey && "ctrl" !== t && (n += "ctrl+"), e.altKey && "alt" !== t && (n += "alt+"), e.metaKey && !e.ctrlKey && "meta" !== t && (n += "meta+"), e.shiftKey ? (o = i[e.which]) ? "" + n + o : "shift" === t ? "" + n + "shift" : t ? "" + n + "shift+" + t : null : t ? "" + n + t : null
+        }, n = function(e) {
+            var t, n;
+            return 1 !== e.nodeType ? !1 : (t = e.nodeName.toLowerCase(), n = (e.getAttribute("type") || "").toLowerCase(), "select" === t || "textarea" === t || "input" === t && "submit" !== n && "reset" !== n)
         }, t = function(t) {
-            return null == t.hotkey && (t.hotkey = e(t)), t.handleObj.handler.apply(this, arguments)
+            var r;
+            return null == t.hotkey && (t.hotkey = e(t)), r = null, null == t.isFormInteraction && (t.isFormInteraction = function() {
+                return null != r ? r : r = n(this.target)
+            }), t.handleObj.handler.apply(this, arguments)
         }, $.event.special.keydown = {
             handle: t
         }, $.event.special.keyup = {
@@ -9537,7 +9781,7 @@ FastClick.prototype.needsClick = function(e) {
             return o = null, e = r
         }, $(document).on("keydown", function(t) {
             var n;
-            if (t.target === document.body)
+            if (!t.isFormInteraction())
                 if (o && clearTimeout(o), n = e[t.hotkey]) {
                     if (!("nodeType" in n)) return e = n, void(o = setTimeout(a, 1500));
                     a(), $(n).fire("hotkey:activate", {
@@ -9551,11 +9795,11 @@ FastClick.prototype.needsClick = function(e) {
             for (i = e.getAttribute("data-hotkey").split(/\s*,\s*/), o = [], n = 0, r = i.length; r > n; n++) t = i[n], o.push(t.split(/\s+/));
             return o
         }, n = function(e) {
-            var n, i, o, a, s, l, c, u, f;
-            for (u = t(e), f = [], l = 0, c = u.length; c > l; l++) a = u[l], s = r, f.push(function() {
-                var t, r, l;
-                for (l = [], i = t = 0, r = a.length; r > t; i = ++t) o = a[i], i < a.length - 1 ? (n = s[o], (!n || "nodeType" in n) && (s[o] = {}), l.push(s = s[o])) : l.push(s[o] = e);
-                return l
+            var n, i, o, a, s, c, l, u, f;
+            for (u = t(e), f = [], c = 0, l = u.length; l > c; c++) a = u[c], s = r, f.push(function() {
+                var t, r, c;
+                for (c = [], i = t = 0, r = a.length; r > t; i = ++t) o = a[i], i < a.length - 1 ? (n = s[o], (!n || "nodeType" in n) && (s[o] = {}), c.push(s = s[o])) : c.push(s[o] = e);
+                return c
             }());
             return f
         }, i = function(t) {
@@ -9616,12 +9860,12 @@ FastClick.prototype.needsClick = function(e) {
     }.call(this),
     function() {
         $.fn.positionedOffset = function(e) {
-            var t, n, r, i, o, a, s, l, c;
+            var t, n, r, i, o, a, s, c, l;
             if (n = this[0]) {
-                for ((null != e ? e.jquery : void 0) && (e = e[0]), l = 0, i = 0, r = n.offsetHeight, c = n.offsetWidth; n !== document.body && n !== e;)
-                    if (l += n.offsetTop || 0, i += n.offsetLeft || 0, n = n.offsetParent, !n) return;
-                return e && e.offsetParent ? (a = e.scrollHeight, s = e.scrollWidth) : (a = $(document).height(), s = $(document).width()), t = a - (l + r), o = s - (i + c), {
-                    top: l,
+                for ((null != e ? e.jquery : void 0) && (e = e[0]), c = 0, i = 0, r = n.offsetHeight, l = n.offsetWidth; n !== document.body && n !== e;)
+                    if (c += n.offsetTop || 0, i += n.offsetLeft || 0, n = n.offsetParent, !n) return;
+                return e && e.offsetParent ? (a = e.scrollHeight, s = e.scrollWidth) : (a = $(document).height(), s = $(document).width()), t = a - (c + r), o = s - (i + l), {
+                    top: c,
                     left: i,
                     bottom: t,
                     right: o
@@ -9632,8 +9876,8 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         var e, t = [].slice;
         $.fn.scrollTo = function() {
-            var n, r, i, o, a, s, l;
-            return n = 1 <= arguments.length ? t.call(arguments, 0) : [], (r = this[0]) ? (o = {}, $.isPlainObject(n[0]) ? (o = n[0], $.isFunction(n[1]) && null == o.complete && (o.complete = n[1])) : null != n[0] && (o.target = n[0]), null == o.top && null == o.left && (o.target ? (s = $(o.target).positionedOffset(r), a = s.top, i = s.left, o.top = a, o.left = i) : (l = $(r).positionedOffset(), a = l.top, i = l.left, o.top = a, o.left = i, r = document)), r.offsetParent ? o.duration ? e(r, o) : (null != o.top && (r.scrollTop = o.top), null != o.left && (r.scrollLeft = o.left), "function" == typeof o.complete && o.complete()) : o.duration ? e("html, body", o) : (null != o.top && $(document).scrollTop(o.top), null != o.left && $(document).scrollLeft(o.left), "function" == typeof o.complete && o.complete()), this) : this
+            var n, r, i, o, a, s, c;
+            return n = 1 <= arguments.length ? t.call(arguments, 0) : [], (r = this[0]) ? (o = {}, $.isPlainObject(n[0]) ? (o = n[0], $.isFunction(n[1]) && null == o.complete && (o.complete = n[1])) : null != n[0] && (o.target = n[0]), null == o.top && null == o.left && (o.target ? (s = $(o.target).positionedOffset(r), a = s.top, i = s.left, o.top = a, o.left = i) : (c = $(r).positionedOffset(), a = c.top, i = c.left, o.top = a, o.left = i, r = document)), r.offsetParent ? o.duration ? e(r, o) : (null != o.top && (r.scrollTop = o.top), null != o.left && (r.scrollLeft = o.left), "function" == typeof o.complete && o.complete()) : o.duration ? e("html, body", o) : (null != o.top && $(document).scrollTop(o.top), null != o.left && $(document).scrollLeft(o.left), "function" == typeof o.complete && o.complete()), this) : this
         }, e = function(e, t) {
             var n, r, i;
             return i = {}, null != t.top && (i.scrollTop = t.top), null != t.left && (i.scrollLeft = t.left), r = {
@@ -9657,20 +9901,20 @@ FastClick.prototype.needsClick = function(e) {
     }.call(this),
     function() {
         $.fn.overflowOffset = function(e) {
-            var t, n, r, i, o, a, s, l, c;
+            var t, n, r, i, o, a, s, c, l;
             return null == e && (e = document.body), (n = this[0]) && (o = $(n).positionedOffset(e)) ? (e.offsetParent ? s = {
                 top: $(e).scrollTop(),
                 left: $(e).scrollLeft()
             } : (s = {
                 top: $(window).scrollTop(),
                 left: $(window).scrollLeft()
-            }, e = document.documentElement), l = o.top - s.top, i = o.left - s.left, r = e.clientHeight, c = e.clientWidth, t = r - (l + n.offsetHeight), a = c - (i + n.offsetWidth), {
-                top: l,
+            }, e = document.documentElement), c = o.top - s.top, i = o.left - s.left, r = e.clientHeight, l = e.clientWidth, t = r - (c + n.offsetHeight), a = l - (i + n.offsetWidth), {
+                top: c,
                 left: i,
                 bottom: t,
                 right: a,
                 height: r,
-                width: c
+                width: l
             }) : void 0
         }
     }.call(this),
@@ -9687,8 +9931,8 @@ FastClick.prototype.needsClick = function(e) {
         }
     }.call(this),
     function() {
-        var e, t, n, r, i, o, a, s, l, c, u, f, d, h, p, m, v, g, y, b, w, x, T, _, E, C, k, S;
-        i = navigator.userAgent.match(/Macintosh/), v = navigator.userAgent.match(/Macintosh/) ? "meta" : "ctrl", l = !1, g = {
+        var e, t, n, r, i, o, a, s, c, l, u, f, d, h, p, m, v, g, y, b, w, x, T, E, _, C, k, S;
+        i = navigator.userAgent.match(/Macintosh/), v = navigator.userAgent.match(/Macintosh/) ? "meta" : "ctrl", c = !1, g = {
             x: 0,
             y: 0
         }, t = function(e) {
@@ -9699,15 +9943,15 @@ FastClick.prototype.needsClick = function(e) {
             add: t,
             remove: S
         }), y = function(e) {
-            (g.x !== e.clientX || g.y !== e.clientY) && (l = !1), g = {
+            (g.x !== e.clientX || g.y !== e.clientY) && (c = !1), g = {
                 x: e.clientX,
                 y: e.clientY
             }
         }, b = function(e) {
-            l || $(e.target).trigger("navigation:mouseover")
+            c || $(e.target).trigger("navigation:mouseover")
         }, $(document).on("keydown", function(e) {
             var t, n, r;
-            (e.target === document.body || e.target.classList.contains("js-navigation-enable")) && (t = d()) && (l = !0, r = $(t).find(".js-navigation-item.navigation-focus")[0] || t, n = $(r).fire("navigation:keydown", {
+            (e.target === document.body || e.target.classList.contains("js-navigation-enable")) && (t = d()) && (c = !0, r = $(t).find(".js-navigation-item.navigation-focus")[0] || t, n = $(r).fire("navigation:keydown", {
                 originalEvent: e,
                 hotkey: e.hotkey,
                 relatedTarget: t
@@ -9822,16 +10066,16 @@ FastClick.prototype.needsClick = function(e) {
         }), $(document).on("navigation:mouseover", ".js-active-navigation-container .js-navigation-item", function(e) {
             var t;
             t = $(e.currentTarget).closest(".js-navigation-container")[0], f(e.currentTarget, t)
-        }), c = function(e) {
+        }), l = function(e) {
             var t, n, r;
             r = e.currentTarget, n = e.modifierKey || e.altKey || e.ctrlKey || e.metaKey, t = $(r).fire("navigation:open", {
                 modifierKey: n
             }), t.isDefaultPrevented() && e.preventDefault()
         }, $(document).on("click", ".js-active-navigation-container .js-navigation-item", function(e) {
-            c(e)
+            l(e)
         }), $(document).on("navigation:keyopen", ".js-active-navigation-container .js-navigation-item", function(e) {
             var t;
-            (t = $(this).filter(".js-navigation-open")[0] || $(this).find(".js-navigation-open")[0]) ? (e.modifierKey ? (window.open(t.href, "_blank"), window.focus()) : $(t).click(), e.preventDefault()) : c(e)
+            (t = $(this).filter(".js-navigation-open")[0] || $(this).find(".js-navigation-open")[0]) ? (e.modifierKey ? (window.open(t.href, "_blank"), window.focus()) : $(t).click(), e.preventDefault()) : l(e)
         }), e = function(e) {
             var t;
             return t = d(), e !== t ? $(e).fire("navigation:activate", function() {
@@ -9849,7 +10093,7 @@ FastClick.prototype.needsClick = function(e) {
                     })
                 }
             }(this))
-        }, r = [], _ = function(t) {
+        }, r = [], E = function(t) {
             var n;
             (n = d()) && r.push(n), e(t)
         }, T = function(t) {
@@ -9863,7 +10107,7 @@ FastClick.prototype.needsClick = function(e) {
             }
         }, n = function(e) {
             $(e).find(".navigation-focus.js-navigation-item").removeClass("navigation-focus")
-        }, E = function(e, t) {
+        }, _ = function(e, t) {
             n(t), u(e, t)
         }, a = function(e, t) {
             var n, r, i, o, a;
@@ -9943,7 +10187,7 @@ FastClick.prototype.needsClick = function(e) {
                 }(this),
                 push: function() {
                     return function() {
-                        return _(r)
+                        return E(r)
                     }
                 }(this),
                 pop: function() {
@@ -9963,7 +10207,7 @@ FastClick.prototype.needsClick = function(e) {
                 }(this),
                 refocus: function(e) {
                     return function() {
-                        return E(e, r)
+                        return _(e, r)
                     }
                 }(this)
             }, "function" == typeof i[t] ? i[t]() : void 0
@@ -9971,10 +10215,10 @@ FastClick.prototype.needsClick = function(e) {
     }.call(this),
     function() {
         $(document).on("keydown", function(e) {
-            var t, n, r, i, o, a, s, l, c;
-            if ("r" === e.hotkey && !e.isDefaultPrevented() && e.target === document.body && (l = window.getSelection(), r = $(l.focusNode), (c = $.trim(l.toString())) && (t = r.closest(".js-quote-selection-container"), t.length))) {
+            var t, n, r, i, o, a, s, c, l;
+            if ("r" === e.hotkey && !e.isDefaultPrevented() && !e.isFormInteraction() && (c = window.getSelection(), r = $(c.focusNode), (l = $.trim(c.toString())) && (t = r.closest(".js-quote-selection-container"), t.length))) {
                 if (o = $.Event("quote:selection"), t.trigger(o), o.isDefaultPrevented()) return !1;
-                if (n = t.find(".js-quote-selection-target").visible().first(), a = n[0]) return s = "> " + c.replace(/\n/g, "\n> ") + "\n\n", (i = a.value) && (s = "" + i + "\n\n" + s), a.value = s, n.trigger("change"), n.scrollTo({
+                if (n = t.find(".js-quote-selection-target").visible().first(), a = n[0]) return s = "> " + l.replace(/\n/g, "\n> ") + "\n\n", (i = a.value) && (s = "" + i + "\n\n" + s), a.value = s, n.trigger("change"), n.scrollTo({
                     duration: 300
                 }, function() {
                     return a.focus(), a.selectionStart = a.value.length, n.scrollTop(a.scrollHeight)
@@ -10102,7 +10346,7 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         $.fn.hasFocus = function() {
             var e, t;
-            return (t = this[0]) ? (e = document.activeElement, t === e || $.contains(t, e)) : !1
+            return (e = this[0]) ? (t = document.activeElement, $(t).is("input, textarea") && e === t || $.contains(e, t)) : !1
         }
     }.call(this),
     function() {
@@ -10112,19 +10356,13 @@ FastClick.prototype.needsClick = function(e) {
         }
     }.call(this),
     function() {
-        $.fn.hasSelection = function() {
-            var e, t, n;
-            return (t = this[0]) ? (n = window.getSelection(), n && "Range" === n.type && null != n.focusNode ? (e = n.focusNode, t === e || $.contains(t, e)) : !1) : !1
-        }
-    }.call(this),
-    function() {
         $.fn.markedAsDirty = function() {
             return this.closest(".js-dirty").length > 0 || this.find(".js-dirty").length > 0
         }
     }.call(this),
     function() {
         $.fn.hasInteractions = function() {
-            return this.hasDirtyFields() || this.hasFocus() || this.hasMousedown() || this.hasSelection() || this.markedAsDirty()
+            return this.hasDirtyFields() || this.hasFocus() || this.hasMousedown() || this.markedAsDirty()
         }
     }.call(this),
     function() {
@@ -10173,8 +10411,8 @@ FastClick.prototype.needsClick = function(e) {
         $.fn.preservingScrollPosition = function(e) {
             return $.preservingScrollPosition(this[0], e), this
         }, $.preservingScrollPosition = function(n, r) {
-            var i, o, a, s, l, c, u, f;
-            return n ? (a = e(n), c = r.call(n), (o = t(a)) ? (n = o.element, l = o.top, s = o.left, f = n.getBoundingClientRect(), u = f.top, i = f.left, $(n).cumulativeScrollBy(i - s, u - l), c) : void 0) : r()
+            var i, o, a, s, c, l, u, f;
+            return n ? (a = e(n), l = r.call(n), (o = t(a)) ? (n = o.element, c = o.top, s = o.left, f = n.getBoundingClientRect(), u = f.top, i = f.left, $(n).cumulativeScrollBy(i - s, u - c), l) : void 0) : r()
         }, e = function(e) {
             var t, n, r, i;
             for (n = []; e;) i = e.getBoundingClientRect(), r = i.top, t = i.left, n.push({
@@ -10201,6 +10439,12 @@ FastClick.prototype.needsClick = function(e) {
                 var t;
                 return t = $.interactiveElement()[0], $.preservingScrollPosition(t, e)
             })
+        }
+    }.call(this),
+    function() {
+        $.fn.replaceContent = function(e) {
+            var t;
+            return "string" == typeof e && (e = $.parseHTML($.trim(e))), t = $(e), this.replaceWith(t), t
         }
     }.call(this),
     function() {
@@ -10272,16 +10516,16 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         var e;
         e = /complete|loaded|interactive/, $.readyQueue = function(t) {
-            var n, r, i, o, a, s, l;
-            return r = [], o = 0, l = !1, s = function() {
+            var n, r, i, o, a, s, c;
+            return r = [], o = 0, c = !1, s = function() {
                 var e;
-                l = !1, e = o, o = r.length, t(r.slice(e))
+                c = !1, e = o, o = r.length, t(r.slice(e))
             }, a = function() {
                 s(), document.removeEventListener("DOMContentLoaded", a, !1)
             }, i = function(t) {
-                t && r.push(t), l || (e.test(document.readyState) ? setImmediate(s) : document.addEventListener("DOMContentLoaded", a, !1), l = !0)
+                t && r.push(t), c || (e.test(document.readyState) ? setImmediate(s) : document.addEventListener("DOMContentLoaded", a, !1), c = !0)
             }, n = function() {
-                r.length = o = 0, l = !1
+                r.length = o = 0, c = !1
             }, {
                 handlers: r,
                 push: i,
@@ -10304,12 +10548,12 @@ FastClick.prototype.needsClick = function(e) {
             var e;
             return e = window.location.href, r(n.handlers, t, e)
         }), r = function(e, t, n) {
-            var r, i, o, a, s, l;
+            var r, i, o, a, s, c;
             for ((o = window.location.hash.slice(1)) && (a = document.getElementById(o)), null == a && (a = window), r = {
                     oldURL: t,
                     newURL: n,
                     target: a
-                }, s = 0, l = e.length; l > s; s++) i = e[s], i.call(a, r)
+                }, s = 0, c = e.length; c > s; s++) i = e[s], i.call(a, r)
         }, $.hashChange.clear = function() {
             return n.clear()
         }
@@ -10327,11 +10571,11 @@ FastClick.prototype.needsClick = function(e) {
     function() {
         var e, t, n;
         t = ["position:absolute;", "overflow:auto;", "word-wrap:break-word;", "top:0px;", "left:-9999px;"], n = ["box-sizing", "font-family", "font-size", "font-style", "font-variant", "font-weight", "height", "letter-spacing", "line-height", "max-height", "min-height", "padding-bottom", "padding-left", "padding-right", "padding-top", "border-bottom", "border-left", "border-right", "border-top", "text-decoration", "text-indent", "text-transform", "width", "word-spacing"], e = new WeakMap, $.fn.textFieldMirror = function(r) {
-            var i, o, a, s, l, c, u, f, d, h, p, m;
-            if ((h = this[0]) && (c = h.nodeName.toLowerCase(), "textarea" === c || "input" === c)) {
+            var i, o, a, s, c, l, u, f, d, h, p, m;
+            if ((h = this[0]) && (l = h.nodeName.toLowerCase(), "textarea" === l || "input" === l)) {
                 if (s = e.get(h), s && s.parentElement === h.parentElement) s.innerHTML = "";
                 else {
-                    for (s = document.createElement("div"), e.set(h, s), f = window.getComputedStyle(h), u = t.slice(0), u.push("textarea" === c ? "white-space:pre-wrap;" : "white-space:nowrap;"), p = 0, m = n.length; m > p; p++) l = n[p], u.push("" + l + ":" + f.getPropertyValue(l) + ";");
+                    for (s = document.createElement("div"), e.set(h, s), f = window.getComputedStyle(h), u = t.slice(0), u.push("textarea" === l ? "white-space:pre-wrap;" : "white-space:nowrap;"), p = 0, m = n.length; m > p; p++) c = n[p], u.push("" + c + ":" + f.getPropertyValue(c) + ";");
                     s.style.cssText = u.join(" ")
                 }
                 return r !== !1 && (a = document.createElement("span"), a.style.cssText = "position: absolute;", a.className = "js-marker", a.innerHTML = "&nbsp;"), "number" == typeof r ? ((d = h.value.substring(0, r)) && (o = document.createTextNode(d)), (d = h.value.substring(r)) && (i = document.createTextNode(d))) : (d = h.value) && (o = document.createTextNode(d)), o && s.appendChild(o), a && s.appendChild(a), i && s.appendChild(i), s.parentElement || h.parentElement.insertBefore(s, h), s.scrollTop = h.scrollTop, s.scrollLeft = h.scrollLeft, s
@@ -10364,7 +10608,82 @@ FastClick.prototype.needsClick = function(e) {
         }
     }.call(this),
     function() {
-        var e, t, n, r, i, o, a, s, l;
+        $.ajaxPoll = function(e) {
+            var t, n, r, i, o, a, s, c;
+            return r = $.Deferred(), e = $.extend({
+                cache: !1
+            }, e), n = null != (a = e.interval) ? a : 1e3, delete e.interval, t = null != (s = e.decay) ? s : 1.5, delete e.decay, o = null != (c = e.status) ? c : 202, delete e.status, i = function(n, a) {
+                var s, c, l, u;
+                u = $.ajax(e), l = function(e) {
+                    return r.notifyWith(this, [n]), u.status === o ? setTimeout(function() {
+                        return i(n + 1, a * t)
+                    }, a) : e()
+                }, s = function() {
+                    var e;
+                    return e = arguments, l(function() {
+                        return r.resolveWith(this, e)
+                    })
+                }, c = function() {
+                    var e;
+                    return e = arguments, l(function() {
+                        return r.rejectWith(this, e)
+                    })
+                }, u.then(s, c)
+            }, i(0, n), r.promise()
+        }
+    }.call(this),
+    function() {
+        var e, t, n, r, i, o, a;
+        a = function() {
+            var e;
+            return e = document.querySelector('meta[name="csrf-token"]'), null != e ? e.getAttribute("content") : void 0
+        }, n = function(e) {
+            var t;
+            return t = (null != e ? e.method : void 0) || "get", "get" === t.toLowerCase()
+        }, i = function(e) {
+            var t, n;
+            return 200 <= (n = e.status) && 300 > n ? Promise.resolve(e) : (t = new Error(e.statusText || e.status), t.response = e, Promise.reject(t))
+        }, t = function(e) {
+            var t;
+            return null == e && (e = {}), e.headers || (e.headers = {}), !n(e) && (t = a()) && (e.headers["X-CSRF-Token"] = t), e.headers["X-Requested-With"] = "XMLHttpRequest", e
+        }, e = function(e) {
+            return null == e && (e = {}), null == e.credentials && (e.credentials = "same-origin"), e
+        }, r = function(e) {
+            return e.json()
+        }, o = function(e) {
+            return e.text()
+        }, $.fetch = function(n, r) {
+            return r = t(e(r)), fetch(n, r).then(i)
+        }, $.fetchText = function(n, r) {
+            return r = t(e(r)), fetch(n, r).then(i).then(o)
+        }, $.fetchJSON = function(n, o) {
+            return o = t(e(o)), o.headers.Accept = "application/json", fetch(n, o).then(i).then(r)
+        }
+    }.call(this),
+    function() {
+        $.fetchPoll = function(e, t) {
+            return new Promise(function(n, r) {
+                var i;
+                return (i = function(o) {
+                    var a;
+                    return a = function(e) {
+                        switch (e.status) {
+                            case 200:
+                                return n(e);
+                            case 202:
+                                return setTimeout(function() {
+                                    return i(1.5 * o)
+                                }, o);
+                            default:
+                                return r()
+                        }
+                    }, $.fetch(e, t).then(a, r)
+                })(1e3)
+            })
+        }
+    }.call(this),
+    function() {
+        var e, t, n, r, i, o, a, s, c;
         "ondragover" in window && (t = null, o = null, i = !1, a = function(e) {
             var r, a;
             a = e.target, a !== o && (i = n(e, o, a)), o = a, i && e.preventDefault(), clearTimeout(t), r = function() {
@@ -10385,17 +10704,17 @@ FastClick.prototype.needsClick = function(e) {
             }), r
         }, e = 0, s = function() {
             1 === ++e && $(window).on("dragover", a)
-        }, l = function() {
+        }, c = function() {
             0 === --e && $(window).off("dragover", a)
         }, r = function(e) {
             var t, n, r, i, o;
             return i = this, o = e.type, n = e.relatedTarget, t = e.handleObj, (!n || n !== i && !$.contains(i, n)) && (e.type = t.origType, r = t.handler.apply(this, arguments), e.type = o), r
         }, $.event.special["drag:out"] = {
             setup: s,
-            teardown: l
+            teardown: c
         }, $.event.special["drag:over"] = {
             setup: s,
-            teardown: l
+            teardown: c
         }, $.event.special["drag:enter"] = {
             handle: r,
             delegateType: "drag:over",

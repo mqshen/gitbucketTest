@@ -20,15 +20,15 @@ trait UserManagementControllerBase extends AccountManagementControllerBase {
                          mailAddress: String, isAdmin: Boolean,
                          url: Option[String], fileId: Option[String])
 
-  case class EditUserForm(userName: String, password: Option[String], fullName: String,
+  case class EditUserForm(password: Option[String], fullName: String,
                           mailAddress: String, isAdmin: Boolean, url: Option[String],
                           fileId: Option[String], clearImage: Boolean, isRemoved: Boolean)
 
   case class NewGroupForm(groupName: String, url: Option[String], fileId: Option[String],
-                          members: String)
+                          members: List[String], memberTypes: List[Boolean])
 
-  case class EditGroupForm(groupName: String, url: Option[String], fileId: Option[String],
-                           members: String, clearImage: Boolean, isRemoved: Boolean)
+  case class EditGroupForm(url: Option[String], fileId: Option[String],
+                           members: List[String], memberTypes: List[Boolean], clearImage: Boolean, isRemoved: Boolean)
 
   val newUserForm = mapping(
     "userName"    -> trim(label("Username"     ,text(required, maxlength(100), identifier, uniqueUserName))),
@@ -41,7 +41,6 @@ trait UserManagementControllerBase extends AccountManagementControllerBase {
   )(NewUserForm.apply)
 
   val editUserForm = mapping(
-    "userName"    -> trim(label("Username"     ,text(required, maxlength(100), identifier))),
     "password"    -> trim(label("Password"     ,optional(text(maxlength(20))))),
     "fullName"    -> trim(label("Full Name"    ,text(required, maxlength(100)))),
     "mailAddress" -> trim(label("Mail Address" ,text(required, maxlength(100), uniqueMailAddress("userName")))),
@@ -56,14 +55,15 @@ trait UserManagementControllerBase extends AccountManagementControllerBase {
     "groupName" -> trim(label("Group name" ,text(required, maxlength(100), identifier, uniqueUserName))),
     "url"       -> trim(label("URL"        ,optional(text(maxlength(200))))),
     "fileId"    -> trim(label("File ID"    ,optional(text()))),
-    "members"   -> trim(label("Members"    ,text(required, members)))
+    "members"   -> list(text()),
+    "memberTypes"   -> list(boolean())
   )(NewGroupForm.apply)
 
   val editGroupForm = mapping(
-    "groupName"  -> trim(label("Group name"  ,text(required, maxlength(100), identifier))),
     "url"        -> trim(label("URL"         ,optional(text(maxlength(200))))),
     "fileId"     -> trim(label("File ID"     ,optional(text()))),
-    "members"    -> trim(label("Members"     ,text(required, members))),
+    "members"   -> list(text()),
+    "memberTypes"   -> list(boolean()),
     "clearImage" -> trim(label("Clear image" ,boolean())),
     "removed"    -> trim(label("Disable"     ,boolean()))
   )(EditGroupForm.apply)
@@ -92,8 +92,14 @@ trait UserManagementControllerBase extends AccountManagementControllerBase {
     val userName = params("userName")
     admin.users.html.user(getAccountByUserName(userName, true))
   })
-  
-  post("/admin/users/:name/_edituser", editUserForm)(adminOnly { form =>
+
+  get("/admin/users/suggestions")(adminOnly {
+    val userName = params("q")
+    val users = getAllUsers().filter(!_.isGroupAccount).filter(_.userName.contains(userName))
+    admin.users.html.suggestions(users)
+  })
+
+  post("/admin/users/:userName/_edituser", editUserForm)(adminOnly { form =>
     val userName = params("userName")
     getAccountByUserName(userName, true).map { account =>
 
@@ -129,11 +135,8 @@ trait UserManagementControllerBase extends AccountManagementControllerBase {
 
   post("/admin/users/_newgroup", newGroupForm)(adminOnly { form =>
     createGroup(form.groupName, form.url)
-    updateGroupMembers(form.groupName, form.members.split(",").map {
-      _.split(":") match {
-        case Array(userName, isManager) => (userName, isManager.toBoolean)
-      }
-    }.toList)
+    val members = form.members.zip(form.memberTypes)
+    updateGroupMembers(form.groupName, members)
     updateImage(form.groupName, form.fileId, false)
     redirect("/admin/users")
   })
@@ -145,40 +148,36 @@ trait UserManagementControllerBase extends AccountManagementControllerBase {
   })
 
   post("/admin/users/:groupName/_editgroup", editGroupForm)(adminOnly { form =>
-    defining(params("groupName"), form.members.split(",").map {
-      _.split(":") match {
-        case Array(userName, isManager) => (userName, isManager.toBoolean)
-      }
-    }.toList){ case (groupName, members) =>
+    val members = form.members.zip(form.memberTypes)
+    println(s"memebers: $members")
+    val groupName = params("groupName")
       getAccountByUserName(groupName, true).map { account =>
-        updateGroup(groupName, form.url, form.isRemoved)
+      updateGroup(groupName, form.url, form.isRemoved)
 
-        if(form.isRemoved){
-          // Remove from GROUP_MEMBER
-          updateGroupMembers(form.groupName, Nil)
-          // Remove repositories
-          getRepositoryNamesOfUser(form.groupName).foreach { repositoryName =>
-            deleteRepository(groupName, repositoryName)
-            FileUtils.deleteDirectory(getRepositoryDir(groupName, repositoryName))
-            FileUtils.deleteDirectory(getWikiRepositoryDir(groupName, repositoryName))
-            FileUtils.deleteDirectory(getTemporaryDir(groupName, repositoryName))
-          }
-        } else {
-          // Update GROUP_MEMBER
-          updateGroupMembers(form.groupName, members)
-          // Update COLLABORATOR for group repositories
-          getRepositoryNamesOfUser(form.groupName).foreach { repositoryName =>
-            removeCollaborators(form.groupName, repositoryName)
-            members.foreach { case (userName, isManager) =>
-              addCollaborator(form.groupName, repositoryName, userName)
-            }
+      if(form.isRemoved){
+        // Remove from GROUP_MEMBER
+        updateGroupMembers(groupName, Nil)
+        // Remove repositories
+        getRepositoryNamesOfUser(groupName).foreach { repositoryName =>
+          deleteRepository(groupName, repositoryName)
+          FileUtils.deleteDirectory(getRepositoryDir(groupName, repositoryName))
+          FileUtils.deleteDirectory(getWikiRepositoryDir(groupName, repositoryName))
+          FileUtils.deleteDirectory(getTemporaryDir(groupName, repositoryName))
+        }
+      } else {
+        // Update GROUP_MEMBER
+        updateGroupMembers(groupName, members)
+        // Update COLLABORATOR for group repositories
+        getRepositoryNamesOfUser(groupName).foreach { repositoryName =>
+          removeCollaborators(groupName, repositoryName)
+          members.foreach { case (userName, isManager) =>
+            addCollaborator(groupName, repositoryName, userName)
           }
         }
+      }
 
-        updateImage(form.groupName, form.fileId, form.clearImage)
-        redirect("/admin/users")
-
-      } getOrElse NotFound
+      updateImage(groupName, form.fileId, form.clearImage)
+      redirect("/admin/users")
     }
   })
 

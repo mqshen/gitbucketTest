@@ -1,6 +1,11 @@
 package app
 
+import java.security.SignatureException
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+
 import org.json4s.{Formats, JValue}
+import org.scalatra.Created
 import service._
 import util._
 import util.StringUtil._
@@ -14,7 +19,7 @@ import org.scalatra.i18n.Messages
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.{FileMode, Constants}
 import org.eclipse.jgit.dircache.DirCache
-import model.GroupMember
+import model.{Account, GroupMember}
 
 class AccountController extends AccountControllerBase
   with AccountService with RepositoryService with ActivityService with WikiService with LabelsService with SshKeyService
@@ -45,7 +50,7 @@ trait AccountControllerBase extends AccountManagementControllerBase {
   val editForm = mapping(
     "password"    -> trim(label("Password"     , optional(text(maxlength(20))))),
     "fullName"    -> trim(label("Full Name"    , text(required, maxlength(100)))),
-    "mailAddress" -> trim(label("Mail Address" , text(required, maxlength(100), uniqueMailAddress("userName")))),
+    "mailAddress" -> trim(label("Mail Address" , text(required, maxlength(100)))),
     "url"         -> trim(label("URL"          , optional(text(maxlength(200))))),
     "fileId"      -> trim(label("File ID"      , optional(text()))),
     "clearImage"  -> trim(label("Clear image"  , boolean()))
@@ -76,6 +81,7 @@ trait AccountControllerBase extends AccountManagementControllerBase {
 
   case class RepositoryCreationForm(owner: String, name: String, description: Option[String], isPrivate: Boolean, createReadme: Boolean)
   case class ForkRepositoryForm(owner: String, name: String)
+  case class NameCheckForm(owner: String, name: String)
 
   val newRepositoryForm = mapping(
     "owner"        -> trim(label("Owner"          , text(required, maxlength(40), identifier, existsAccount))),
@@ -95,6 +101,11 @@ trait AccountControllerBase extends AccountManagementControllerBase {
   val accountForm = mapping(
     "account" -> trim(label("Group/User name", text(required, validAccountName)))
   )(AccountForm.apply)
+
+  val nameCheckForm = mapping(
+    "owner"       -> trim(text()),
+    "value"       -> trim(text())
+  )(NameCheckForm.apply)
 
   /**
    * Displays user information.
@@ -144,6 +155,49 @@ trait AccountControllerBase extends AccountManagementControllerBase {
       Thread.currentThread.getContextClassLoader.getResourceAsStream("noimage.png")
     }
   }
+
+  get("/settings/profile")(oneselfOnly {
+    context.loginAccount.map { user =>
+      response.setHeader("Content-Security-Policy", "default-src *; script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' 'unsafe-eval' ; img-src 'self' data: mqshen.qiniudn.com *.gravatar.com ; media-src 'none'; frame-src 'self' ; font-src 'self' assets-cdn.github.com; connect-src 'self' up.qbox.me  mqshen.qiniudn.com ")
+      account.html.edit(user, flash.get("info"))
+    } getOrElse Unauthorized
+  })
+
+  post("/settings/profile", editForm)(oneselfOnly { form =>
+    context.loginAccount.map { user =>
+      if(uniqueMailAddressUserName(user.userName, form.mailAddress)) {
+        val newUser = user.copy(
+          password    = form.password.map(sha1).getOrElse(user.password),
+          fullName    = form.fullName,
+          mailAddress = form.mailAddress,
+          url         = form.url)
+        updateAccount(newUser)
+
+        session.setAttribute(Keys.Session.LoginAccount, newUser)
+
+        flash += "info" -> "Account information has been updated."
+        redirect("/settings/profile")
+      }
+      else {
+        flash += "info" -> "Email address is not unique."
+        redirect("/settings/profile")
+      }
+    } getOrElse NotFound
+  })
+
+  get("/settings/avatars/:fileName") {
+    val fileName = params("fileName")
+    contentType = formats("html")
+    account.html.avatar(fileName)
+  }
+
+  post("/settings/avatars/:fileName")(oneselfOnly {
+    val fileName = params("fileName")
+    context.loginAccount.map { user =>
+      updateAvatarImage(user.userName, Some(fileName))
+      redirect("/settings/profile")
+    }
+  })
 
   get("/:userName/_edit")(oneselfOnly {
     val userName = params("userName")
@@ -296,6 +350,15 @@ trait AccountControllerBase extends AccountManagementControllerBase {
     account.html.newrepo(getGroupsByUserName(context.loginAccount.get.userName), context.settings.isCreateRepoOptionPublic)
   })
 
+  ajaxPost("/repositories/check-name", nameCheckForm)(usersOnly {form =>
+    if(getRepository(form.owner, form.name, context.baseUrl).isEmpty){
+      contentType = formats("json")
+      org.json4s.jackson.Serialization.write(Map("name" -> form.name))
+    }
+    else {
+      org.scalatra.Unauthorized("Name already exists on this account")
+    }
+  })
   /**
    * Create new repository.
    */

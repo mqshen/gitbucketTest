@@ -7,6 +7,9 @@ import org.apache.commons.io.input.BOMInputStream
 import org.apache.commons.io.IOUtils
 
 object StringUtil {
+  val hexDigit = Seq('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
+  val UrlSafeBase64Digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+  val Base64Digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
   def sha1(value: String): String =
     defining(java.security.MessageDigest.getInstance("SHA-1")){ md =>
@@ -26,6 +29,118 @@ object StringUtil {
 
   def splitWords(value: String): Array[String] = value.split("[ \\t　]+")
 
+  def base64Encode(data: Array[Byte]): String = {
+    base64EncodeGeneric(Base64Digits, data)
+  }
+
+  def urlSafeBase64Encode(data: Array[Byte]) = {
+    base64EncodeGeneric(UrlSafeBase64Digits, data)
+  }
+
+  def urlSafeBase64Encode(data: String) = {
+    base64EncodeGeneric(UrlSafeBase64Digits, data.getBytes())
+  }
+
+  def jq (value: String) = {
+    javaQuotedLiteral(value)
+  }
+
+  def javaQuotedLiteral (value: String) = {
+    val b: StringBuilder = new StringBuilder(value.length * 2)
+    b.append('"')
+    value.map {
+      case '"' =>
+        b.append("\\\"")
+      case '\\' =>
+        b.append("\\\\")
+      case '\n' =>
+        b.append("\\n")
+      case '\r' =>
+        b.append("\\t")
+      case '\t' =>
+        b.append("\\r")
+      case '\0' =>
+        b.append("\\000")
+      case c =>
+        if (c >= 0x20 && c <= 0x7e) {
+          b.append(c)
+        }
+        else {
+          val h1: Int = (c >> 12) & 0xf
+          val h2: Int = (c >> 8) & 0xf
+          val h3: Int = (c >> 4) & 0xf
+          val h4: Int = c & 0xf
+          b.append("\\u")
+          b.append(hexDigit(h1))
+          b.append(hexDigit(h2))
+          b.append(hexDigit(h3))
+          b.append(hexDigit(h4))
+        }
+    }
+    b.append('"')
+    b.toString
+  }
+
+  def base64EncodeGeneric(digits: String, data: Array[Byte]): String = {
+    if (data == null) throw new IllegalArgumentException("'data' can't be null")
+    if (digits == null) throw new IllegalArgumentException("'digits' can't be null")
+    if (digits.length != 64) throw new IllegalArgumentException("'digits' must be 64 characters long: " + jq(digits))
+    val numGroupsOfThreeInputBytes: Int = (data.length + 2) / 3
+    val numOutputChars: Int = numGroupsOfThreeInputBytes * 4
+    val buf: StringBuilder = new StringBuilder(numOutputChars)
+    var i: Int = 0
+    while ((i + 3) <= data.length) {
+      val b1: Int = (data(({
+        i += 1; i - 1
+      })).toInt) & 0xff
+      val b2: Int = (data(({
+        i += 1; i - 1
+      })).toInt) & 0xff
+      val b3: Int = (data(({
+        i += 1; i - 1
+      })).toInt) & 0xff
+      val d1: Int = b1 >>> 2
+      val d2: Int = ((b1 & 0x3) << 4) | (b2 >>> 4)
+      val d3: Int = ((b2 & 0xf) << 2) | (b3 >>> 6)
+      val d4: Int = b3 & 0x3f
+      buf.append(digits.charAt(d1))
+      buf.append(digits.charAt(d2))
+      buf.append(digits.charAt(d3))
+      buf.append(digits.charAt(d4))
+    }
+    val remaining: Int = data.length - i
+    if (remaining == 0) {
+    }
+    else if (remaining == 1) {
+      val b1: Int = (data(({
+        i += 1; i - 1
+      })).toInt) & 0xff
+      val d1: Int = b1 >>> 2
+      val d2: Int = (b1 & 0x3) << 4
+      buf.append(digits.charAt(d1))
+      buf.append(digits.charAt(d2))
+      buf.append("==")
+    }
+    else if (remaining == 2) {
+      val b1: Int = (data(({
+        i += 1; i - 1
+      })).toInt) & 0xff
+      val b2: Int = (data(({
+        i += 1; i - 1
+      })).toInt) & 0xff
+      val d1: Int = b1 >>> 2
+      val d2: Int = ((b1 & 0x3) << 4) | (b2 >>> 4)
+      val d3: Int = ((b2 & 0xf) << 2)
+      buf.append(digits.charAt(d1))
+      buf.append(digits.charAt(d2))
+      buf.append(digits.charAt(d3))
+      buf.append('=')
+    }
+    else {
+      throw new AssertionError("data.length: " + data.length + ", i: " + i)
+    }
+    return buf.toString
+  }
   def escapeHtml(value: String): String =
     value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 

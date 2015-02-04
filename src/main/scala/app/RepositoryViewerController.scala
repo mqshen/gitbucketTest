@@ -60,6 +60,7 @@ trait RepositoryViewerControllerBase extends ControllerBase {
     issueId: Option[Int]
   )
 
+
   val editorForm = mapping(
     "branch"        -> trim(label("Branch", text(required))),
     "path"          -> trim(label("Path", text())),

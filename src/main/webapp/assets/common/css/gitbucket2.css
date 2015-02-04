@@ -2954,7 +2954,8 @@
 .boxed-group-list
 {
     list-style: none;
-    margin: 0;
+    margin: 0 0 10px 0;
+
 }
 .boxed-group-list>li
 {
@@ -15884,4 +15885,16 @@ input.tree-finder-input,input.tree-finder-input:focus
 .signin-form {
     width: 400px;
     margin: 30px auto;
+}
+.member-container {
+    background: lightblue;
+    padding: 5px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+.member-container .member-name {
+    margin-right: 5px;
+}
+.boxed-group-list .delete-button {
+    margin: 0 0 0 80px;
 }

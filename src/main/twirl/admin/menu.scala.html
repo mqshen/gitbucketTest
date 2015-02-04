@@ -1,24 +1,18 @@
 @(active: String)(body: Html)(implicit context: app.Context)
 @import context._
 <div class="container">
-  <div class="row-fluid">
-    <div class="span3">
-      <div class="box">
-        <ul class="nav nav-tabs nav-stacked side-menu">
-          <li@if(active=="users"){ class="active"}>
-            <a href="@path/admin/users">User Management</a>
-          </li>
-          <li@if(active=="system"){ class="active"}>
-            <a href="@path/admin/system">System Settings</a>
-          </li>
-          <li>
-            <a href="@path/console/login.jsp">H2 Console</a>
-          </li>
-       </ul>
-     </div>
+    <div class="columns">
+        <div class="column one-fourth" role="navigation">
+            <nav class="menu" data-pjax="">
+                <h3 class="menu-heading">
+                    System settings
+                </h3>
+                <a href="@path/admin/users" class="@if(active=="users"){ selected } js-selected-navigation-item menu-item" data-selected-links="avatar_settings /admin/users">User Management</a>
+                <a href="@path/admin/users" class="@if(active=="system"){ selected } js-selected-navigation-item menu-item" data-selected-links="avatar_settings /admin/system">System Management</a>
+                <a href="@path/console/login.jsp" js-selected-navigation-item menu-item"  data-selected-links="avatar_settings /admin/users">User Management</a>
+            </nav>
+        </div>
+        <div class="column three-fourths">
+            @body
+        </div>
     </div>
-    <div class="span9">
-      @body
-    </div>
-  </div>
-</div>

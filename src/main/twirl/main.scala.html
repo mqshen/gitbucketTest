@@ -20,7 +20,7 @@
     <link href="@assets/vendors/octicons/octicons.css" rel="stylesheet">
     <link href="@assets/common/css/github.css" rel="stylesheet">
     <link href="@assets/common/css/gitbucket2.css" rel="stylesheet">
-  <script src="@assets/common/js/frameworks2.js"></script>
+      <script src="@assets/common/js/frameworks2.js"></script>
       <script src="@assets/common/js/github2.js"></script>
       <!--
     <script src="@assets/vendors/jquery/jquery-1.9.1.js"></script>
@@ -56,63 +56,67 @@
               <ul class="header-nav user-nav right" id="user-links">
 
                   @if(loginAccount.isDefined){
+                  <li class="header-nav-item dropdown js-menu-container">
+                      <a class="header-nav-link name" href="@url(loginAccount.get.userName)" data-ga-click="Header, go to profile, text:username">
+                          @avatar(loginAccount.get.userName, 20)
+                          <span class="css-truncate">
+                              <span class="css-truncate-target"> @loginAccount.get.userName</span>
+                          </span>
+                      </a>
+                  </li>
+
+                  <li class="header-nav-item dropdown js-menu-container">
+                      <a class="header-nav-link js-menu-target tooltipped tooltipped-s" href="#" aria-label="Create new..." data-ga-click="Header, create new, icon:add">
+                          <span class="octicon octicon-plus"></span>
+                          <span class="dropdown-caret"></span>
+                      </a>
+
+                      <div class="dropdown-menu-content js-menu-content">
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="@path/new"><span class="octicon octicon-repo"></span> New repository</a>
+                              </li>
+                              <li>
+                                  <a href="@path/groups/new"><span class="octicon octicon-organization"></span> New organization</a>
+                              </li>
 
 
-                      <li class="header-nav-item dropdown js-menu-container">
-                          <a class="header-nav-link name" href="@url(loginAccount.get.userName)" data-ga-click="Header, go to profile, text:username">
-                              @avatar(loginAccount.get.userName, 20)
-                              <span class="css-truncate">
-                                  <span class="css-truncate-target"> @loginAccount.get.userName</span>
-                              </span>
-                          </a>
-                      </li>
+                          </ul>
 
-                      <li class="header-nav-item dropdown js-menu-container">
-                          <a class="header-nav-link js-menu-target tooltipped tooltipped-s" href="#" aria-label="Create new..." data-ga-click="Header, create new, icon:add">
-                              <span class="octicon octicon-plus"></span>
-                              <span class="dropdown-caret"></span>
-                          </a>
+                      </div>
+                  </li>
 
-                          <div class="dropdown-menu-content js-menu-content">
+                  <li class="header-nav-item">
+                      <a href="/notifications" aria-label="You have no unread notifications" class="header-nav-link notification-indicator tooltipped tooltipped-s" data-ga-click="Header, go to notifications, icon:read" data-hotkey="g n">
+                          <span class="mail-status all-read"></span>
+                          <span class="octicon octicon-inbox"></span>
+                      </a>
+                  </li>
+                  <li class="header-nav-item">
+                      <a class="header-nav-link tooltipped tooltipped-s" href="/settings/profile" id="account_settings" aria-label="Settings" data-ga-click="Header, go to settings, icon:settings">
+                          <span class="octicon octicon-gear"></span>
+                      </a>
+                  </li>
+                  @if(loginAccount.get.isAdmin){
+                  <li class="header-nav-item">
+                      <a class="header-nav-link tooltipped tooltipped-s" href="/admin/users" id="administration" aria-label="Settings" data-ga-click="Header, go to settings, icon:settings">
+                          <span class="octicon octicon-tools"></span>
+                      </a>
+                  </li>
+                  }
 
-                              <ul class="dropdown-menu">
-                                  <li>
-                                      <a href="@path/new"><span class="octicon octicon-repo"></span> New repository</a>
-                                  </li>
-                                  <li>
-                                      <a href="@path/groups/new"><span class="octicon octicon-organization"></span> New organization</a>
-                                  </li>
 
-
-                              </ul>
-
+                  <li class="header-nav-item">
+                      <form accept-charset="UTF-8" action="@path/signout" class="logout-form" method="post">
+                          <div style="margin:0;padding:0;display:inline">
+                              <input name="utf8" type="hidden" value="✓">
+                              <input name="authenticity_token" type="hidden" value="==">
                           </div>
-                      </li>
-
-                      <li class="header-nav-item">
-                          <a href="/notifications" aria-label="You have no unread notifications" class="header-nav-link notification-indicator tooltipped tooltipped-s" data-ga-click="Header, go to notifications, icon:read" data-hotkey="g n">
-                              <span class="mail-status all-read"></span>
-                              <span class="octicon octicon-inbox"></span>
-                          </a>
-                      </li>
-
-                      <li class="header-nav-item">
-                          <a class="header-nav-link tooltipped tooltipped-s" href="/settings/profile" id="account_settings" aria-label="Settings" data-ga-click="Header, go to settings, icon:settings">
-                              <span class="octicon octicon-gear"></span>
-                          </a>
-                      </li>
-
-                      <li class="header-nav-item">
-                          <form accept-charset="UTF-8" action="@path/signout" class="logout-form" method="post">
-                              <div style="margin:0;padding:0;display:inline">
-                                  <input name="utf8" type="hidden" value="✓">
-                                  <input name="authenticity_token" type="hidden" value="==">
-                              </div>
-                              <button class="header-nav-link sign-out-button tooltipped tooltipped-s" aria-label="Sign out" data-ga-click="Header, sign out, icon:logout">
-                                  <span class="octicon octicon-sign-out"></span>
-                              </button>
-                          </form>
-                      </li>
+                          <button class="header-nav-link sign-out-button tooltipped tooltipped-s" aria-label="Sign out" data-ga-click="Header, sign out, icon:logout">
+                              <span class="octicon octicon-sign-out"></span>
+                          </button>
+                      </form>
+                  </li>
 
                       <!--
                       <a href="" class="username menu"></a>
@@ -145,12 +149,5 @@
       <div id="site-container" class="context-loader-container" data-pjax-container="">
           @body
       </div>
-    <script>
-      $(function(){
-        $('#search').submit(function(){
-          return $.trim($(this).find('input[name=query]').val()) != '';
-        });
-      });
-    </script>
   </body>
 </html>

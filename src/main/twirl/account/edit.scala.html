@@ -3,69 +3,78 @@
 @import view.helpers._
 @import util.LDAPUtil
 @html.main("Edit your profile"){
+
+@helper.html.information(info)
 <div class="container">
-  <div class="row-fluid">
-    <div class="span3">
-      @menu("profile", settings.ssh)
-    </div>
-    <div class="span9">
-      @helper.html.information(info)
-      @if(LDAPUtil.isDummyMailAddress(account)){<div class="alert alert-danger">Please register your mail address.</div>}
-      <form action="@url(account.userName)/_edit" method="POST" validate="true">
-      <div class="box">
-        <div class="box-header">Profile</div>
-        <div class="box-content">
-          <div class="row-fluid">
-            <div class="span6">
-              @if(account.password.nonEmpty){
-                <fieldset>
-                  <label for="password" class="strong">
-                    Password (input to change password):
-                  </label>
-                  <input type="password" name="password" id="password" value=""/>
-                  <span id="error-password" class="error"></span>
-                </fieldset>
-              }
-              <fieldset>
-                <label for="fullName" class="strong">Full Name:</label>
-                <input type="text" name="fullName" id="fullName" value="@account.fullName"/>
-                <span id="error-fullName" class="error"></span>
-              </fieldset>
-              <fieldset>
-                <label for="mailAddress" class="strong">Mail Address:</label>
-                <input type="text" name="mailAddress" id="mailAddress" value="@if(!LDAPUtil.isDummyMailAddress(account)){@account.mailAddress}"/>
-                <span id="error-mailAddress" class="error"></span>
-              </fieldset>
-              <fieldset>
-                <label for="url" class="strong">URL (optional):</label>
-                <input type="text" name="url" id="url" style="width: 300px;" value="@account.url"/>
-                <span id="error-url" class="error"></span>
-              </fieldset>
-            </div>
-            <div class="span6">
-              <fieldset>
-                <label for="avatar" class="strong">Image (optional):</label>
-                @helper.html.uploadavatar(Some(account))
-              </fieldset>
-            </div>
-          </div>
-          <div style="margin-top: 20px;">
-            <div class="pull-right">
-              <a href="@path/@account.userName/_delete" class="btn btn-danger" id="delete">Delete account</a>
-            </div>
-            <input type="submit" class="btn btn-success" value="Save"/>
-            @if(!LDAPUtil.isDummyMailAddress(account)){<a href="@url(account.userName)" class="btn">Cancel</a>}
-          </div>
+    <div class="columns">
+        <div class="column one-fourth" role="navigation">
+            @menu("profile", settings.ssh)
         </div>
-      </div>
-    </form>
-  </div>
+        <div class="column three-fourths">
+            <div class="boxed-group">
+                <h3>Public profile</h3>
+                @if(LDAPUtil.isDummyMailAddress(account)){<div class="alert alert-danger">Please register your mail address.</div>}
+                <div class="boxed-group-inner clearfix js-uploadable-container js-upload-avatar-image is-default" data-upload-policy-url="/upload/policies/avatars">
+                    <form action="@path/settings/profile" method="POST" validate="true">
+                        <div class="column two-thirds">
+                            <dl class="form edit-profile-avatar">
+                                <dt><label for="upload-profile-picture">Profile picture</label></dt>
+                                <dd class="avatar-upload-container clearfix">
+                                    @avatar(account.userName, 70, avatarClass = "avatar left")
+                                    <div class="avatar-upload">
+                                        <a href="#" class="button button-change-profile-picture">
+                                            <label for="upload-profile-picture">
+                                                Upload new picture
+                                                <input id="upload-profile-picture" type="file" multiple="multiple" class="manual-file-chooser js-manual-file-chooser js-avatar-field">
+                                            </label>
+                                        </a>
+
+                                        <div class="upload-state default">
+                                            <p>You can also drag and drop a picture from your computer.</p>
+                                        </div>
+
+                                        <div class="upload-state loading">
+                                            <span class="button disabled">
+                                                <img alt="" height="16" src="@assets/spinners/octocat-spinner-32.gif" width="16"> Uploading...
+                                            </span>
+                                        </div>
+                                        <div class="upload-state danger too-big">
+                                            Please upload a picture smaller than 1 MB.
+                                        </div>
+                                        <div class="upload-state danger bad-dimensions">
+                                            Please upload a picture smaller than 10,000x10,000.
+                                        </div>
+                                        <div class="upload-state danger bad-file">
+                                            Unfortunately, we only support PNG, GIF, or JPG pictures.
+                                        </div>
+                                        <div class="upload-state danger bad-browser">
+                                            This browser doesn't support uploading pictures.
+                                        </div>
+                                        <div class="upload-state danger failed-request">
+                                            Something went really wrong and we can't process that picture.
+                                        </div>
+                                    </div> <!-- /.avatar-upload -->
+                                </dd>
+                            </dl>
+                            <dl class="form">
+                                <dt><label for="user_profile_name">Name</label></dt>
+                                <dd><input id="user_profile_name" name="fullName" size="30" type="text" value="@account.fullName"></dd>
+                            </dl>
+                            <dl class="form">
+                                <dt><label for="user_profile_mail">Mail Address</label></dt>
+                                <dd><input id="user_profile_mail" name="mailAddress" size="30" type="email" value="@if(!LDAPUtil.isDummyMailAddress(account)){@account.mailAddress}"></dd>
+                            </dl>
+                            <dl class="form">
+                                <dt><label for="user_profile_blog">URL</label></dt>
+                                <dd><input id="user_profile_blog" name="url" size="30" type="url" value="@account.url"></dd>
+                            </dl>
+                            <p><button type="submit" class="button primary">Update profile</button></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 }
-<script>
-$(function(){
-  $('#delete').click(function(){
-    return confirm('Once you delete your account, there is no going back.\nAre you sure?');
-  });
-});
-</script>
+

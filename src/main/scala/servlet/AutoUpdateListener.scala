@@ -30,7 +30,6 @@ object AutoUpdate {
      */
     def update(conn: Connection): Unit = {
       val sqlPath = s"update/${majorVersion}_${minorVersion}.sql"
-
       using(Thread.currentThread.getContextClassLoader.getResourceAsStream(sqlPath)){ in =>
         if(in != null){
           val sql = IOUtils.toString(in, "UTF-8")
