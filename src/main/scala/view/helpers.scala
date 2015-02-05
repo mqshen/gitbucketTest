@@ -1,6 +1,7 @@
 package view
 import java.util.{Locale, Date, TimeZone}
 import java.text.SimpleDateFormat
+import compare.Compare
 import model.{Repository, Issue}
 import play.twirl.api.Html
 import util.StringUtil
@@ -290,4 +291,5 @@ object helpers extends AvatarImageProvider with LinkConverter with RequestCache 
 
 
   def let[A,B](a:A)(f:A=>B):B = f(a)
+
 }

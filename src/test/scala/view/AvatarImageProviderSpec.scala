@@ -93,7 +93,10 @@ class AvatarImageProviderSpec extends Specification with Mockito {
   private def createSystemSettings(useGravatar: Boolean) =
     SystemSettings(
       baseUrl                  = None,
+      information              = None,
       allowAccountRegistration = false,
+      allowAnonymousAccess     = false,
+      isCreateRepoOptionPublic = false,
       gravatar                 = useGravatar,
       notification             = false,
       ssh                      = false,

@@ -12,127 +12,56 @@
 @import util.Implicits._
 @html.main(commit.shortMessage, Some(repository)){
   @html.menu("code", repository){
-    <table class="table table-bordered">
-      <tr>
-        <th>
-          <div class="pull-right align-right">
-            <a href="@url(repository)/tree/@commit.id" class="btn btn-small">Browse code</a>
-          </div>
-          <div class="commit-log">@link(commit.summary, repository)</div>
-          @if(commit.description.isDefined){
-            <pre class="commit-description">@link(commit.description.get, repository)</pre>
-          }
-          <div class="small" style="font-weight: normal;">
-            @if(branches.nonEmpty){
-              <span class="muted">
-                <img src="@assets/common/images/branch.png"/>
-                @branches.zipWithIndex.map { case (branch, i) =>
-                  <a href="@url(repository)/tree/@encodeRefName(branch)" class="branch" id="branch-@i">@branch</a>
-                }
-              </span>
+<div class="commit full-commit ">
+    <a href="@url(repository)/tree/@commit.id" class="button-outline right" title="Browse the repository at this point in the history" rel="nofollow">Browse files</a>
+
+    <p class="commit-title">
+        @commit.summary
+    </p>
+
+
+    <div class="commit-branches">
+
+        <span class="octicon octicon-git-branch"></span>
+        @if(branches.nonEmpty){
+        <ul class="branches-list">
+            @branches.zipWithIndex.map { case (branch, i) =>
+                <li class="branch"><a href="@url(repository)/tree/@encodeRefName(branch)">@branch</a></li>
             }
-            @if(tags.nonEmpty){
-              <span class="muted">
+        </ul>
+        }
+        @if(tags.nonEmpty){
+            <span class="octicon octicon-tag"></span>
+            <ul class="branches-tag-list js-details-container">
                 <img src="@assets/common/images/tag.png"/>
                 @tags.zipWithIndex.map { case (tag, i) =>
-                  <a href="@url(repository)/tree/@tag" class="tag" id="tag-@i">@tag</a>
+                    <li><a href="@url(repository)/tree/@tag">@tag</a></li>
                 }
-              </span>
-            }
-          </div>
-        </th>
-      </tr>
-      <tr>
-        <td>
-          <div class="pull-right monospace small" style="text-align: right;">
-            <div>
-              @if(commit.parents.size == 0){
-                <span class="muted">0 parent</span>
-              }
-              @if(commit.parents.size == 1){
-                <span class="muted">1 parent</span>
-                <a href="@url(repository)/commit/@commit.parents(0)" class="commit-id">@commit.parents(0).substring(0, 7)</a>
-              }
-              <span class="muted">commit</span> @commit.id
-            </div>
-            @if(commit.parents.size > 1){
-              <div>
-                <span class="muted">@commit.parents.size parents
-                @commit.parents.map { parent =>
-                  <a href="@url(repository)/commit/@parent" class="commit-id">@parent.substring(0, 7)</a>
-                }.mkHtml(" + ")
-                </span>
-              </div>
-            }
-          </div>
+            </ul>
+        }
+    </div>
 
-          <div class="author-info">
-            <div class="author">
-              @avatar(commit, 20)
-              <span>@user(commit.authorName, commit.authorEmailAddress, "username strong")</span>
-              <span class="muted">authored on @datetime(commit.authorTime)</span>
-            </div>
-            @if(commit.isDifferentFromAuthor) {
-            <div class="committer">
-              <span class="icon-arrow-right"></span>
-              <span>@user(commit.committerName, commit.committerEmailAddress, "username strong")</span>
-              <span class="muted"> committed on @datetime(commit.commitTime)</span>
-            </div>
-            }
-          </div>
-        </td>
-      </tr>
-    </table>
+    <div class="commit-meta clearfix">
+        <span class="sha-block">commit <span class="sha js-selectable-text">@commit.id</span></span>
+
+    <span class="sha-block" data-pjax="">
+        @if(commit.parents.size == 0){
+            0 parent
+        }
+        @if(commit.parents.size == 1){
+            <span class="muted">1 parent</span>
+            <a href="@url(repository)/commit/@commit.parents(0)" class="sha">@commit.parents(0).substring(0, 7)</a>
+        }
+    </span>
+
+        <div class="authorship">
+            @avatar(commit, 24)
+            <span class="author-name"><a href="/@commit.authorName" rel="author">@commit.authorName</a></span>
+            authored @datetime(commit.authorTime)
+        </div>
+    </div>
+</div>
     @helper.html.diff(diffs, repository, Some(commit.id), oldCommitId, true, None, hasWritePermission, true)
   }
 }
-<script>
-$(function(){
-  $('a.branch:first, a.tag:first').css({
-    'font-weight': 'bold',
-    'color': '#555555'
-  });
 
-  @if(branches.size > 5){
-    // hide branches
-    @for(i <- 1 to branches.size - 2){
-      $('#branch-@i').hide();
-    }
-    // add omit link
-    $('#branch-@(branches.size - 1)').before(
-      $('<a href="javascript:void(0);" class="omit">...</a>').click(function(){
-        @for(i <- 1 to branches.size - 2){
-          $('#branch-@i').show();
-          this.remove();
-        }
-      })
-    );
-  }
-
-  @if(tags.size > 5){
-    // hide tags
-    @for(i <- 1 to tags.size - 2){
-      $('#tag-@i').hide();
-    }
-    // add omit link
-    $('#tag-@(tags.size - 1)').before(
-      $('<a href="javascript:void(0);" class="omit">...</a>').click(function(){
-        @for(i <- 1 to tags.size - 2){
-          $('#tag-@i').show();
-          this.remove();
-        }
-      })
-    );
-  }
-});
-</script>
-<style type="text/css">
-a.branch, a.tag {
-  color: #888888;
-  margin-right: 4px;
-}
-
-a.omit {
-  margin-right: 4px;
-}
-</style>

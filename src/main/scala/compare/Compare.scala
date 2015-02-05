@@ -1,18 +1,35 @@
 package compare
 
-import model.{DeleteDiff, Diff, EqualDiff, InsertDiff}
-
 import scala.annotation.tailrec
 
 /**
  * Created by goldratio on 2/5/15.
  */
 object Compare {
+  val split = "\\r?\\n"
 
-  def compare(text1: String, text2: String) = {
-    val textLine1 = text1.split("\\r?\\n")
-    val textLine2 = text2.split("\\r?\\n")
-    compareLines(textLine1, textLine2)
+  def compare(t1: Option[String], t2: Option[String]) = {
+    t1.map { text1 =>
+      t2.map { text2 =>
+        val textLine1 = text1.split(split)
+        val textLine2 = text2.split(split)
+        compareLines(textLine1, textLine2)
+      }.getOrElse {
+        val diffs = scala.collection.mutable.ListBuffer[Diff]()
+        text1.split(split).zipWithIndex.map { case (text, index) =>
+          diffs += new DeleteDiff(index, text)
+        }
+        diffs
+      }
+    }.getOrElse {
+      val diffs = scala.collection.mutable.ListBuffer[Diff]()
+      t2.map { text2 =>
+        text2.split(split).zipWithIndex.map { case (text, index) =>
+          diffs += new InsertDiff(index, text)
+        }
+      }
+      diffs
+    }
   }
 
   def compareLines(textLine1: Array[String], textLine2: Array[String], left: Int = 1, right: Int = 1): scala.collection.mutable.ListBuffer[Diff]  = {
@@ -99,7 +116,7 @@ object Compare {
             textLine1.zipWithIndex.map { case (text, index) =>
               diffs += new DeleteDiff(left + index, text)
             }
-            textLine2.zipWithIndex.map { case (text, index) =>
+            textLine2.zipWithIndex.map { case (text, index)  =>
               diffs += new InsertDiff(right + index, text)
             }
             diffs
