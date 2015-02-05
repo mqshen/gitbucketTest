@@ -847,7 +847,7 @@
         e = function(t) {
             return "INPUT" === t.nodeName || "TEXTAREA" === t.nodeName
         }, ZeroClipboard.config({
-            swfPath: "" + GitHub.assetHostUrl + "flash/ZeroClipboard.v" + ZeroClipboard.version + ".swf",
+            swfPath: "" + GitHub.assetHostUrl + "assets/flash/ZeroClipboard.v" + ZeroClipboard.version + ".swf",
             trustedOrigins: [location.hostname],
             flashLoadTimeout: 1e4,
             cacheBust: null != (n = /MSIE/.test(navigator.userAgent) || /Trident\/[\d](?=[^\?]+).*rv:([0-9.].)/.test(navigator.userAgent)) ? n : {
@@ -3516,36 +3516,9 @@
     }.call(this),
     function() {
         var t;
-        $.conduit = function(t) {
-            return new Promise(function(e, n) {
-                var i, s;
-                return i = function(t) {
-                    return 200 === t.status ? e(t.json()) : n(new Error(t.statusText))
-                }, (s = document.querySelector('link[rel="conduit-xhr"]')) ? fetch("" + s.href + t).then(i, n) : n(new Error("Conduit link not found"))
-            })
-        }, t = null, $.conduit.status = function() {
-            return null != t ? t : t = $.conduit("status")
-        }, $.conduit.capable = function(t) {
-            return $.conduit.status().then(function(e) {
-                return -1 !== e.capabilities.indexOf(t)
-            })["catch"](function() {
-                return !1
-            })
-        }
-    }.call(this),
-    function() {
-        var t;
         $.observe(".js-conduit-openfile-check", t = function(t) {
             $.conduit.capable("url-parameter-filepath").then(function(e) {
                 return e ? t.setAttribute("href", t.getAttribute("data-url")) : (t.classList.add("disabled"), t.setAttribute("aria-label", t.getAttribute("data-failed-title")))
-            })
-        })
-    }.call(this),
-    function() {
-        var t;
-        $.observe(".js-conduit-rewrite-url", t = function(t) {
-            $.conduit.status().then(function() {
-                return t.href = t.getAttribute("data-url")
             })
         })
     }.call(this),

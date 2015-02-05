@@ -57,7 +57,7 @@ trait AvatarImageProvider { self: RequestCache =>
         if(account.image.isEmpty && context.settings.gravatar){
           s"""https://secure.gravatar.com/avatar/${StringUtil.md5(account.mailAddress.toLowerCase)}?s=${size}&d=retro&r=g"""
         } else {
-          s"""${context.path}/${account.userName}/_avatar"""
+          s"""http://mqshen.qiniudn.com/${account.image.get}"""
         }
       } getOrElse {
         s"""${context.path}/_unknown/_avatar"""
@@ -68,7 +68,7 @@ trait AvatarImageProvider { self: RequestCache =>
         if(account.image.isEmpty && context.settings.gravatar){
           s"""https://secure.gravatar.com/avatar/${StringUtil.md5(account.mailAddress.toLowerCase)}?s=${size}&d=retro&r=g"""
         } else {
-          s"""${context.path}/${account.userName}/_avatar"""
+          s"""http://mqshen.qiniudn.com/${account.image.get}"""
         }
       } getOrElse {
         if(context.settings.gravatar){

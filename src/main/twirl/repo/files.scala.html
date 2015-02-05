@@ -49,7 +49,6 @@
       <div class="commit commit-tease js-details-container">
           <p class="commit-title ">
               <a href="@url(repository)/commit/@latestCommit.id" class="message" data-pjax="true" title="small readme update">@link(latestCommit.summary, repository)</a>
-
           </p>
           <div class="commit-meta">
               <button aria-label="Copy SHA" class="js-zeroclipboard zeroclipboard-link" data-clipboard-text="0b310afff2524cbeb2bd740a20fe32b025e44197" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
@@ -58,9 +57,10 @@
 
               <div class="authorship">
                   @avatar(latestCommit, 20)
-                  <span class="author-name"><a href="/daltoniam" rel="author">@user(latestCommit.authorName, latestCommit.authorEmailAddress, "username strong")</a></span>
+                  <span class="author-name">
+                      <a href="/@latestCommit.authorName" rel="author">@latestCommit.authorName</a>
+                  </span>
                   authored @datetime(latestCommit.authorTime)
-
               </div>
           </div>
       </div>
@@ -112,7 +112,7 @@
                           </td>
                           <td class="message">
                               <a href="@url(repository)/commit/@file.commitId" class="commit-message">@link(file.message, repository)</a>
-                              [@user(file.author, file.mailAddress)]
+                              [@file.author]
                           </td>
                           <td class="age">
                               <span class="css-truncate css-truncate-target">@datetime(file.time)</span>
@@ -129,8 +129,7 @@
             <span class="octicon octicon-book"></span>
             README.md
         </h3>
-
-        <article class="markdown-body entry-content" itemprop="mainContentOfPage"><p>
+        <article class="markdown-body entry-content" itemprop="mainContentOfPage">
             @renderMarkup(filePath, content, branch, repository, false, false)
         </article>
     </div>

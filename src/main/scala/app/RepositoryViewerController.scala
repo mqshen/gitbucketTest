@@ -106,6 +106,13 @@ trait RepositoryViewerControllerBase extends ControllerBase {
     fileList(_)
   })
 
+  get("/:owner/:repository/issues/counts"){
+    contentType = formats("json")
+    org.json4s.jackson.Serialization.write(
+      Map("count" ->  1
+      ))
+  }
+
   /**
    * Displays the file list of the specified path and branch.
    */
