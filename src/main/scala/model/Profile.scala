@@ -17,7 +17,7 @@ trait Profile {
 }
 
 object Profile extends {
-  val profile = slick.driver.H2Driver
+  val profile = slick.driver.MySQLDriver
 
 } with AccountComponent
   with ActivityComponent

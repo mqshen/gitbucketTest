@@ -1,10 +1,11 @@
 package servlet
 
-import java.io.File
-import java.sql.{DriverManager, Connection}
+import java.io.{InputStreamReader, BufferedReader, File}
+import java.sql._
 import org.apache.commons.io.FileUtils
 import javax.servlet.{ServletContext, ServletContextListener, ServletContextEvent}
 import org.apache.commons.io.IOUtils
+import org.apache.ibatis.jdbc.ScriptRunner
 import org.slf4j.LoggerFactory
 import util.Directory._
 import util.ControlUtil._
@@ -13,7 +14,44 @@ import org.eclipse.jgit.api.Git
 import util.Directory
 
 object AutoUpdate {
-  
+
+  implicit class ExtendedConnection(connection: Connection) {
+    def withStatement[T](sql: String)(f: PreparedStatement => T) = {
+      var ok= false
+      val s = connection.prepareStatement(sql)
+      try {
+        val res = f(s)
+        ok = true
+        res
+      }
+      finally {
+        if(ok) s.close() // Let exceptions propagate normally
+        else {
+          // f(s) threw an exception, so don't replace it with an Exception from close()
+          try s.close() catch { case _: Throwable => }
+        }
+      }
+    }
+  }
+
+  implicit class ExtendedStatement(statement: PreparedStatement) {
+    def withResult[T](f: ResultSet => T) = {
+      var ok= false
+      val rs = statement.executeQuery
+      try {
+        val res = f(rs)
+        ok = true
+        res
+      }
+      finally {
+        if(ok) rs.close() // Let exceptions propagate normally
+        else {
+          // f(s) threw an exception, so don't replace it with an Exception from close()
+          try rs.close() catch { case _: Throwable => }
+        }
+      }
+    }
+  }
   /**
    * Version of GitBucket
    * 
@@ -30,13 +68,12 @@ object AutoUpdate {
      */
     def update(conn: Connection): Unit = {
       val sqlPath = s"update/${majorVersion}_${minorVersion}.sql"
+      logger.debug(s"start execute sql: $sqlPath")
       using(Thread.currentThread.getContextClassLoader.getResourceAsStream(sqlPath)){ in =>
         if(in != null){
-          val sql = IOUtils.toString(in, "UTF-8")
-          using(conn.createStatement()){ stmt =>
-            logger.debug(sqlPath + "=" + sql)
-            stmt.executeUpdate(sql)
-          }
+          val reader = new BufferedReader(new InputStreamReader(in, "UTF-8"))
+          val scriptRunner = new ScriptRunner(conn)
+          scriptRunner.runScript(reader)
         }
       }
     }
@@ -171,22 +208,43 @@ object AutoUpdate {
   /**
    * The version file (GITBUCKET_HOME/version).
    */
-  lazy val versionFile = new File(GitBucketHome, "version")
+  //lazy val versionFile = new File(GitBucketHome, "version")
   
   /**
    * Returns the current version from the version file.
    */
-  def getCurrentVersion(): Version = {
-    if(versionFile.exists){
-      FileUtils.readFileToString(versionFile, "UTF-8").trim.split("\\.") match {
-        case Array(majorVersion, minorVersion) => {
-          versions.find { v => 
-            v.majorVersion == majorVersion.toInt && v.minorVersion == minorVersion.toInt
-          }.getOrElse(Version(0, 0))
+  def getCurrentVersion(conn: Connection): Version = {
+    conn.withStatement("SELECT * FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'GITBUCKET'  and TABLE_NAME = 'VERSIONS' LIMIT 1") { statement =>
+      statement.withResult { rs =>
+        if(rs.next()) {
+          conn.withStatement("SELECT MAJOR, MINOR FROM VERSIONS ORDER BY MAJOR, MINOR LIMIT 1") { st =>
+            st.withResult { resultSet =>
+              if(resultSet.next()) {
+                val major = resultSet.getInt(1)
+                val minor = resultSet.getInt(2)
+                Version(major, minor)
+              }
+              else {
+                Version(0, 0)
+              }
+            }
+          }
         }
-        case _ => Version(0, 0)
+        else {
+          Version(0, 0)
+        }
       }
-    } else Version(0, 0)
+    }
+  }
+
+  def updateVersion(conn: Connection, version: Version) = {
+    conn.withStatement("INSERT INTO VERSIONS(MAJOR, MINOR, UPDATED) VALUES(?, ?, ?)") { statement =>
+      statement.setInt(1, version.majorVersion)
+      statement.setInt(2, version.minorVersion)
+      val currentTimestamp = System.currentTimeMillis()
+      statement.setTimestamp(3, new Timestamp(currentTimestamp))
+      statement.executeUpdate()
+    }
   }
   
 }
@@ -205,22 +263,27 @@ class AutoUpdateListener extends ServletContextListener {
     if(dataDir != null){
       System.setProperty("gitbucket.home", dataDir)
     }
-    org.h2.Driver.load()
+    //org.h2.Driver.load()
+    //Class.forName("com.mysql.jdbc.Driver"
 
     val context = event.getServletContext
-    context.setInitParameter("db.url", s"jdbc:h2:${DatabaseHome};MVCC=true")
+    //context.setInitParameter("db.url", s"jdbc:h2:${DatabaseHome};MVCC=true")
+    //context.setInitParameter("db.url", s"jdbc:mysql://dev1:3306/gitbucket?characterEncoding=utf8")
 
     defining(getConnection(event.getServletContext)){ conn =>
       logger.debug("Start schema update")
       try {
-        defining(getCurrentVersion()){ currentVersion =>
+        defining(getCurrentVersion(conn)){ currentVersion =>
           if(currentVersion == headVersion){
             logger.debug("No update")
           } else if(!versions.contains(currentVersion)){
             logger.warn(s"Skip migration because ${currentVersion.versionString} is illegal version.")
-          } else {
+          }
+          else {
+            logger.debug("start update database!")
             versions.takeWhile(_ != currentVersion).reverse.foreach(_.update(conn))
-            FileUtils.writeStringToFile(versionFile, headVersion.versionString, "UTF-8")
+            //FileUtils.writeStringToFile(versionFile, headVersion.versionString, "UTF-8")
+            updateVersion(conn, headVersion)
             logger.debug(s"Updated from ${currentVersion.versionString} to ${headVersion.versionString}")
           }
         }

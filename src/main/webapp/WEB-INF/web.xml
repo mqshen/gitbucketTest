@@ -47,16 +47,21 @@
   </servlet-mapping>
 
   <!-- ===================================================================== -->
-  <!-- H2 database configuration -->
+  <!-- MySQL database configuration -->
   <!-- ===================================================================== -->
   <context-param>
+    <param-name>db.url</param-name>
+    <param-value>jdbc:mysql://dev1:3306/gitbucket?characterEncoding=utf8</param-value>
+  </context-param>
+
+  <context-param>
     <param-name>db.user</param-name>
-    <param-value>sa</param-value>
+    <param-value>gitbucket</param-value>
   </context-param>
   
   <context-param>
     <param-name>db.password</param-name>
-    <param-value>sa</param-value>
+    <param-value>gitbucket</param-value>
   </context-param>
   
   <context-param>
