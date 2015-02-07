@@ -59,6 +59,11 @@ trait IndexControllerBase extends ControllerBase {
     redirect("/")
   }
 
+  post("/signout"){
+    session.invalidate
+    redirect("/")
+  }
+
   get("/activities.atom"){
     contentType = "application/atom+xml; type=feed"
     helper.xml.feed(getRecentActivities())
