@@ -19,15 +19,25 @@ trait RequestCache extends SystemSettingsService with AccountService with Issues
 
   def getIssue(userName: String, repositoryName: String, issueId: String)
               (implicit context: app.Context): Option[Issue] = {
-    context.cache(s"issue.${userName}/${repositoryName}#${issueId}"){
-      super.getIssue(userName, repositoryName, issueId)
+    RedisClient.clients.withClient { client =>
+      val key = s"issue.${userName}/${repositoryName}#${issueId}"
+      client.get(key).map { value =>
+        Some(org.json4s.jackson.Serialization.read[Issue](value))
+      }.getOrElse {
+        val issue = super.getIssue(userName, repositoryName, issueId)
+        issue.map { issue =>
+          val value = org.json4s.jackson.Serialization.write(issue)
+          client.set(key, value)
+        }
+        issue
+      }
     }
   }
 
   def getAccountByUserName(userName: String)
                           (implicit context: app.Context): Option[Account] = {
     RedisClient.clients.withClient { client =>
-      val key = s"account.${userName}"
+      val key = s"account.name.${userName}"
       client.get(key).map { value =>
         Some(org.json4s.jackson.Serialization.read[Account](value))
       }.getOrElse {
@@ -43,8 +53,19 @@ trait RequestCache extends SystemSettingsService with AccountService with Issues
 
   def getAccountByMailAddress(mailAddress: String)
                              (implicit context: app.Context): Option[Account] = {
-    context.cache(s"account.${mailAddress}"){
-      super.getAccountByMailAddress(mailAddress)
+
+    RedisClient.clients.withClient { client =>
+      val key = s"account.mail.${mailAddress}"
+      client.get(key).map { value =>
+        Some(org.json4s.jackson.Serialization.read[Account](value))
+      }.getOrElse {
+        val account = super.getAccountByMailAddress(mailAddress)
+        account.map { account =>
+          val value = org.json4s.jackson.Serialization.write(account)
+          client.set(key, value)
+        }
+        account
+      }
     }
   }
 }
