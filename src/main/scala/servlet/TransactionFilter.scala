@@ -1,6 +1,7 @@
 package servlet
 
 import javax.servlet._
+import com.redis.RedisClientPool
 import org.slf4j.LoggerFactory
 import javax.servlet.http.HttpServletRequest
 import util.Keys
@@ -42,4 +43,8 @@ object Database {
   def getSession(req: ServletRequest): slick.jdbc.JdbcBackend#Session =
     req.getAttribute(Keys.Request.DBSession).asInstanceOf[slick.jdbc.JdbcBackend#Session]
 
+}
+
+object RedisClient {
+  val clients = new RedisClientPool("dev1", 6379)
 }
