@@ -165,6 +165,8 @@ case class Context(settings: SystemSettingsService.SystemSettings, loginAccount:
   val currentPath = request.getRequestURI.substring(request.getContextPath.length)
   val baseUrl = settings.baseUrl(request)
   val host = new java.net.URL(baseUrl).getHost
+  val pjaxId = request.getParameter("_pjax")
+  val isPJax = (pjaxId != null && !pjaxId.isEmpty)
 
   /**
    * Get object from cache.

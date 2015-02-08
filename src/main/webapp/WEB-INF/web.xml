@@ -51,7 +51,7 @@
   <!-- ===================================================================== -->
   <context-param>
     <param-name>db.url</param-name>
-    <param-value>jdbc:mysql://dev1:3306/gitbucket?characterEncoding=utf8</param-value>
+    <param-value>jdbc:mysql://dev1:3306/gitbucketTest?characterEncoding=utf8</param-value>
   </context-param>
 
   <context-param>

@@ -14,7 +14,7 @@
 
         <div class="flex-table empty-repo-options">
             <div class="flex-table-item">
-                <a href="http://mac.github.com" data-url="github-mac://openRepo/@repository.httpUrl" class="minibutton primary js-conduit-rewrite-url" title="Set up shenmq/test using GitHub Desktop" aria-label="Set up shenmq/test using GitHub Desktop" data-ga-click="Empty repo, click, Clicked Set up in Desktop (Mac)">
+                <a href="http://mac.github.com" data-url="github-mac://openRepo/@repository.httpUrl" class="minibutton primary js-conduit-rewrite-url" title="Set up using GitHub Desktop" aria-label="Set up using GitHub Desktop" data-ga-click="Empty repo, click, Clicked Set up in Desktop (Mac)">
                     <span class="octicon octicon-device-desktop"></span> Set up in Desktop</a>
             </div>
             <div class="flex-table-item">
@@ -24,14 +24,14 @@
                 <div class="url-box">
                 <span class="clone-urls js-clone-urls js-zeroclipboard-container">
                     <span class="clone-url-button js-clone-url-button selected">
-                      <a href="@{repository.httpUrl}.git" class="js-git-protocol-selector" data-url="/users/set_protocol?protocol_selector=http&amp;protocol_type=push" data-skip-pjax="">HTTPS</a>
+                      <a href="@{repository.httpUrl}" class="js-git-protocol-selector" data-url="/users/set_protocol?protocol_selector=http&amp;protocol_type=push" data-skip-pjax="">HTTPS</a>
                     </span>
                     @if(settings.ssh && loginAccount.isDefined){
                     <span class="clone-url-button js-clone-url-button">
                       <a href="@repository.httpUrl" class="js-git-protocol-selector" data-url="/users/set_protocol?protocol_selector=ssh&amp;protocol_type=push" data-skip-pjax="">SSH</a>
                     </span>
                     }
-                  <input type="text" readonly="" spellcheck="false" class="js-url-field url-field js-zeroclipboard-target" value="@{repository.httpUrl}.git">
+                  <input type="text" readonly="" spellcheck="false" class="js-url-field url-field js-zeroclipboard-target" value="@{repository.httpUrl}">
                   <span class="clone-url-button url-box-clippy">
                     <button aria-label="Copy to clipboard" class="js-zeroclipboard minibutton zeroclipboard-button" data-copied-hint="Copied!" data-ga-click="Empty repo, click, Clicked copy URL" type="button">
                         <span class="octicon octicon-clippy"></span>
@@ -61,7 +61,7 @@
 <span class="js-selectable-text">git init</span>
 <span class="js-selectable-text">git add README.md</span>
 <span class="js-selectable-text">git commit -m "first commit"</span>
-<span class="js-selectable-text">git remote add origin <span class="js-live-clone-url">@{repository.httpUrl}.git</span></span>
+<span class="js-selectable-text">git remote add origin <span class="js-live-clone-url">@{repository.httpUrl}</span></span>
 <span class="js-selectable-text">git push -u origin master</span>
             </pre>
         </div>
@@ -77,7 +77,7 @@
                 </button>
             </div>
             <pre class="copyable-terminal-content js-zeroclipboard-target">
-<span class="js-selectable-text">git remote add origin <span class="js-live-clone-url">@{repository.httpUrl}.git</span></span>
+<span class="js-selectable-text">git remote add origin <span class="js-live-clone-url">@{repository.httpUrl}</span></span>
 <span class="js-selectable-text">git push -u origin master</span>
             </pre>
         </div>

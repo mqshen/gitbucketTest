@@ -1,5 +1,6 @@
 *.class
 *.log
+web.xml
 
 # sbt specific
 dist/*

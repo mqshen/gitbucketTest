@@ -41,7 +41,9 @@
       <div class="commit file-history-tease">
           <div class="file-history-tease-header">
               @avatar(latestCommit, 20)
-              @user(latestCommit.authorName, latestCommit.authorEmailAddress, "username strong")
+              <span class="author-name">
+                  <a href="/@latestCommit.authorName" rel="author">@latestCommit.authorName</a>
+              </span>
               @datetime(latestCommit.commitTime)
               <div class="commit-title">
                   <a href="@url(repository)/commit/@latestCommit.id" class="message" data-pjax="true" title="Initial commit">@link(latestCommit.summary, repository)</a>
@@ -97,7 +99,16 @@
                               @renderMarkup(pathList, content.content.get, branch, repository, false, false)
                               </div>
                           } else {
-                              <pre class="prettyprint linenums blob">@content.content.get</pre>
+                              <table class="highlight tab-size-8 js-file-line-container">
+                                  <tbody>
+                                  @content.content.get.split("\\r?\\n").zipWithIndex.map { case (line, index) =>
+                                  <tr>
+                                      <td id="L@index" class="blob-num js-line-number" data-line-number="@index"></td>
+                                      <td id="LC@index" class="blob-code js-file-line">@line</td>
+                                  </tr>
+                                  }
+                                </tbody>
+                              </table>
                           }
                       }
                   }

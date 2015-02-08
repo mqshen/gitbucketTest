@@ -25,48 +25,45 @@
   </li>
 }
 
+@if(!isPJax) {
 <div class="pagehead repohead instapaper_ignore readability-menu">
-<div class="container">
-  @if(repository.commitCount > 0){
-
-      <ul class="pagehead-actions">
-          <li>
-              <a href="@path/@repository.owner/@repository.name/fork" class="minibutton with-count js-toggler-target fork-button tooltipped-n"
-              title="Fork your own copy of @repository.owner/@repository.name to your account"
-              aria-label="Fork your own copy of @repository.owner/@repository.name to your account" rel="facebox nofollow">
-                  <span class="octicon octicon-repo-forked"></span>
-                  Fork
-              </a>
-              <a href="@url(repository)/network/members" class="social-count">@repository.forkedCount</a>
-          </li>
-
-      </ul>
-  }
-
-      <h1 itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public">
-          @helper.html.repositoryicon(repository, true)
-          <span class="author">
-              <a href="@url(repository.owner)" class="url fn" itemprop="url" rel="author">
-                <span itemprop="title">@repository.owner</span>
-              </a>
-          </span>
-          <span class="path-divider">/</span>
-          <strong>
-              <a href="@url(repository)" class="js-current-repository js-repo-home-link">@repository.name</a>
-          </strong>
-          <span class="page-context-loader">
-              <img alt="" height="16" src="@assets/spinners/octocat-spinner-32.gif" width="16">
-          </span>
-          @defining(repository.repository){ x =>
-              @if(repository.repository.originRepositoryName.isDefined){
-                  <span class="fork-flag">
-                      <span class="text">forked from <a href="@path/@x.parentUserName/@x.parentRepositoryName">@x.parentUserName/@x.parentRepositoryName</a></span>
-                  </span>
-              }
-          }
-
-      </h1>
-</div>
+    <div class="container">
+        @if(repository.commitCount > 0){
+        <ul class="pagehead-actions">
+            <li>
+                <a href="@path/@repository.owner/@repository.name/fork" class="minibutton with-count js-toggler-target fork-button tooltipped-n"
+                   title="Fork your own copy of @repository.owner/@repository.name to your account"
+                   aria-label="Fork your own copy of @repository.owner/@repository.name to your account" rel="facebox nofollow">
+                    <span class="octicon octicon-repo-forked"></span>
+                    Fork
+                </a>
+                <a href="@url(repository)/network/members" class="social-count">@repository.forkedCount</a>
+            </li>
+        </ul>
+        }
+        <h1 itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public">
+            @helper.html.repositoryicon(repository, true)
+            <span class="author">
+                <a href="@url(repository.owner)" class="url fn" itemprop="url" rel="author">
+                    <span itemprop="title">@repository.owner</span>
+                </a>
+            </span>
+            <span class="path-divider">/</span>
+            <strong>
+                <a href="@url(repository)" class="js-current-repository js-repo-home-link">@repository.name</a>
+            </strong>
+            <span class="page-context-loader">
+                <img alt="" height="16" src="@assets/spinners/octocat-spinner-32.gif" width="16">
+            </span>
+            @defining(repository.repository){ x =>
+                @if(repository.repository.originRepositoryName.isDefined){
+                <span class="fork-flag">
+                    <span class="text">forked from <a href="@path/@x.parentUserName/@x.parentRepositoryName">@x.parentUserName/@x.parentRepositoryName</a></span>
+                </span>
+                }
+            }
+        </h1>
+    </div>
 </div>
 <div class="container body">
     <div class="repository-with-sidebar repo-container new-discussion-timeline @if(expand) {with-full-navigation}">
@@ -75,38 +72,13 @@
             <div class="sunken-menu vertical-right repo-nav js-repo-nav js-repository-container-pjax js-octicon-loaders" role="navigation" data-issue-count-url="@url(repository)/issues/counts">
                 <div class="sunken-menu-contents">
                     <ul class="sunken-menu-group">
-                        @if(expand) {
-                            @sidemenu(""       , "code"  , "code"  , "Code")
-                            @sidemenu("/issues", "issues", "issues"  , "Issues", repository.issueCount)
-                            @sidemenu("/pulls" , "pulls" , "pulls"  , "Pull Requests", repository.pullCount)
-                            @sidemenu("/wiki"  , "wiki"  , "wiki"  , "Wiki")
-                        } else {
                             @sidemenu(""       , "code"  , "code"  , "Code")
                             @sidemenu("/issues", "issue-opened", "issues"  , "Issues", repository.issueCount)
                             @sidemenu("/pulls" , "git-pull-request" , "pulls"  , "Pull Requests", repository.pullCount)
                             @sidemenu("/wiki"  , "book"  , "wiki"  , "Wiki")
-                        }
                     </ul>
 
                     <div class="sunken-menu-separator"></div>
-
-                    <!--
-                    <ul class="sunken-menu-group">
-                        <li class="tooltipped tooltipped-w" aria-label="Pulse">
-                            <a href="/mqshen/gitbucket/pulse/weekly" aria-label="Pulse" class="js-selected-navigation-item sunken-menu-item" data-pjax="true"
-                            data-selected-links="pulse /mqshen/gitbucket/pulse/weekly">
-                                <span class="octicon octicon-pulse"></span> <span class="full-word">Pulse</span>
-                            </a>
-                        </li>
-
-                        <li class="tooltipped tooltipped-w" aria-label="Graphs">
-                            <a href="/mqshen/gitbucket/graphs" aria-label="Graphs" class="js-selected-navigation-item sunken-menu-item" data-pjax="true"
-                            data-selected-links="repo_graphs repo_contributors /mqshen/gitbucket/graphs">
-                                <span class="octicon octicon-graph"></span> <span class="full-word">Graphs</span>
-                            </a>
-                        </li>
-                    </ul>
--->
                     @if(loginAccount.isDefined && (loginAccount.get.isAdmin || repository.managers.contains(loginAccount.get.userName))) {
                         <div class="sunken-menu-separator"></div>
                         <ul class="sunken-menu-group">
@@ -225,81 +197,17 @@
                                     releases
                                 </a>
                             </li>
-                                <!--
-                        <li>
-                            <a href="/mqshen/gitbucket/graphs/contributors">
-                                <span class="octicon octicon-organization"></span>
-                                <span class="num text-emphasized">
-                                    42
-                                </span>
-                                contributors
-                            </a>
-                        </li>
-                        -->
                         </ul>
                     </div>
                 </div>
 
             </div>
         }
+    }
     @body
-  </div>
+@if(!isPJax) {
+    </div>
 </div>
 </div>
-<script>
-$(function(){
-  $('a.header-link').mouseover(function(e){
-    var target = e.target;
-    if(e.target.tagName != 'A'){
-      target = e.target.parentElement;
-    }
-    $(target).children('strong'               ).css('color', '#0088cc');
-    $(target).children('img.header-icon-hover').css('display', 'inline');
-    $(target).children('img.header-icon'      ).css('display', 'none');
-  });
+}
 
-  $('a.header-link').mouseout(function(e){
-    var target = e.target;
-    if(e.target.tagName != 'A'){
-      target = e.target.parentElement;
-    }
-    $(target).children('strong'               ).css('color', 'black');
-    $(target).children('img.header-icon-hover').css('display', 'none');
-    $(target).children('img.header-icon'      ).css('display', 'inline');
-  });
-
-  $('ul.sidemenu a').mouseover(function(e){
-    var target = e.target;
-    if(e.target.tagName == "IMG"){
-      target = e.target.parentElement;
-    }
-    $(target).prev    ('div.gradient'        ).css('border-left', '1px solid silver');
-    $(target).children('img.menu-icon-active').css('display', 'inline');
-    $(target).children('img.menu-icon'       ).css('display', 'none');
-  });
-
-  $('ul.sidemenu a').mouseout(function(e){
-    var target = e.target;
-    if(e.target.tagName == "IMG"){
-      target = e.target.parentElement;
-    }
-    $(target).prev    ('div.gradient'        ).css('border-left', '1px solid #eee');
-    $(target).children('img.menu-icon-active').css('display', 'none');
-    $(target).children('img.menu-icon'       ).css('display', 'inline');
-  });
-
-  @if(settings.ssh && loginAccount.isDefined){
-    $('#repository-url-http').click(function(){
-      $('#repository-url-proto').text('HTTP');
-      $('#repository-url').val('@repository.httpUrl');
-      $('#repository-url-copy').attr('data-clipboard-text', $('#repository-url').val());
-    });
-
-    $('#repository-url-ssh').click(function(){
-      $('#repository-url-proto').text('SSH');
-      $('#repository-url').val('@repository.sshUrl(settings.sshPort.getOrElse(service.SystemSettingsService.DefaultSshPort), loginAccount.get.userName)');
-      $('#repository-url-copy').attr('data-clipboard-text', $('#repository-url').val());
-    });
-  }
-});
-</script>

@@ -1,6 +1,7 @@
 @(title: String, repository: Option[service.RepositoryService.RepositoryInfo] = None, bodyClass: String = "")(body: Html)(implicit context: app.Context)
 @import context._
 @import view.helpers._
+@if(!isPJax) {
 <!DOCTYPE html>
 <html>
   <head>
@@ -147,7 +148,15 @@
           </div>
       </div>
       <div id="site-container" class="context-loader-container" data-pjax-container="">
+} else {
+      <div id="pjax-body">
+}
           @body
+
+@if(!isPJax) {
       </div>
   </body>
 </html>
+} else {
+      </div>
+}
